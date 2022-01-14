@@ -1,13 +1,18 @@
-`midisnoop` is a MIDI monitor and prober.  For more information on `midisnoop`,
-visit:
+`midisnoop` is a MIDI monitor and prober.  For more information on `midisnoop`, visit:
+  https://github.com/catraeus/midisnoop
 
-  http://midisnoop.googlecode.com/
-
-All images, save for application logos, are taken from the excellent Oxygen
-Icon Theme.  For more information on the Oxygen Icon Theme, visit:
-
+All images, save for application logos, are taken from the Oxygen Icon Theme.
+  For more information on the Oxygen Icon Theme, visit:
   http://www.oxygen-icons.org/
 
-Now with added flavor from catraeus
+The code you are looking at is a fork made by catraeus:
+https://github.com/catraeus
 
-https://github.com/catraeus/midisnoop
+Currently it is a good steady-Eddy midi snooper.
+Time codes are cryptic
+Why it has outputs is, my guess, only to pipe, merge, fork MIDI communications
+  as the artist sees fit.
+I hope to add:
+  Timecodes from midnight.
+  Control Channel morph - CCx -> CCy to enable a limited app that creates, e.g.
+    Morph Wheel (CC2) output and put it to CC3, CC6 ... whatever CC you wish.

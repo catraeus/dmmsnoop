@@ -1,4 +1,5 @@
 Makefile
+.qmake.stash
 build/
 build-stamp
 debian/

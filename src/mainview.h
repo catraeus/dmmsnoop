@@ -29,72 +29,45 @@
 #include "messagetabledelegate.h"
 
 class MainView: public DesignerView {
-
     Q_OBJECT
 
 public:
 
-    explicit
-    MainView(QObject *parent=0);
-
-    ~MainView();
+  explicit  MainView(QObject *parent=0);
+           ~MainView();
 
 public slots:
 
-    void
-    addReceivedMessage(quint64 timeStamp, const QString &statusDescription,
-                       const QString &dataDescription, bool valid);
+  void addReceivedMessage(quint64 timeStamp, const QString &statusDescription, const QString &dataDescription, bool valid);
+  void addSentMessage(quint64 timeStamp, const QString &statusDescription, const QString &dataDescription, bool valid);
+  void clearMessages();
+  void setMessageSendEnabled(bool enabled);
 
-    void
-    addSentMessage(quint64 timeStamp, const QString &statusDescription,
-                   const QString &dataDescription, bool valid);
+       signals:
 
-    void
-    clearMessages();
-
-    void
-    setMessageSendEnabled(bool enabled);
-
-signals:
-
-    void
-    aboutRequest();
-
-    void
-    addMessageRequest();
-
-    void
-    clearMessagesRequest();
-
-    void
-    configureRequest();
+  void aboutRequest();
+  void addMessageRequest();
+  void clearMessagesRequest();
+  void configureRequest();
 
 private:
+  enum MessageTableColumn {
+    MESSAGETABLECOLUMN_TIMESTAMP = 0,
+    MESSAGETABLECOLUMN_STATUS    = 1,
+    MESSAGETABLECOLUMN_DATA      = 2,
+    MESSAGETABLECOLUMN_TOTAL     = 3
+  };
+  int  addMessage(quint64 timeStamp, const QString &statusDescription, const QString &dataDescription, bool valid);
+  void setModelData(int row, int column, const QVariant &value, int role=Qt::DisplayRole);
 
-    enum MessageTableColumn {
-        MESSAGETABLECOLUMN_TIMESTAMP = 0,
-        MESSAGETABLECOLUMN_STATUS = 1,
-        MESSAGETABLECOLUMN_DATA = 2,
-
-        MESSAGETABLECOLUMN_TOTAL = 3
-    };
-
-    int
-    addMessage(quint64 timeStamp, const QString &statusDescription,
-               const QString &dataDescription, bool valid);
-
-    void
-    setModelData(int row, int column, const QVariant &value,
-                 int role=Qt::DisplayRole);
-
-    QAction *aboutAction;
-    QAction *addAction;
-    QAction *clearAction;
-    QAction *configureAction;
-    MessageTableDelegate tableDelegate;
-    QAction *quitAction;
-    QStandardItemModel tableModel;
-    QTableView *tableView;
+  QAction              *aboutAction;
+  QAction              *addAction;
+  QAction              *clearAction;
+  QAction              *configureAction;
+  MessageTableDelegate  tableDelegate;
+  QAction              *quitAction;
+  QStandardItemModel    tableModel;
+  QTableView           *tableView;
 
 };
 

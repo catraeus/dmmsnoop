@@ -17,7 +17,7 @@ their corresponding development packages) installed:
 
 In addition, you'll need the following tools:
 
-  * python
+  * python3
   * qmake
 
 2. Building and Installing from Source

@@ -23,8 +23,9 @@
 #include <QtCore/QByteArray>
 #include <QtCore/QStringList>
 #include <QtCore/QVector>
+#include <QtCore/QObject>
 
-#include <RtMidi.h>
+#include <rtmidi/RtMidi.h>
 
 class Engine: public QObject {
 

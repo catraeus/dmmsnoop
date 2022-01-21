@@ -63,9 +63,11 @@ Engine::Engine(QObject *parent):
         case RtMidi::UNIX_JACK:
             driverNames.append(tr("JACK Audio Connection Kit"));
             break;
+ /*  RtMidi no longer accommodates Kernel Streaming
         case RtMidi::WINDOWS_KS:
             driverNames.append(tr("Windows Kernel Streaming"));
             break;
+ */
         case RtMidi::WINDOWS_MM:
             driverNames.append(tr("Windows Multimedia MIDI"));
             break;
@@ -242,11 +244,11 @@ Engine::sendMessage(const QByteArray &message)
     for (int i = 0; i < message.count(); i++) {
         msg.push_back(static_cast<unsigned char>(message[i]));
     }
-    try {
+//    try {
         output->sendMessage(&msg);
-    } catch (RtError &e) {
-        throw Error(e.what());
-    }
+//    } catch (RtError &e) {
+//        throw Error(e.what());
+//    }
     return getCurrentTimestamp();
 }
 
@@ -268,7 +270,7 @@ Engine::setDriver(int index)
         // Open the new driver.
         if (index != -1) {
             RtMidi::Api api = driverAPIs[index];
-            try {
+//            try {
                 input = new RtMidiIn(api, "midisnoop");
                 QScopedPointer<RtMidiIn> inputPtr(input);
                 output = new RtMidiOut(api, "midisnoop");
@@ -276,7 +278,7 @@ Engine::setDriver(int index)
                 input->setCallback(handleMidiInput, this);
 
                 // Add ports.
-                try {
+//                try {
                     unsigned int count = input->getPortCount();
                     QString name;
                     for (unsigned int i = 0; i < count; i++) {
@@ -307,15 +309,15 @@ Engine::setDriver(int index)
                     default:
                         virtualPortsAdded = false;
                     }
-                } catch (...) {
-                    removePorts();
-                    throw;
-                }
+//                } catch (...) {
+//                    removePorts();
+//                    throw;
+//                }
                 inputPtr.take();
                 outputPtr.take();
-            } catch (RtError &e) {
-                throw Error(e.what());
-            }
+//            } catch (RtError &e) {
+//                throw Error(e.what());
+//            }
             driver = index;
             emit driverChanged(index);
         }
@@ -360,27 +362,27 @@ Engine::setInputPort(int index)
 
         // Close the currently open input port.
         if (inputPort != -1) {
-            try {
+//            try {
                 input->closePort();
-            } catch (RtError &e) {
-                qWarning() << e.what();
-            }
+//            } catch (RtError &e) {
+//                qWarning() << e.what();
+//            }
             inputPort = -1;
             emit inputPortChanged(-1);
         }
 
         // Open the new input port.
         if (index != -1) {
-            try {
+//            try {
                 if (virtualPortsAdded &&
                     (index == (inputPortNames.count() - 1))) {
                     input->openVirtualPort("MIDI Input");
                 } else {
                     input->openPort(index, "MIDI Input");
                 }
-            } catch (RtError &e) {
-                throw Error(e.what());
-            }
+//            } catch (RtError &e) {
+//                throw Error(e.what());
+//            }
             inputPort = index;
             updateEventFilter();
             emit inputPortChanged(index);
@@ -396,27 +398,27 @@ Engine::setOutputPort(int index)
 
         // Close the currently open output port.
         if (outputPort != -1) {
-            try {
+//            try {
                 output->closePort();
-            } catch (RtError &e) {
-                qWarning() << e.what();
-            }
+//            } catch (RtError &e) {
+//                qWarning() << e.what();
+//            }
             outputPort = -1;
             emit outputPortChanged(-1);
         }
 
         // Open the new output port.
         if (index != -1) {
-            try {
+//            try {
                 if (virtualPortsAdded &&
                     (index == (outputPortNames.count() - 1))) {
                     output->openVirtualPort("MIDI Output");
                 } else {
                     output->openPort(index, "MIDI Output");
                 }
-            } catch (RtError &e) {
-                throw Error(e.what());
-            }
+//            } catch (RtError &e) {
+//                throw Error(e.what());
+//            }
             outputPort = index;
             emit outputPortChanged(index);
         }

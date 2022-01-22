@@ -49,23 +49,23 @@ Controller::Controller(Application &application, QObject *parent)
         throw Error(tr("no MIDI drivers found"));
     }
     for (int i = 0; i < driverCount; i++) {
-        configureView.addDriver(i, engine.getDriverName(i));
+        theQVwConfig.addDriver(i, engine.getDriverName(i));
     }
     int driver = engine.getDriver();
     int outputPort = engine.getOutputPort();
-    configureView.setDriver                        (driver);
-    configureView.setInputPort(engine.getInputPort ());
-    configureView.setIgnoreActiveSensingEvents     (engine.getIgnoreActiveSensingEvents());
-    configureView.setIgnoreSystemExclusiveEvents   (engine.getIgnoreSystemExclusiveEvents());
-    configureView.setIgnoreTimeEvents              (engine.getIgnoreTimeEvents());
-    configureView.setOutputPort                    (outputPort);
-    connect(&configureView, SIGNAL(closeRequest()),                                   &configureView, SLOT(hide()));
-    connect(&configureView, SIGNAL(driverChangeRequest(int)),                         &engine, SLOT(setDriver(int)));
-    connect(&configureView, SIGNAL(ignoreActiveSensingEventsChangeRequest(bool)),     &engine, SLOT(setIgnoreActiveSensingEvents(bool)));
-    connect(&configureView, SIGNAL(ignoreSystemExclusiveEventsChangeRequest(bool)),   &engine, SLOT(setIgnoreSystemExclusiveEvents(bool)));
-    connect(&configureView, SIGNAL(ignoreTimeEventsChangeRequest(bool)),              &engine, SLOT(setIgnoreTimeEvents(bool)));
-    connect(&configureView, SIGNAL(inputPortChangeRequest(int)),                      &engine, SLOT(setInputPort(int)));
-    connect(&configureView, SIGNAL(outputPortChangeRequest(int)),                     &engine, SLOT(setOutputPort(int)));
+    theQVwConfig.setDriver                        (driver);
+    theQVwConfig.setInputPort(engine.getInputPort ());
+    theQVwConfig.setIgnoreActiveSensingEvents     (engine.getIgnoreActiveSensingEvents());
+    theQVwConfig.setIgnoreSystemExclusiveEvents   (engine.getIgnoreSystemExclusiveEvents());
+    theQVwConfig.setIgnoreTimeEvents              (engine.getIgnoreTimeEvents());
+    theQVwConfig.setOutputPort                    (outputPort);
+    connect(&theQVwConfig, SIGNAL(closeRequest()),                                   &theQVwConfig, SLOT(hide()));
+    connect(&theQVwConfig, SIGNAL(driverChangeRequest(int)),                         &engine, SLOT(setDriver(int)));
+    connect(&theQVwConfig, SIGNAL(ignoreActiveSensingEventsChangeRequest(bool)),     &engine, SLOT(setIgnoreActiveSensingEvents(bool)));
+    connect(&theQVwConfig, SIGNAL(ignoreSystemExclusiveEventsChangeRequest(bool)),   &engine, SLOT(setIgnoreSystemExclusiveEvents(bool)));
+    connect(&theQVwConfig, SIGNAL(ignoreTimeEventsChangeRequest(bool)),              &engine, SLOT(setIgnoreTimeEvents(bool)));
+    connect(&theQVwConfig, SIGNAL(inputPortChangeRequest(int)),                      &engine, SLOT(setInputPort(int)));
+    connect(&theQVwConfig, SIGNAL(outputPortChangeRequest(int)),                     &engine, SLOT(setOutputPort(int)));
 
     // Setup error view
     connect(&errorView, SIGNAL(closeRequest()),                              &errorView,     SLOT(hide()));
@@ -76,7 +76,7 @@ Controller::Controller(Application &application, QObject *parent)
     connect(&mainView, SIGNAL(aboutRequest()),                               &aboutView,     SLOT(show()));
     connect(&mainView, SIGNAL(addMessageRequest()),                          &messageView,   SLOT(show()));
     connect(&mainView, SIGNAL(clearMessagesRequest()),                       &mainView,      SLOT(clearMessages()));
-    connect(&mainView, SIGNAL(configureRequest()),                           &configureView, SLOT(show()));
+    connect(&mainView, SIGNAL(configureRequest()),                           &theQVwConfig, SLOT(show()));
     connect(&mainView, SIGNAL(closeRequest()),                               &application,   SLOT(quit()));
 
     // Setup message view
@@ -86,19 +86,19 @@ Controller::Controller(Application &application, QObject *parent)
 
     // Setup engine
     connect(&engine, SIGNAL(messageReceived(quint64, const QByteArray &)),                   SLOT(handleReceivedMessage(quint64, const QByteArray &)));
-    connect(&engine, SIGNAL(driverChanged(int)),                             &configureView, SLOT(setDriver(int)));
+    connect(&engine, SIGNAL(driverChanged(int)),                             &theQVwConfig, SLOT(setDriver(int)));
     connect(&engine, SIGNAL(driverChanged(int)),                                             SLOT(handleDriverChange()));
-    connect(&engine, SIGNAL(ignoreActiveSensingEventsChanged(bool)),         &configureView, SLOT(setIgnoreActiveSensingEvents(bool)));
-    connect(&engine, SIGNAL(ignoreSystemExclusiveEventsChanged(bool)),       &configureView, SLOT(setIgnoreSystemExclusiveEvents(bool)));
-    connect(&engine, SIGNAL(ignoreTimeEventsChanged(bool)),                  &configureView, SLOT(setIgnoreTimeEvents(bool)));
-    connect(&engine, SIGNAL(inputPortAdded(int, QString)),                   &configureView, SLOT(addInputPort(int, QString)));
-    connect(&engine, SIGNAL(inputPortChanged(int)),                          &configureView, SLOT(setInputPort(int)));
+    connect(&engine, SIGNAL(ignoreActiveSensingEventsChanged(bool)),         &theQVwConfig, SLOT(setIgnoreActiveSensingEvents(bool)));
+    connect(&engine, SIGNAL(ignoreSystemExclusiveEventsChanged(bool)),       &theQVwConfig, SLOT(setIgnoreSystemExclusiveEvents(bool)));
+    connect(&engine, SIGNAL(ignoreTimeEventsChanged(bool)),                  &theQVwConfig, SLOT(setIgnoreTimeEvents(bool)));
+    connect(&engine, SIGNAL(inputPortAdded(int, QString)),                   &theQVwConfig, SLOT(addInputPort(int, QString)));
+    connect(&engine, SIGNAL(inputPortChanged(int)),                          &theQVwConfig, SLOT(setInputPort(int)));
     connect(&engine, SIGNAL(inputPortChanged(int)),                                          SLOT(handleDriverChange()));
-    connect(&engine, SIGNAL(inputPortRemoved(int)),                          &configureView, SLOT(removeInputPort(int)));
-    connect(&engine, SIGNAL(outputPortAdded(int, QString)),                  &configureView, SLOT(addOutputPort(int, QString)));
-    connect(&engine, SIGNAL(outputPortChanged(int)),                         &configureView, SLOT(setOutputPort(int)));
+    connect(&engine, SIGNAL(inputPortRemoved(int)),                          &theQVwConfig, SLOT(removeInputPort(int)));
+    connect(&engine, SIGNAL(outputPortAdded(int, QString)),                  &theQVwConfig, SLOT(addOutputPort(int, QString)));
+    connect(&engine, SIGNAL(outputPortChanged(int)),                         &theQVwConfig, SLOT(setOutputPort(int)));
     connect(&engine, SIGNAL(outputPortChanged(int)),                                         SLOT(handleDriverChange()));
-    connect(&engine, SIGNAL(outputPortRemoved(int)),                         &configureView, SLOT(removeOutputPort(int)));
+    connect(&engine, SIGNAL(outputPortRemoved(int)),                         &theQVwConfig, SLOT(removeOutputPort(int)));
 
     // Setup application
     connect(&application, SIGNAL(eventError(QString)),                &errorView, SLOT(setMessage(QString)));

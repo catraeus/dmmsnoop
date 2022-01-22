@@ -17,8 +17,8 @@
  * Ave, Cambridge, MA 02139, USA.
  */
 
-#ifndef __CONFIGUREVIEW_H__
-#define __CONFIGUREVIEW_H__
+#ifndef __QVW_CONFIG_HPP__
+#define __QVW_CONFIG_HPP__
 
 #include <QtWidgets/QCheckBox>
 #include <QtWidgets/QComboBox>
@@ -26,16 +26,16 @@
 
 #include "designerview.h"
 
-class ConfigureView: public DesignerView {
+class QVW_Config: public DesignerView {
 
     Q_OBJECT
 
 public:
 
     explicit
-    ConfigureView(QObject *parent=0);
+    QVW_Config(QObject *parent=0);
 
-    ~ConfigureView();
+    ~QVW_Config();
 
 public slots:
 

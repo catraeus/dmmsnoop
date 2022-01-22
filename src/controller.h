@@ -22,7 +22,7 @@
 
 #include "aboutview.h"
 #include "application.h"
-#include "configureview.h"
+#include "QVW_Config.hpp"
 #include "engine.h"
 #include "errorview.h"
 #include "ViewMain.hpp"
@@ -48,7 +48,7 @@ private:
 
   AboutView      aboutView;
   Application   &application;
-  ConfigureView  configureView;
+  QVW_Config     theQVwConfig;
   QString        dataDescription;
   Engine         engine;
   ErrorView      errorView;

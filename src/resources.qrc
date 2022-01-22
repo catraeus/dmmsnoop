@@ -10,7 +10,7 @@
     <file>images/32x32/error.png</file>
     <file>images/32x32/information.png</file>
     <file>aboutview.ui</file>
-    <file>configureview.ui</file>
+    <file>QVW_Config.ui</file>
     <file>errorview.ui</file>
     <file>ViewMain.ui</file>
     <file>messageview.ui</file>

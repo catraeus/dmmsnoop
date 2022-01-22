@@ -71,7 +71,7 @@ DESTDIR = $${BUILDDIR}/$${DMMSNOOP_APP_SUFFIX}
 HEADERS += aboutview.h \
     application.h \
     closeeventfilter.h \
-    configureview.h \
+    QVW_Config.hpp \
     controller.h \
     designerview.h \
     dialogview.h \
@@ -92,7 +92,7 @@ RESOURCES += resources.qrc
 SOURCES += aboutview.cpp \
     application.cpp \
     closeeventfilter.cpp \
-    configureview.cpp \
+    QVW_Config.cpp \
     controller.cpp \
     designerview.cpp \
     dialogview.cpp \

@@ -2,12 +2,12 @@
 # Build
 ################################################################################
 
-MIDISNOOP_APP_SUFFIX = bin
-MIDISNOOP_DATA_SUFFIX = share
+DMMSNOOP_APP_SUFFIX = bin
+DMMSNOOP_DATA_SUFFIX = share
 
 !isEmpty(DEBUG) {
     CONFIG += debug
-    DEFINES += MIDISNOOP_DEBUG
+    DEFINES += DMMSNOOP_DEBUG
 }
 
 isEmpty(BUILDDIR) {
@@ -26,48 +26,48 @@ isEmpty(MINOR_VERSION) {
 isEmpty(REVISION) {
     REVISION = 3
 }
-MIDISNOOP_VERSION = $${MAJOR_VERSION}.$${MINOR_VERSION}.$${REVISION}
+DMMSNOOP_VERSION = $${MAJOR_VERSION}.$${MINOR_VERSION}.$${REVISION}
 
 macx {
     CONFIG += x86_64
-    DEFINES += MIDISNOOP_PLATFORM_MACX
+    DEFINES += DMMSNOOP_PLATFORM_MACX
 } else:unix {
-    DEFINES += MIDISNOOP_PLATFORM_UNIX
+    DEFINES += DMMSNOOP_PLATFORM_UNIX
 } else:win32 {
-    DEFINES += MIDISNOOP_PLATFORM_WIN32
+    DEFINES += DMMSNOOP_PLATFORM_WIN32
 } else {
     warning(Your platform has not been detected successfully.  Expect errors.)
 }
 
 isEmpty(PREFIX) {
     win32 {
-        PREFIX = C:/Program Files/midisnoop
+        PREFIX = C:/Program Files/dmmsnoop
     } else {
         PREFIX = /usr/local
     }
 }
 isEmpty(DATAROOTDIR) {
-    DATAROOTDIR = $${PREFIX}/$${MIDISNOOP_DATA_SUFFIX}
+    DATAROOTDIR = $${PREFIX}/$${DMMSNOOP_DATA_SUFFIX}
 }
 isEmpty(EXECPREFIX) {
     EXECPREFIX = $${PREFIX}
 }
 isEmpty(BINDIR) {
-    MIDISNOOP_APP_INSTALL_PATH = $${EXECPREFIX}/$${MIDISNOOP_APP_SUFFIX}
+    DMMSNOOP_APP_INSTALL_PATH = $${EXECPREFIX}/$${DMMSNOOP_APP_SUFFIX}
 } else {
-    MIDISNOOP_APP_INSTALL_PATH = $${BINDIR}
+    DMMSNOOP_APP_INSTALL_PATH = $${BINDIR}
 }
 isEmpty(DATADIR) {
-    MIDISNOOP_DATA_INSTALL_PATH = $${DATAROOTDIR}
+    DMMSNOOP_DATA_INSTALL_PATH = $${DATAROOTDIR}
 } else {
-    MIDISNOOP_DATA_INSTALL_PATH = $${DATADIR}
+    DMMSNOOP_DATA_INSTALL_PATH = $${DATADIR}
 }
 
 CONFIG += console warn_on
-DEFINES += MIDISNOOP_MAJOR_VERSION=$${MAJOR_VERSION} \
-    MIDISNOOP_MINOR_VERSION=$${MINOR_VERSION} \
-    MIDISNOOP_REVISION=$${REVISION}
-DESTDIR = $${BUILDDIR}/$${MIDISNOOP_APP_SUFFIX}
+DEFINES += DMMSNOOP_MAJOR_VERSION=$${MAJOR_VERSION} \
+    DMMSNOOP_MINOR_VERSION=$${MINOR_VERSION} \
+    DMMSNOOP_REVISION=$${REVISION}
+DESTDIR = $${BUILDDIR}/$${DMMSNOOP_APP_SUFFIX}
 HEADERS += aboutview.h \
     application.h \
     closeeventfilter.h \
@@ -105,30 +105,30 @@ SOURCES += aboutview.cpp \
     messageview.cpp \
     util.cpp \
     view.cpp
-TARGET = midisnoop
+TARGET = dmmsnoop
 TEMPLATE = app
-VERSION = $${MIDISNOOP_VERSION}
+VERSION = $${DMMSNOOP_VERSION}
 
 ################################################################################
 # Install
 ################################################################################
 
-icon.files = template/midisnoop.svg
+icon.files = template/dmmsnoop.svg
 
 unix:!macx {
-    icon.path = $${MIDISNOOP_DATA_INSTALL_PATH}/icons/
+    icon.path = $${DMMSNOOP_DATA_INSTALL_PATH}/icons/
 
     desktop.CONFIG += no_check_exist
     desktop.extra = ../install/build-desktop-file \
-        '$${MIDISNOOP_APP_INSTALL_PATH}' '$${MIDISNOOP_DATA_INSTALL_PATH}'
-    desktop.files = ../resources/midisnoop.desktop
-    desktop.path = $${MIDISNOOP_DATA_INSTALL_PATH}/applications
+        '$${DMMSNOOP_APP_INSTALL_PATH}' '$${DMMSNOOP_DATA_INSTALL_PATH}'
+    desktop.files = ../resources/dmmsnoop.desktop
+    desktop.path = $${DMMSNOOP_DATA_INSTALL_PATH}/applications
     INSTALLS += desktop
 
 } else {
-    icon.path = $${MIDISNOOP_DATA_INSTALL_PATH}
+    icon.path = $${DMMSNOOP_DATA_INSTALL_PATH}
 }
 INSTALLS += icon
 
-target.path = $${MIDISNOOP_APP_INSTALL_PATH}
+target.path = $${DMMSNOOP_APP_INSTALL_PATH}
 INSTALLS += target

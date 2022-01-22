@@ -11,7 +11,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>midisnoop</string>
+   <string>dmmsnoop</string>
   </property>
   <widget class="QTableView" name="QTV_MidiMsg">
    <property name="horizontalScrollBarPolicy">
@@ -108,7 +108,7 @@
   <action name="addAction">
    <property name="icon">
     <iconset resource="resources.qrc">
-     <normaloff>:/midisnoop/images/16x16/add.png</normaloff>:/midisnoop/images/16x16/add.png</iconset>
+     <normaloff>:/dmmsnoop/images/16x16/add.png</normaloff>:/dmmsnoop/images/16x16/add.png</iconset>
    </property>
    <property name="text">
     <string>Add</string>
@@ -123,7 +123,7 @@
   <action name="QA_ClearMsgMon">
    <property name="icon">
     <iconset resource="resources.qrc">
-     <normaloff>:/midisnoop/images/16x16/clear.png</normaloff>:/midisnoop/images/16x16/clear.png</iconset>
+     <normaloff>:/dmmsnoop/images/16x16/clear.png</normaloff>:/dmmsnoop/images/16x16/clear.png</iconset>
    </property>
    <property name="text">
     <string>Clear</string>
@@ -138,7 +138,7 @@
   <action name="quitAction">
    <property name="icon">
     <iconset resource="resources.qrc">
-     <normaloff>:/midisnoop/images/16x16/quit.png</normaloff>:/midisnoop/images/16x16/quit.png</iconset>
+     <normaloff>:/dmmsnoop/images/16x16/quit.png</normaloff>:/dmmsnoop/images/16x16/quit.png</iconset>
    </property>
    <property name="text">
     <string>Quit</string>
@@ -153,7 +153,7 @@
   <action name="configureAction">
    <property name="icon">
     <iconset resource="resources.qrc">
-     <normaloff>:/midisnoop/images/16x16/configure.png</normaloff>:/midisnoop/images/16x16/configure.png</iconset>
+     <normaloff>:/dmmsnoop/images/16x16/configure.png</normaloff>:/dmmsnoop/images/16x16/configure.png</iconset>
    </property>
    <property name="text">
     <string>Config</string>
@@ -168,13 +168,13 @@
   <action name="aboutAction">
    <property name="icon">
     <iconset resource="resources.qrc">
-     <normaloff>:/midisnoop/images/16x16/information.png</normaloff>:/midisnoop/images/16x16/information.png</iconset>
+     <normaloff>:/dmmsnoop/images/16x16/information.png</normaloff>:/dmmsnoop/images/16x16/information.png</iconset>
    </property>
    <property name="text">
     <string>About</string>
    </property>
    <property name="toolTip">
-    <string>About midisnoop.</string>
+    <string>About dmmsnoop.</string>
    </property>
    <property name="shortcut">
     <string>Ctrl+A</string>

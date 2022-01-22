@@ -1,5 +1,5 @@
 /*
- * midisnoop - MIDI monitor and prober
+ * dmmsnoop - MIDI monitor and prober
  * Copyright (C) 2012 Devin Anderson
  *
  * This program is free software; you can redistribute it and/or modify it
@@ -37,9 +37,9 @@ int main(int argc, char **argv) {
   QTranslator   translator;
   int           result;
 
-  theApp.setApplicationName("midisnoop");
-  theApp.setOrganizationDomain("midisnoop.catraeus.com");
-  theApp.setOrganizationName("midisnoop.catraeus.com");
+  theApp.setApplicationName("dmmsnoop");
+  theApp.setOrganizationDomain("dmmsnoop.catraeus.com");
+  theApp.setOrganizationName("dmmsnoop.catraeus.com");
 
 // Translations
   QString      directory = QLibraryInfo::location(QLibraryInfo::TranslationsPath);
@@ -48,7 +48,7 @@ int main(int argc, char **argv) {
   qtTranslator.load("qt_" + language, directory);
   theApp.installTranslator(&qtTranslator);
     
-  translator.load("midisnoop_" + language);
+  translator.load("dmmsnoop_" + language);
   theApp.installTranslator(&translator);
   qDebug() <<   theApp.tr("Translations loaded.");
 

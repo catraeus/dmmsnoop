@@ -1,5 +1,5 @@
 /*
- * midisnoop - MIDI monitor and prober
+ * dmmsnoop - MIDI monitor and prober
  * Copyright (C) 2012 Devin Anderson
  *
  * This program is free software; you can redistribute it and/or modify it
@@ -38,9 +38,9 @@ Controller::Controller(Application &application, QObject *parent)
 , application(application)
 {
     // Setup about view
-    aboutView.setMajorVersion(MIDISNOOP_MAJOR_VERSION);
-    aboutView.setMinorVersion(MIDISNOOP_MINOR_VERSION);
-    aboutView.setRevision(MIDISNOOP_REVISION);
+    aboutView.setMajorVersion(DMMSNOOP_MAJOR_VERSION);
+    aboutView.setMinorVersion(DMMSNOOP_MINOR_VERSION);
+    aboutView.setRevision(DMMSNOOP_REVISION);
     connect(&aboutView, SIGNAL(closeRequest()), &aboutView, SLOT(hide()));
 
     // Setup configure view

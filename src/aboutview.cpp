@@ -1,5 +1,5 @@
 /*
- * midisnoop - MIDI monitor and prober
+ * dmmsnoop - MIDI monitor and prober
  * Copyright (C) 2012 Devin Anderson
  *
  * This program is free software; you can redistribute it and/or modify it
@@ -23,7 +23,7 @@
 #include "util.h"
 
 AboutView::AboutView(QObject *parent):
-    DialogView(":/midisnoop/aboutview.ui", parent)
+    DialogView(":/dmmsnoop/aboutview.ui", parent)
 {
     closeButton = getChild<QPushButton>(dialog, "closeButton");
     connect(closeButton, SIGNAL(clicked()), SIGNAL(closeRequest()));

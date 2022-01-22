@@ -14,11 +14,11 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>About midisnoop</string>
+   <string>About dmmsnoop</string>
   </property>
   <property name="windowIcon">
    <iconset>
-    <normaloff>:/midisnoop/images/16x16/information.png</normaloff>:/midisnoop/images/16x16/information.png</iconset>
+    <normaloff>:/dmmsnoop/images/16x16/information.png</normaloff>:/dmmsnoop/images/16x16/information.png</iconset>
   </property>
   <property name="modal">
    <bool>true</bool>
@@ -40,7 +40,7 @@
           <string/>
          </property>
          <property name="pixmap">
-          <pixmap>:/midisnoop/images/32x32/information.png</pixmap>
+          <pixmap>:/dmmsnoop/images/32x32/information.png</pixmap>
          </property>
         </widget>
        </item>
@@ -72,7 +72,7 @@
           </font>
          </property>
          <property name="text">
-          <string>midisnoop</string>
+          <string>dmmsnoop</string>
          </property>
          <property name="alignment">
           <set>Qt::AlignCenter</set>
@@ -133,7 +133,7 @@
          <item row="3" column="1">
           <widget class="QLabel" name="label">
            <property name="text">
-            <string>&lt;a href=&quot;http://midisnoop.googlecode.com&quot;&gt;http://midisnoop.googlecode.com&lt;/a&gt;</string>
+            <string>&lt;a href=&quot;https://github.com/catraeus/dmmsnoop&quot;&gt;https://github.com/catraeus/dmmsnoop&lt;/a&gt;</string>
            </property>
            <property name="textFormat">
             <enum>Qt::RichText</enum>
@@ -156,7 +156,7 @@
          <item row="4" column="1">
           <widget class="QLabel" name="label">
            <property name="text">
-            <string>&lt;a href=&quot;http://code.google.com/p/midisnoop/issues/list&quot;&gt;http://code.google.com/p/midisnoop/issues/list&lt;/a&gt;</string>
+            <string>&lt;a href=&quot;https://github.com/catraeus/dmmsnoop&quot;&gt;https://github.com/catraeus/dmmsnoop&lt;/a&gt;</string>
            </property>
            <property name="textFormat">
             <enum>Qt::RichText</enum>
@@ -179,7 +179,7 @@
          <item row="5" column="1">
           <widget class="QLabel" name="label">
            <property name="text">
-            <string>&lt;a href=&quot;http://groups.google.com/group/midisnoop-users&quot;&gt;http://groups.google.com/group/midisnoop-users&lt;/a&gt;</string>
+            <string>&lt;a href=&quot;https://github.com/catraeus/dmmsnoop&quot;&gt;https://github.com/catraeus/dmmsnoop&lt;/a&gt;</string>
            </property>
            <property name="textFormat">
             <enum>Qt::RichText</enum>
@@ -202,7 +202,7 @@
          <item row="6" column="1">
           <widget class="QLabel" name="label">
            <property name="text">
-            <string>&lt;a href=&quot;http://groups.google.com/group/midisnoop-development&quot;&gt;http://groups.google.com/group/midisnoop-development&lt;/a&gt;</string>
+            <string>&lt;a href=&quot;https://github.com/catraeus/dmmsnoop&quot;&gt;https://github.com/catraeus/dmmsnoop&lt;/a&gt;</string>
            </property>
            <property name="textFormat">
             <enum>Qt::RichText</enum>
@@ -243,7 +243,7 @@
        </property>
        <property name="icon">
         <iconset>
-         <normaloff>:/midisnoop/images/16x16/close.png</normaloff>:/midisnoop/images/16x16/close.png</iconset>
+         <normaloff>:/dmmsnoop/images/16x16/close.png</normaloff>:/dmmsnoop/images/16x16/close.png</iconset>
        </property>
       </widget>
      </item>

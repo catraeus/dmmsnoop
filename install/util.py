@@ -31,7 +31,7 @@ def createSourcePackage(path):
     gzipStream = _open(filename=path, mode="wb")
     try:
         gitArgs = ["git", "archive", "--format=tar",
-                   "--prefix=midisnoop-%s%s" % (VERSION, sep), "HEAD"]
+                   "--prefix=dmmsnoop-%s%s" % (VERSION, sep), "HEAD"]
         oldDirectory = getcwd()
         chdir(getRootDirectory())
         try:

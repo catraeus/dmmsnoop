@@ -1,5 +1,5 @@
 /*
- * midisnoop - MIDI monitor and prober
+ * dmmsnoop - MIDI monitor and prober
  * Copyright (C) 2012 Devin Anderson
  *
  * This program is free software; you can redistribute it and/or modify it
@@ -21,7 +21,7 @@
 #include "util.h"
 
 ConfigureView::ConfigureView(QObject *parent):
-    DesignerView(":/midisnoop/configureview.ui", parent)
+    DesignerView(":/dmmsnoop/configureview.ui", parent)
 {
     QWidget *rootWidget = getRootWidget();
 

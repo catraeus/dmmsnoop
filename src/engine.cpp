@@ -1,5 +1,5 @@
 /*
- * midisnoop - MIDI monitor and prober
+ * dmmsnoop - MIDI monitor and prober
  * Copyright (C) 2012 Devin Anderson
  *
  * This program is free software; you can redistribute it and/or modify it
@@ -269,9 +269,9 @@ Engine::setDriver(int index)
         if (index != -1) {
             RtMidi::Api api = driverAPIs[index];
 //            try {
-                input = new RtMidiIn(api, "midisnoop");
+                input = new RtMidiIn(api, "dmmsnoop");
                 QScopedPointer<RtMidiIn> inputPtr(input);
-                output = new RtMidiOut(api, "midisnoop");
+                output = new RtMidiOut(api, "dmmsnoop");
                 QScopedPointer<RtMidiOut> outputPtr(output);
                 input->setCallback(handleMidiInput, this);
 

@@ -1,5 +1,5 @@
 <RCC>
-  <qresource prefix="/midisnoop">
+  <qresource prefix="/dmmsnoop">
     <file>images/16x16/add.png</file>
     <file>images/16x16/clear.png</file>
     <file>images/16x16/close.png</file>

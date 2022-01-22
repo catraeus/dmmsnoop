@@ -18,7 +18,7 @@
   </property>
   <property name="windowIcon">
    <iconset resource="resources.qrc">
-    <normaloff>:/midisnoop/images/16x16/add.png</normaloff>:/midisnoop/images/16x16/add.png</iconset>
+    <normaloff>:/dmmsnoop/images/16x16/add.png</normaloff>:/dmmsnoop/images/16x16/add.png</iconset>
   </property>
   <property name="modal">
    <bool>true</bool>
@@ -53,7 +53,7 @@
        </property>
        <property name="icon">
         <iconset resource="resources.qrc">
-         <normaloff>:/midisnoop/images/16x16/add.png</normaloff>:/midisnoop/images/16x16/add.png</iconset>
+         <normaloff>:/dmmsnoop/images/16x16/add.png</normaloff>:/dmmsnoop/images/16x16/add.png</iconset>
        </property>
       </widget>
      </item>
@@ -64,7 +64,7 @@
        </property>
        <property name="icon">
         <iconset resource="resources.qrc">
-         <normaloff>:/midisnoop/images/16x16/close.png</normaloff>:/midisnoop/images/16x16/close.png</iconset>
+         <normaloff>:/dmmsnoop/images/16x16/close.png</normaloff>:/dmmsnoop/images/16x16/close.png</iconset>
        </property>
       </widget>
      </item>

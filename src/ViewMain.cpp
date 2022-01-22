@@ -1,5 +1,5 @@
 /*
- * midisnoop - MIDI monitor and prober
+ * dmmsnoop - MIDI monitor and prober
  * Copyright (C) 2012 Devin Anderson
  *
  * This program is free software; you can redistribute it and/or modify it
@@ -25,7 +25,7 @@
 #include "util.h"
 
      MainView::MainView(QObject *parent)
-: DesignerView(":/midisnoop/ViewMain.ui", parent)
+: DesignerView(":/dmmsnoop/ViewMain.ui", parent)
 {
     QWidget *widget = getRootWidget();
 
@@ -67,7 +67,7 @@ int MainView::MsgAdd(quint64 timeStamp, const QString &statusDescription, const 
   setModelData(count, MESSAGETABLECOLUMN_TIMESTAMP, timeStamp - timeZero);
   setModelData(count, MESSAGETABLECOLUMN_TIMESTAMP, alignment,   Qt::TextAlignmentRole);
   if(!valid)
-    setModelData(count, MESSAGETABLECOLUMN_STATUS,  QIcon(":/midisnoop/images/16x16/error.png"), Qt::DecorationRole);
+    setModelData(count, MESSAGETABLECOLUMN_STATUS,  QIcon(":/dmmsnoop/images/16x16/error.png"), Qt::DecorationRole);
   tableView->resizeRowToContents(count);
   tableView->scrollToBottom();
   return count;

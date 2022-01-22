@@ -1,0 +1,12 @@
+[Desktop Entry]
+Categories=Audio;AudioVideo;Qt;
+Comment=MIDI monitor and prober.
+Encoding=UTF-8
+Exec=${binDir}/dmmsnoop
+GenericName=dmmsnoop
+GenericName[en_US]=dmmsnoop
+Hidden=false
+Icon=${dataDir}/icons/gnome/scalable/apps/dmmsnoop.svg
+Name=dmmsnoop
+Terminal=false
+Type=Application

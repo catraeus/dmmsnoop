@@ -18,7 +18,7 @@ from install.util import (
 
 def main():
     parser = OptionParser("usage: %prog [options] [qmake-args]")
-    parser.add_option("--bin-dir",       action="store",      default=None,  dest="binDir",      help="Install directory for midisnoop executable")
+    parser.add_option("--bin-dir",       action="store",      default=None,  dest="binDir",      help="Install directory for dmmsnoop executable")
     parser.add_option("--build-dir",     action="store",      default=None,  dest="buildDir",    help="Build directory")
     parser.add_option("--data-dir",      action="store",      default=None,  dest="dataDir",     help="Install directory for general data files")
     parser.add_option("--data-root-dir", action="store",      default=None,  dest="dataRootDir", help="Install root for data files")

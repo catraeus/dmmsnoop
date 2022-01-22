@@ -18,7 +18,7 @@
   </property>
   <property name="windowIcon">
    <iconset resource="../lib/lib.qrc">
-    <normaloff>:/midisnoop/images/16x16/error.png</normaloff>:/midisnoop/images/16x16/error.png</iconset>
+    <normaloff>:/dmmsnoop/images/16x16/error.png</normaloff>:/dmmsnoop/images/16x16/error.png</iconset>
   </property>
   <property name="modal">
    <bool>true</bool>
@@ -44,7 +44,7 @@
         <string/>
        </property>
        <property name="pixmap">
-        <pixmap resource="../lib/lib.qrc">:/midisnoop/images/32x32/error.png</pixmap>
+        <pixmap resource="../lib/lib.qrc">:/dmmsnoop/images/32x32/error.png</pixmap>
        </property>
        <property name="alignment">
         <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
@@ -88,7 +88,7 @@
        </property>
        <property name="icon">
         <iconset resource="../lib/lib.qrc">
-         <normaloff>:/midisnoop/images/16x16/close.png</normaloff>:/midisnoop/images/16x16/close.png</iconset>
+         <normaloff>:/dmmsnoop/images/16x16/close.png</normaloff>:/dmmsnoop/images/16x16/close.png</iconset>
        </property>
       </widget>
      </item>

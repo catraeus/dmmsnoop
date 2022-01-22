@@ -11,7 +11,7 @@ def main():
 
     parser = OptionParser("usage: %prog [options]")
     parser.add_option("-a", "--archive-name", action="store",
-                      default="midisnoop-%s.tar.gz" % VERSION,
+                      default="dmmsnoop-%s.tar.gz" % VERSION,
                       dest="archiveName", help="The archive file name")
     parser.add_option("-d", "--destination-dir", action="store",
                       default=abspath(join(rootDirectory, pardir)),

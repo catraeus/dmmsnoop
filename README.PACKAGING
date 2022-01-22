@@ -1,4 +1,4 @@
-Packaging `midisnoop`
+Packaging `dmmsnoop`
 =====================
 
 Contents:
@@ -9,15 +9,16 @@ Contents:
 1. Install Parts
 ----------------
 
-A `midisnoop` install is made up of two files:
+A `dmmsnoop` install is made up of three files:
 
-  1. `midisnoop` - The application.
-  2. `midisnoop.desktop` - The desktop file.
+  1. `dmmsnoop` - The application.
+  2. `dmmsnoop.desktop` - The desktop file.
+  3.  dmmsnoop.svg - the apps icon
 
 2. Install Options For Packagers
 --------------------------------
 
-`midisnoop` is built using the typical UNIX build process (`configure`, `make`,
+`dmmsnoop` is built using the typical UNIX build process (`configure`, `make`,
 `make install`).  There are several options that you can pass to the configure
 script in order to select what will or will not be built, and where each item
 will be installed:
@@ -27,7 +28,7 @@ will be installed:
 
   Options:
     -h, --help            show this help message and exit
-    --bin-dir=BINDIR      Install directory for midisnoop executable
+    --bin-dir=BINDIR      Install directory for dmmsnoop executable
     --build-dir=BUILDDIR  Build directory
     --data-dir=DATADIR    Install directory for general data files
     --data-root-dir=DATAROOTDIR
@@ -38,7 +39,7 @@ will be installed:
     --make-dir=MAKEDIR    Make directory
     --prefix=PREFIX       Install prefix
 
-After building `midisnoop`, you may want to set the install path for to a
+After building `dmmsnoop`, you may want to set the install path for to a
 different location than the 'prefix' for packaging purposes.  To do this,
 execute:
 

@@ -13,7 +13,7 @@
   <property name="windowTitle">
    <string>midisnoop</string>
   </property>
-  <widget class="QTableView" name="centralWidget">
+  <widget class="QTableView" name="QTV_MidiMsg">
    <property name="horizontalScrollBarPolicy">
     <enum>Qt::ScrollBarAsNeeded</enum>
    </property>

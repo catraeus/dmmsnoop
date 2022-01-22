@@ -25,56 +25,37 @@
 #include "configureview.h"
 #include "engine.h"
 #include "errorview.h"
-#include "mainview.h"
+#include "ViewMain.hpp"
 #include "messageview.h"
 
 class Controller: public QObject {
-
-    Q_OBJECT
+  Q_OBJECT
 
 public:
-
-    explicit
-    Controller(Application &application, QObject *parent=0);
-
-    ~Controller();
-
-    void
-    run();
+  explicit  Controller(Application &application, QObject *parent=0);
+           ~Controller();
+  void run();
 
 private slots:
-
-    void
-    handleDriverChange();
-
-    void
-    handleMessageSend(const QString &message);
-
-    void
-    handleReceivedMessage(quint64 timeStamp, const QByteArray &message);
+  void handleDriverChange();
+  void handleMessageSend(const QString &message);
+  void handleReceivedMessage(quint64 timeStamp, const QByteArray &message);
 
 private:
+  QString getGenericDataDescription(const QByteArray &message, int lastIndex=-1);
+  void    parseMessage(const QByteArray &message);
+  void    showError(const QString &message);
 
-    QString
-    getGenericDataDescription(const QByteArray &message, int lastIndex=-1);
-
-    void
-    parseMessage(const QByteArray &message);
-
-    void
-    showError(const QString &message);
-
-    AboutView aboutView;
-    Application &application;
-    ConfigureView configureView;
-    QString dataDescription;
-    Engine engine;
-    ErrorView errorView;
-    MainView mainView;
-    MessageView messageView;
-    QString statusDescription;
-    bool valid;
-
+  AboutView      aboutView;
+  Application   &application;
+  ConfigureView  configureView;
+  QString        dataDescription;
+  Engine         engine;
+  ErrorView      errorView;
+  MainView       mainView;
+  MessageView    messageView;
+  QString        statusDescription;
+  bool           valid;
 };
 
 #endif

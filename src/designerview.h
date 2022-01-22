@@ -23,17 +23,10 @@
 #include "view.h"
 
 class DesignerView: public View {
-
-    Q_OBJECT
-
+  Q_OBJECT
 protected:
-
-    explicit
-    DesignerView(const QString &path, QObject *parent=0);
-
-    virtual
-    ~DesignerView();
-
+  explicit DesignerView(const QString &path, QObject *parent=0);
+  virtual ~DesignerView();
 };
 
 #endif

@@ -170,9 +170,7 @@ Engine::getOutputPortName(int index) const
     return outputPortNames[index];
 }
 
-quint64
-Engine::getCurrentTimestamp() const
-{
+quint64 Engine::TimeGet() const {
 
 #if QT_VERSION >= 0x040700
     return QDateTime::currentDateTime().toMSecsSinceEpoch();
@@ -212,7 +210,7 @@ Engine::handleMidiInput(double /*timeStamp*/,
             return;
         }
     }
-    quint64 timeStamp = getCurrentTimestamp();
+    quint64 timeStamp = TimeGet();
     QByteArray msg;
     int size = static_cast<int>(message.size());
     for (int i = 0; i < size; i++) {
@@ -249,7 +247,7 @@ Engine::sendMessage(const QByteArray &message)
 //    } catch (RtError &e) {
 //        throw Error(e.what());
 //    }
-    return getCurrentTimestamp();
+    return TimeGet();
 }
 
 void

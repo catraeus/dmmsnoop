@@ -28,28 +28,20 @@
 // Static data
 
 const int statusLengths[0x80] = {
-    3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3,
-    3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3,
-    3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3,
-    3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3,
-    2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2,
-    2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2,
-    3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3,
-    0, 2, 3, 2, -1, -1, 1, -1, 1, 1, 1, 1, 1, -1, 1, 1
+    3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3,        3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3,        3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3,        3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3,        2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2,        2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2,        3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3,        0, 2, 3, 2, -1, -1, 1, -1, 1, 1, 1, 1, 1, -1, 1, 1
 };
 
 // Class definition
 
-Controller::Controller(Application &application, QObject *parent):
-    QObject(parent),
-    application(application)
+Controller::Controller(Application &application, QObject *parent)
+: QObject(parent)
+, application(application)
 {
     // Setup about view
     aboutView.setMajorVersion(MIDISNOOP_MAJOR_VERSION);
     aboutView.setMinorVersion(MIDISNOOP_MINOR_VERSION);
     aboutView.setRevision(MIDISNOOP_REVISION);
-    connect(&aboutView, SIGNAL(closeRequest()),
-            &aboutView, SLOT(hide()));
+    connect(&aboutView, SIGNAL(closeRequest()), &aboutView, SLOT(hide()));
 
     // Setup configure view
     int driverCount = engine.getDriverCount();
@@ -61,117 +53,74 @@ Controller::Controller(Application &application, QObject *parent):
     }
     int driver = engine.getDriver();
     int outputPort = engine.getOutputPort();
-    configureView.setDriver(driver);
-    configureView.setInputPort(engine.getInputPort());
-    configureView.setIgnoreActiveSensingEvents
-        (engine.getIgnoreActiveSensingEvents());
-    configureView.setIgnoreSystemExclusiveEvents
-        (engine.getIgnoreSystemExclusiveEvents());
-    configureView.setIgnoreTimeEvents(engine.getIgnoreTimeEvents());
-    configureView.setOutputPort(outputPort);
-    connect(&configureView, SIGNAL(closeRequest()),
-            &configureView, SLOT(hide()));
-    connect(&configureView, SIGNAL(driverChangeRequest(int)),
-            &engine, SLOT(setDriver(int)));
-    connect(&configureView,
-            SIGNAL(ignoreActiveSensingEventsChangeRequest(bool)),
-            &engine, SLOT(setIgnoreActiveSensingEvents(bool)));
-    connect(&configureView,
-            SIGNAL(ignoreSystemExclusiveEventsChangeRequest(bool)),
-            &engine, SLOT(setIgnoreSystemExclusiveEvents(bool)));
-    connect(&configureView, SIGNAL(ignoreTimeEventsChangeRequest(bool)),
-            &engine, SLOT(setIgnoreTimeEvents(bool)));
-    connect(&configureView, SIGNAL(inputPortChangeRequest(int)),
-            &engine, SLOT(setInputPort(int)));
-    connect(&configureView, SIGNAL(outputPortChangeRequest(int)),
-            &engine, SLOT(setOutputPort(int)));
+    configureView.setDriver                        (driver);
+    configureView.setInputPort(engine.getInputPort ());
+    configureView.setIgnoreActiveSensingEvents     (engine.getIgnoreActiveSensingEvents());
+    configureView.setIgnoreSystemExclusiveEvents   (engine.getIgnoreSystemExclusiveEvents());
+    configureView.setIgnoreTimeEvents              (engine.getIgnoreTimeEvents());
+    configureView.setOutputPort                    (outputPort);
+    connect(&configureView, SIGNAL(closeRequest()),                                   &configureView, SLOT(hide()));
+    connect(&configureView, SIGNAL(driverChangeRequest(int)),                         &engine, SLOT(setDriver(int)));
+    connect(&configureView, SIGNAL(ignoreActiveSensingEventsChangeRequest(bool)),     &engine, SLOT(setIgnoreActiveSensingEvents(bool)));
+    connect(&configureView, SIGNAL(ignoreSystemExclusiveEventsChangeRequest(bool)),   &engine, SLOT(setIgnoreSystemExclusiveEvents(bool)));
+    connect(&configureView, SIGNAL(ignoreTimeEventsChangeRequest(bool)),              &engine, SLOT(setIgnoreTimeEvents(bool)));
+    connect(&configureView, SIGNAL(inputPortChangeRequest(int)),                      &engine, SLOT(setInputPort(int)));
+    connect(&configureView, SIGNAL(outputPortChangeRequest(int)),                     &engine, SLOT(setOutputPort(int)));
 
     // Setup error view
-    connect(&errorView, SIGNAL(closeRequest()),
-            &errorView, SLOT(hide()));
+    connect(&errorView, SIGNAL(closeRequest()),                              &errorView,     SLOT(hide()));
 
     // Setup main view
     mainView.setMessageSendEnabled((driver != -1) && (outputPort != -1));
-    connect(&mainView, SIGNAL(aboutRequest()),
-            &aboutView, SLOT(show()));
-    connect(&mainView, SIGNAL(addMessageRequest()),
-            &messageView, SLOT(show()));
-    connect(&mainView, SIGNAL(clearMessagesRequest()),
-            &mainView, SLOT(clearMessages()));
-    connect(&mainView, SIGNAL(configureRequest()),
-            &configureView, SLOT(show()));
-    connect(&mainView, SIGNAL(closeRequest()),
-            &application, SLOT(quit()));
+    mainView.SetTimeZero(engine.TimeGet());
+    connect(&mainView, SIGNAL(aboutRequest()),                               &aboutView,     SLOT(show()));
+    connect(&mainView, SIGNAL(addMessageRequest()),                          &messageView,   SLOT(show()));
+    connect(&mainView, SIGNAL(clearMessagesRequest()),                       &mainView,      SLOT(clearMessages()));
+    connect(&mainView, SIGNAL(configureRequest()),                           &configureView, SLOT(show()));
+    connect(&mainView, SIGNAL(closeRequest()),                               &application,   SLOT(quit()));
 
     // Setup message view
-    connect(&messageView, SIGNAL(closeRequest()),
-            &messageView, SLOT(hide()));
-    connect(&messageView, SIGNAL(sendRequest(const QString &)),
-            &messageView, SLOT(hide()));
-    connect(&messageView, SIGNAL(sendRequest(const QString &)),
-            SLOT(handleMessageSend(const QString &)));
+    connect(&messageView, SIGNAL(closeRequest()),                            &messageView,   SLOT(hide()));
+    connect(&messageView, SIGNAL(sendRequest(const QString &)),              &messageView,   SLOT(hide()));
+    connect(&messageView, SIGNAL(sendRequest(const QString &)),                              SLOT(handleMessageSend(const QString &)));
 
     // Setup engine
-    connect(&engine, SIGNAL(messageReceived(quint64, const QByteArray &)),
-            SLOT(handleReceivedMessage(quint64, const QByteArray &)));
-    connect(&engine, SIGNAL(driverChanged(int)),
-            &configureView, SLOT(setDriver(int)));
-    connect(&engine, SIGNAL(driverChanged(int)),
-            SLOT(handleDriverChange()));
-    connect(&engine, SIGNAL(ignoreActiveSensingEventsChanged(bool)),
-            &configureView, SLOT(setIgnoreActiveSensingEvents(bool)));
-    connect(&engine, SIGNAL(ignoreSystemExclusiveEventsChanged(bool)),
-            &configureView, SLOT(setIgnoreSystemExclusiveEvents(bool)));
-    connect(&engine, SIGNAL(ignoreTimeEventsChanged(bool)),
-            &configureView, SLOT(setIgnoreTimeEvents(bool)));
-    connect(&engine, SIGNAL(inputPortAdded(int, QString)),
-            &configureView, SLOT(addInputPort(int, QString)));
-    connect(&engine, SIGNAL(inputPortChanged(int)),
-            &configureView, SLOT(setInputPort(int)));
-    connect(&engine, SIGNAL(inputPortChanged(int)),
-            SLOT(handleDriverChange()));
-    connect(&engine, SIGNAL(inputPortRemoved(int)),
-            &configureView, SLOT(removeInputPort(int)));
-    connect(&engine, SIGNAL(outputPortAdded(int, QString)),
-            &configureView, SLOT(addOutputPort(int, QString)));
-    connect(&engine, SIGNAL(outputPortChanged(int)),
-            &configureView, SLOT(setOutputPort(int)));
-    connect(&engine, SIGNAL(outputPortChanged(int)),
-            SLOT(handleDriverChange()));
-    connect(&engine, SIGNAL(outputPortRemoved(int)),
-            &configureView, SLOT(removeOutputPort(int)));
+    connect(&engine, SIGNAL(messageReceived(quint64, const QByteArray &)),                   SLOT(handleReceivedMessage(quint64, const QByteArray &)));
+    connect(&engine, SIGNAL(driverChanged(int)),                             &configureView, SLOT(setDriver(int)));
+    connect(&engine, SIGNAL(driverChanged(int)),                                             SLOT(handleDriverChange()));
+    connect(&engine, SIGNAL(ignoreActiveSensingEventsChanged(bool)),         &configureView, SLOT(setIgnoreActiveSensingEvents(bool)));
+    connect(&engine, SIGNAL(ignoreSystemExclusiveEventsChanged(bool)),       &configureView, SLOT(setIgnoreSystemExclusiveEvents(bool)));
+    connect(&engine, SIGNAL(ignoreTimeEventsChanged(bool)),                  &configureView, SLOT(setIgnoreTimeEvents(bool)));
+    connect(&engine, SIGNAL(inputPortAdded(int, QString)),                   &configureView, SLOT(addInputPort(int, QString)));
+    connect(&engine, SIGNAL(inputPortChanged(int)),                          &configureView, SLOT(setInputPort(int)));
+    connect(&engine, SIGNAL(inputPortChanged(int)),                                          SLOT(handleDriverChange()));
+    connect(&engine, SIGNAL(inputPortRemoved(int)),                          &configureView, SLOT(removeInputPort(int)));
+    connect(&engine, SIGNAL(outputPortAdded(int, QString)),                  &configureView, SLOT(addOutputPort(int, QString)));
+    connect(&engine, SIGNAL(outputPortChanged(int)),                         &configureView, SLOT(setOutputPort(int)));
+    connect(&engine, SIGNAL(outputPortChanged(int)),                                         SLOT(handleDriverChange()));
+    connect(&engine, SIGNAL(outputPortRemoved(int)),                         &configureView, SLOT(removeOutputPort(int)));
 
     // Setup application
-    connect(&application, SIGNAL(eventError(QString)),
-            &errorView, SLOT(setMessage(QString)));
-    connect(&application, SIGNAL(eventError(QString)),
-            &errorView, SLOT(show()));
+    connect(&application, SIGNAL(eventError(QString)),                &errorView, SLOT(setMessage(QString)));
+    connect(&application, SIGNAL(eventError(QString)),                &errorView, SLOT(show()));
 }
 
-Controller::~Controller()
-{
+Controller::~Controller() {
     // Disconnect engine signals handled by the controller before the engine is
     // deleted.
-    disconnect(&engine, SIGNAL(messageReceived(quint64, const QByteArray &)),
-               this, SLOT(handleReceivedMessage(quint64, const QByteArray &)));
-    disconnect(&engine, SIGNAL(driverChanged(int)),
-               this, SLOT(handleDriverChange()));
-    disconnect(&engine, SIGNAL(inputPortChanged(int)),
-               this, SLOT(handleDriverChange()));
-    disconnect(&engine, SIGNAL(outputPortChanged(int)),
-               this, SLOT(handleDriverChange()));
+    disconnect(&engine, SIGNAL(messageReceived(quint64, const QByteArray &)),                   this, SLOT(handleReceivedMessage(quint64, const QByteArray &)));
+    disconnect(&engine, SIGNAL(driverChanged(int)),                   this, SLOT(handleDriverChange()));
+    disconnect(&engine, SIGNAL(inputPortChanged(int)),                   this, SLOT(handleDriverChange()));
+    disconnect(&engine, SIGNAL(outputPortChanged(int)),                   this, SLOT(handleDriverChange()));
 }
 
-QString
-Controller::getGenericDataDescription(const QByteArray &message, int lastIndex)
-{
-    assert((lastIndex >= -1) && (lastIndex < message.count()));
-    if (lastIndex == -1) {
-        lastIndex = message.count() - 1;
-    }
-
-    QStringList dataParts;
-    for (int i = 1; i <= lastIndex; i++) {
+QString Controller::getGenericDataDescription(const QByteArray &message, int lastIndex) {
+  assert((lastIndex >= -1) && (lastIndex < message.count()));
+  if (lastIndex == -1) {
+    lastIndex = message.count() - 1;
+  }
+  QStringList dataParts;
+  for (int i = 1; i <= lastIndex; i++) {
         dataParts += QString("%1").
             arg(static_cast<uint>(message[i]), 2, 16, QChar('0'));
     }
@@ -214,16 +163,14 @@ Controller::handleMessageSend(const QString &message)
 
     // Send the message.
     quint64 timeStamp = engine.sendMessage(msg);
-    mainView.addSentMessage(timeStamp, statusDescription, dataDescription,
-                            valid);
+    mainView.MsgAddTX(timeStamp, statusDescription, dataDescription,                                valid);
 }
 
 void
 Controller::handleReceivedMessage(quint64 timeStamp, const QByteArray &message)
 {
     parseMessage(message);
-    mainView.addReceivedMessage(timeStamp, statusDescription, dataDescription,
-                                valid);
+    mainView.addReceivedMessage(timeStamp, statusDescription, dataDescription,                                    valid);
 }
 
 void

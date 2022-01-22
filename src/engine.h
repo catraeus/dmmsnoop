@@ -28,143 +28,68 @@
 #include <rtmidi/RtMidi.h>
 
 class Engine: public QObject {
-
     Q_OBJECT
 
 public:
-
-    explicit
-    Engine(QObject *parent=0);
-
-    ~Engine();
-
-    int
-    getDriver() const;
-
-    int
-    getDriverCount() const;
-
-    QString
-    getDriverName(int index) const;
-
-    bool
-    getIgnoreActiveSensingEvents() const;
-
-    bool
-    getIgnoreSystemExclusiveEvents() const;
-
-    bool
-    getIgnoreTimeEvents() const;
-
-    int
-    getInputPort() const;
-
-    int
-    getInputPortCount() const;
-
-    QString
-    getInputPortName(int index) const;
-
-    int
-    getOutputPort() const;
-
-    int
-    getOutputPortCount() const;
-
-    QString
-    getOutputPortName(int index) const;
+  explicit  Engine(QObject *parent=0);
+           ~Engine();
+  int       getDriver() const;
+  int       getDriverCount() const;
+  QString   getDriverName(int index) const;
+  bool      getIgnoreActiveSensingEvents() const;
+  bool      getIgnoreSystemExclusiveEvents() const;
+  bool      getIgnoreTimeEvents() const;
+  int       getInputPort() const;
+  int       getInputPortCount() const;
+  QString   getInputPortName(int index) const;
+  int       getOutputPort() const;
+  int       getOutputPortCount() const;
+  QString   getOutputPortName(int index) const;
 
 public slots:
 
-    quint64
-    sendMessage(const QByteArray &message);
-
-    void
-    setDriver(int index);
-
-    void
-    setIgnoreActiveSensingEvents(bool ignore);
-
-    void
-    setIgnoreSystemExclusiveEvents(bool ignore);
-
-    void
-    setIgnoreTimeEvents(bool ignore);
-
-    void
-    setInputPort(int index);
-
-    void
-    setOutputPort(int index);
+  quint64   sendMessage(const QByteArray &message);
+  void      setDriver(int index);
+  void      setIgnoreActiveSensingEvents(bool ignore);
+  void      setIgnoreSystemExclusiveEvents(bool ignore);
+  void      setIgnoreTimeEvents(bool ignore);
+  void      setInputPort(int index);
+  void      setOutputPort(int index);
 
 signals:
+  void      driverChanged(int index);
+  void      ignoreActiveSensingEventsChanged(bool ignore);
+  void      ignoreSystemExclusiveEventsChanged(bool ignore);
+  void      ignoreTimeEventsChanged(bool ignore);
+  void      inputPortAdded(int index, const QString &name);
+  void      inputPortChanged(int index);
+  void      inputPortRemoved(int index);
+  void      messageReceived(quint64 timeStamp, const QByteArray &message);
+  void      outputPortAdded(int index, const QString &name);
+  void      outputPortChanged(int index);
+  void      outputPortRemoved(int index);
 
-    void
-    driverChanged(int index);
-
-    void
-    ignoreActiveSensingEventsChanged(bool ignore);
-
-    void
-    ignoreSystemExclusiveEventsChanged(bool ignore);
-
-    void
-    ignoreTimeEventsChanged(bool ignore);
-
-    void
-    inputPortAdded(int index, const QString &name);
-
-    void
-    inputPortChanged(int index);
-
-    void
-    inputPortRemoved(int index);
-
-    void
-    messageReceived(quint64 timeStamp, const QByteArray &message);
-
-    void
-    outputPortAdded(int index, const QString &name);
-
-    void
-    outputPortChanged(int index);
-
-    void
-    outputPortRemoved(int index);
-
+public:
+         quint64 TimeGet() const;
 private:
+  static void    handleMidiInput(double timeStamp, std::vector<unsigned char> *message, void *engine);
+         void    handleMidiInput(double timeStamp, const std::vector<unsigned char> &message);
+         void    removePorts();
+         void    updateEventFilter();
 
-    static void
-    handleMidiInput(double timeStamp, std::vector<unsigned char> *message,
-                    void *engine);
-
-    quint64
-    getCurrentTimestamp() const;
-
-    void
-    handleMidiInput(double timeStamp,
-                    const std::vector<unsigned char> &message);
-
-    void
-    removePorts();
-
-    void
-    updateEventFilter();
-
-    int driver;
-    QList<RtMidi::Api> driverAPIs;
-    QStringList driverNames;
-    bool ignoreActiveSensingEvents;
-    bool ignoreSystemExclusiveEvents;
-    bool ignoreTimeEvents;
-    RtMidiIn *input;
-    int inputPort;
-    QStringList inputPortNames;
-    RtMidiOut *output;
-    int outputPort;
-    QStringList outputPortNames;
-    bool virtualPortsAdded;
-
+    int                  driver;
+    QList<RtMidi::Api>   driverAPIs;
+    QStringList          driverNames;
+    bool                 ignoreActiveSensingEvents;
+    bool                 ignoreSystemExclusiveEvents;
+    bool                 ignoreTimeEvents;
+    RtMidiIn            *input;
+    int                  inputPort;
+    QStringList          inputPortNames;
+    RtMidiOut           *output;
+    int                  outputPort;
+    QStringList          outputPortNames;
+    bool                 virtualPortsAdded;
 };
 
 #endif

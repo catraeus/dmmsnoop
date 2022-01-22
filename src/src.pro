@@ -78,7 +78,7 @@ HEADERS += aboutview.h \
     engine.h \
     error.h \
     errorview.h \
-    mainview.h \
+    ViewMain.hpp \
     messagetabledelegate.h \
     messageview.h \
     util.h \
@@ -99,8 +99,8 @@ SOURCES += aboutview.cpp \
     engine.cpp \
     error.cpp \
     errorview.cpp \
-    main.cpp \
-    mainview.cpp \
+    _main.cpp \
+    ViewMain.cpp \
     messagetabledelegate.cpp \
     messageview.cpp \
     util.cpp \

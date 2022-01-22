@@ -39,7 +39,7 @@ public:
 public slots:
 
   void addReceivedMessage(quint64 timeStamp, const QString &statusDescription, const QString &dataDescription, bool valid);
-  void addSentMessage(quint64 timeStamp, const QString &statusDescription, const QString &dataDescription, bool valid);
+  void MsgAddTX(quint64 timeStamp, const QString &statusDescription, const QString &dataDescription, bool valid);
   void clearMessages();
   void setMessageSendEnabled(bool enabled);
 
@@ -50,6 +50,9 @@ public slots:
   void clearMessagesRequest();
   void configureRequest();
 
+public:
+  void SetTimeZero(qint64 i_timeZero);
+
 private:
   enum MessageTableColumn {
     MESSAGETABLECOLUMN_TIMESTAMP = 0,
@@ -57,7 +60,9 @@ private:
     MESSAGETABLECOLUMN_DATA      = 2,
     MESSAGETABLECOLUMN_TOTAL     = 3
   };
-  int  addMessage(quint64 timeStamp, const QString &statusDescription, const QString &dataDescription, bool valid);
+  qint64 timeZero;
+  
+  int  MsgAdd(quint64 timeStamp, const QString &statusDescription, const QString &dataDescription, bool valid);
   void setModelData(int row, int column, const QVariant &value, int role=Qt::DisplayRole);
 
   QAction              *aboutAction;

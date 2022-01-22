@@ -12,7 +12,7 @@
     <file>aboutview.ui</file>
     <file>configureview.ui</file>
     <file>errorview.ui</file>
-    <file>mainview.ui</file>
+    <file>ViewMain.ui</file>
     <file>messageview.ui</file>
   </qresource>
 </RCC>

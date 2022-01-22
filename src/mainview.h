@@ -62,7 +62,7 @@ private:
 
   QAction              *aboutAction;
   QAction              *addAction;
-  QAction              *clearAction;
+  QAction              *QA_ClearMsgMon;
   QAction              *configureAction;
   MessageTableDelegate  tableDelegate;
   QAction              *quitAction;

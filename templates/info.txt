@@ -1,0 +1,1 @@
+midisnoop.xpm was at /usr/share/pixmaps/midisnoop.xpm

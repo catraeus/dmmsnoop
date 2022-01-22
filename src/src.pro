@@ -113,10 +113,10 @@ VERSION = $${MIDISNOOP_VERSION}
 # Install
 ################################################################################
 
-# icon.files = src/lib/images/32x32/midisnoop.png
+icon.files = template/midisnoop.svg
 
 unix:!macx {
-    #icon.path = $${MIDISNOOP_DATA_INSTALL_PATH}/icons/
+    icon.path = $${MIDISNOOP_DATA_INSTALL_PATH}/icons/
 
     desktop.CONFIG += no_check_exist
     desktop.extra = ../install/build-desktop-file \
@@ -126,9 +126,9 @@ unix:!macx {
     INSTALLS += desktop
 
 } else {
-    # icon.path = $${MIDISNOOP_DATA_INSTALL_PATH}
+    icon.path = $${MIDISNOOP_DATA_INSTALL_PATH}
 }
-# INSTALLS += icon
+INSTALLS += icon
 
 target.path = $${MIDISNOOP_APP_INSTALL_PATH}
 INSTALLS += target

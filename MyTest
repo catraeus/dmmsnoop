@@ -1,0 +1,43 @@
+#!/usr/bin/env python3
+
+from optparse import OptionParser
+from os.path import abspath, dirname, join
+from subprocess import call
+from sys import argv, stderr, stdout
+import os
+
+
+
+from install.util import (
+    MAJOR_VERSION,
+    MINOR_VERSION,
+    PLATFORM_MACX,
+    PLATFORM_UNIX,
+    PLATFORM_WIN32,
+    REVISION,
+    findExecutable,
+    getPlatform
+)
+
+
+
+def main():
+#  os.environ['PKG_CONFIG_PATH'] = "/usr/lib/arch/pkgconfig/"
+  pkgConfigDataPath = os.environ['PKG_CONFIG_PATH']
+  stdout.write(pkgConfigDataPath + "\n")
+  pkgConfigPath = findExecutable("pkg-config")
+
+  rtMidiMinVer = "2.0.1"
+  
+  productVersionStr = "%d" % MAJOR_VERSION + "." + "%d" % MINOR_VERSION + "." + "%d" % REVISION
+  stdout.write("Version to build: " + productVersionStr + "\n")
+  
+  if call([pkgConfigPath, "--exists", "rtmidi"]) :
+    exit("FATAL: rtmidi not found\n")
+  if call([pkgConfigPath, "--atleast-version=" + rtMidiMinVer, "rtmidi"]):
+    exit("FATAL: rtmidi version >= " + rtMidiMinVer + " is required for compilation")
+
+  stdout.write("WooHoo!  We made it all the way!\n")
+
+if __name__ == "__main__":
+    main()

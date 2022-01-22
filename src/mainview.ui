@@ -48,7 +48,7 @@
      <x>0</x>
      <y>0</y>
      <width>800</width>
-     <height>23</height>
+     <height>26</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
@@ -62,7 +62,7 @@
      <string>&amp;Edit</string>
     </property>
     <addaction name="addAction"/>
-    <addaction name="clearAction"/>
+    <addaction name="QA_ClearMsgMon"/>
     <addaction name="separator"/>
     <addaction name="configureAction"/>
    </widget>
@@ -99,7 +99,7 @@
    <addaction name="quitAction"/>
    <addaction name="separator"/>
    <addaction name="addAction"/>
-   <addaction name="clearAction"/>
+   <addaction name="QA_ClearMsgMon"/>
    <addaction name="separator"/>
    <addaction name="configureAction"/>
    <addaction name="separator"/>
@@ -120,7 +120,7 @@
     <string>Ctrl+D</string>
    </property>
   </action>
-  <action name="clearAction">
+  <action name="QA_ClearMsgMon">
    <property name="icon">
     <iconset resource="resources.qrc">
      <normaloff>:/midisnoop/images/16x16/clear.png</normaloff>:/midisnoop/images/16x16/clear.png</iconset>
@@ -156,10 +156,10 @@
      <normaloff>:/midisnoop/images/16x16/configure.png</normaloff>:/midisnoop/images/16x16/configure.png</iconset>
    </property>
    <property name="text">
-    <string>Configure</string>
+    <string>Config</string>
    </property>
    <property name="toolTip">
-    <string>Configure midisnoop.</string>
+    <string>Various setup parameters</string>
    </property>
    <property name="shortcut">
     <string>Ctrl+O</string>

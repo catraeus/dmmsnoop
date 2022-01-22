@@ -37,8 +37,8 @@ MainView::MainView(QObject *parent):
     connect(addAction, SIGNAL(triggered()),
             SIGNAL(addMessageRequest()));
 
-    clearAction = getChild<QAction>(widget, "clearAction");
-    connect(clearAction, SIGNAL(triggered()),
+    QA_ClearMsgMon = getChild<QAction>(widget, "QA_ClearMsgMon");
+    connect(QA_ClearMsgMon, SIGNAL(triggered()),
             SIGNAL(clearMessagesRequest()));
 
     configureAction = getChild<QAction>(widget, "configureAction");

@@ -17,11 +17,11 @@
  * Ave, Cambridge, MA 02139, USA.
  */
 
-#include "QVwError.hpp"
+#include "errorview.h"
 #include "util.h"
 
-QVwError::QVwError(QObject *parent):
-    DialogView(":/dmmsnoop/QVwError.ui", parent)
+ErrorView::ErrorView(QObject *parent):
+    DialogView(":/dmmsnoop/errorview.ui", parent)
 {
     closeButton = getChild<QPushButton>(dialog, "closeButton");
     connect(closeButton, SIGNAL(clicked()), SIGNAL(closeRequest()));
@@ -29,13 +29,13 @@ QVwError::QVwError(QObject *parent):
     message = getChild<QLabel>(dialog, "message");
 }
 
-QVwError::~QVwError()
+ErrorView::~ErrorView()
 {
     // Empty
 }
 
 void
-QVwError::setMessage(const QString &message)
+ErrorView::setMessage(const QString &message)
 {
     this->message->setText(message);
 }

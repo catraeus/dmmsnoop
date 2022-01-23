@@ -35,7 +35,8 @@ const int statusLengths[0x80] = {
 
 Controller::Controller(Application &application, QObject *parent)
 : QObject(parent)
-, application(application) {
+, application(application)
+{
     // Setup about view
     theQVwAbout.setMajorVersion(DMMSNOOP_MAJOR_VERSION);
     theQVwAbout.setMinorVersion(DMMSNOOP_MINOR_VERSION);
@@ -67,7 +68,7 @@ Controller::Controller(Application &application, QObject *parent)
     connect(&theQVwConfig, SIGNAL(outputPortChangeRequest(int)),                     &engine, SLOT(setOutputPort(int)));
 
     // Setup error view
-    connect(&theQVwError, SIGNAL(closeRequest()),                              &theQVwError,     SLOT(hide()));
+    connect(&errorView, SIGNAL(closeRequest()),                              &errorView,     SLOT(hide()));
 
     // Setup main view
     theQVwMain.setMessageSendEnabled((driver != -1) && (outputPort != -1));
@@ -100,8 +101,8 @@ Controller::Controller(Application &application, QObject *parent)
     connect(&engine, SIGNAL(outputPortRemoved(int)),                         &theQVwConfig, SLOT(removeOutputPort(int)));
 
     // Setup application
-    connect(&application, SIGNAL(eventError(QString)),                &theQVwError, SLOT(setMessage(QString)));
-    connect(&application, SIGNAL(eventError(QString)),                &theQVwError, SLOT(show()));
+    connect(&application, SIGNAL(eventError(QString)),                &errorView, SLOT(setMessage(QString)));
+    connect(&application, SIGNAL(eventError(QString)),                &errorView, SLOT(show()));
 }
 
 Controller::~Controller() {
@@ -127,12 +128,16 @@ QString Controller::getGenericDataDescription(const QByteArray &message, int las
     return dataParts.join(" ");
 }
 
-void Controller::handleDriverChange() {
+void
+Controller::handleDriverChange()
+{
     theQVwMain.setMessageSendEnabled((engine.getDriver() != -1) &&
                                    (engine.getOutputPort() != -1));
 }
 
-void Controller::handleMessageSend(const QString &message) {
+void
+Controller::handleMessageSend(const QString &message)
+{
     // Convert the message to bytes.
     QStringList bytes = message.split(' ', QString::SkipEmptyParts);
     int count = bytes.count();
@@ -158,15 +163,19 @@ void Controller::handleMessageSend(const QString &message) {
 
     // Send the message.
     quint64 timeStamp = engine.sendMessage(msg);
-    theQVwMain.MsgAddTX(timeStamp, statusDescription, dataDescription, valid);
+    theQVwMain.MsgAddTX(timeStamp, statusDescription, dataDescription,                                valid);
 }
 
-void Controller::handleReceivedMessage(quint64 timeStamp, const QByteArray &message) {
+void
+Controller::handleReceivedMessage(quint64 timeStamp, const QByteArray &message)
+{
     parseMessage(message);
-    theQVwMain.addReceivedMessage(timeStamp, statusDescription, dataDescription, valid);
+    theQVwMain.addReceivedMessage(timeStamp, statusDescription, dataDescription,                                    valid);
 }
 
-void Controller::parseMessage(const QByteArray &message) {
+void
+Controller::parseMessage(const QByteArray &message)
+{
     // Make sure we have an actual message.
     int length = message.count();
     if (! length) {
@@ -433,12 +442,16 @@ void Controller::parseMessage(const QByteArray &message) {
     }
 }
 
-void Controller::run() {
+void
+Controller::run()
+{
     theQVwMain.show();
     application.exec();
 }
 
-void Controller::showError(const QString &message) {
-    theQVwError.setMessage(message);
-    theQVwError.show();
+void
+Controller::showError(const QString &message)
+{
+    errorView.setMessage(message);
+    errorView.show();
 }

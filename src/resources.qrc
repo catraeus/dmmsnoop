@@ -11,7 +11,7 @@
     <file>images/32x32/information.png</file>
     <file>QVwAbout.ui</file>
     <file>QVwConfig.ui</file>
-    <file>QVwError.ui</file>
+    <file>errorview.ui</file>
     <file>QVwMain.ui</file>
     <file>messageview.ui</file>
   </qresource>

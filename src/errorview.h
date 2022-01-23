@@ -25,16 +25,16 @@
 
 #include "dialogview.h"
 
-class QVwError: public DialogView {
+class ErrorView: public DialogView {
 
     Q_OBJECT
 
 public:
 
     explicit
-    QVwError(QObject *parent=0);
+    ErrorView(QObject *parent=0);
 
-    ~QVwError();
+    ~ErrorView();
 
 public slots:
 

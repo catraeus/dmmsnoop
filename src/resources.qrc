@@ -13,6 +13,6 @@
     <file>QVwConfig.ui</file>
     <file>errorview.ui</file>
     <file>QVwMain.ui</file>
-    <file>messageview.ui</file>
+    <file>QVwMsg.ui</file>
   </qresource>
 </RCC>

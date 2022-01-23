@@ -26,7 +26,7 @@
 #include "engine.h"
 #include "errorview.h"
 #include "QVwMain.hpp"
-#include "messageview.h"
+#include "QVwMsg.hpp"
 
 class Controller: public QObject {
   Q_OBJECT
@@ -46,15 +46,19 @@ private:
   void    parseMessage(const QByteArray &message);
   void    showError(const QString &message);
 
-  QVwAbout      theQVwAbout;
   Application   &application;
-  QVwConfig     theQVwConfig;
-  QString        dataDescription;
+
   Engine         engine;
-  ErrorView      errorView;
+
+  QVwAbout       theQVwAbout;
+  QVwConfig      theQVwConfig;
   QVwMain        theQVwMain;
-  MessageView    messageView;
+  MessageView    theQVwMsg;
+  ErrorView      errorView;
+
+  QString        dataDescription;
   QString        statusDescription;
+
   bool           valid;
 };
 

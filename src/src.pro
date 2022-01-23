@@ -43,7 +43,7 @@ isEmpty(PREFIX) {
     win32 {
         PREFIX = C:/Program Files/dmmsnoop
     } else {
-        PREFIX = /usr/local
+        PREFIX = /usr
     }
 }
 isEmpty(DATAROOTDIR) {
@@ -80,7 +80,7 @@ HEADERS += QVwAbout.hpp \
     errorview.h \
     QVwMain.hpp \
     messagetabledelegate.h \
-    messageview.h \
+    QVwMsg.hpp \
     util.h \
     view.h
 LIBS += -lrtmidi
@@ -102,7 +102,7 @@ SOURCES += QVwAbout.cpp \
     _main.cpp \
     QVwMain.cpp \
     messagetabledelegate.cpp \
-    messageview.cpp \
+    QVwMsg.cpp \
     util.cpp \
     view.cpp
 TARGET = dmmsnoop
@@ -116,7 +116,7 @@ VERSION = $${DMMSNOOP_VERSION}
 icon.files = template/dmmsnoop.svg
 
 unix:!macx {
-    icon.path = $${DMMSNOOP_DATA_INSTALL_PATH}/icons/
+    icon.path = $${DMMSNOOP_DATA_INSTALL_PATH}/icons/gnome/scalable/apps
 
     desktop.CONFIG += no_check_exist
     desktop.extra = ../install/build-desktop-file \

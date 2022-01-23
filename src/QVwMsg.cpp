@@ -17,41 +17,22 @@
  * Ave, Cambridge, MA 02139, USA.
  */
 
-#ifndef __MESSAGEVIEW_H__
-#define __MESSAGEVIEW_H__
+#include "QVwMsg.hpp"
+#include "util.h"
 
-#include <QtWidgets/QPlainTextEdit>
-#include <QtWidgets/QPushButton>
+     MessageView::MessageView(QObject *parent)
+: DesignerView(":/dmmsnoop/QVwMsg.ui", parent) {
+  QWidget *rootWidget = getRootWidget();
 
-#include "designerview.h"
+  closeButton = getChild<QPushButton>(rootWidget, "closeButton");
+  connect(closeButton, SIGNAL(clicked()), SIGNAL(closeRequest()));
 
-class MessageView: public DesignerView {
+  message = getChild<QPlainTextEdit>(rootWidget, "message");
 
-    Q_OBJECT
+  sendButton = getChild<QPushButton>(rootWidget, "sendButton");
+  connect(sendButton, SIGNAL(clicked()), SLOT(handleSendButtonClick()));
+}
 
-public:
+     MessageView::~MessageView() {}
+void MessageView::handleSendButtonClick() { emit sendRequest(message->toPlainText());  }
 
-    explicit
-    MessageView(QObject *parent=0);
-
-    ~MessageView();
-
-signals:
-
-    void
-    sendRequest(const QString &data);
-
-private slots:
-
-    void
-    handleSendButtonClick();
-
-private:
-
-    QPushButton *closeButton;
-    QPlainTextEdit *message;
-    QPushButton *sendButton;
-
-};
-
-#endif

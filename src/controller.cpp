@@ -74,15 +74,15 @@ Controller::Controller(Application &application, QObject *parent)
     theQVwMain.setMessageSendEnabled((driver != -1) && (outputPort != -1));
     theQVwMain.SetTimeZero(engine.TimeGet());
     connect(&theQVwMain, SIGNAL(aboutRequest()),                               &theQVwAbout,     SLOT(show()));
-    connect(&theQVwMain, SIGNAL(addMessageRequest()),                          &messageView,   SLOT(show()));
+    connect(&theQVwMain, SIGNAL(addMessageRequest()),                          &theQVwMsg,   SLOT(show()));
     connect(&theQVwMain, SIGNAL(clearMessagesRequest()),                       &theQVwMain,      SLOT(clearMessages()));
     connect(&theQVwMain, SIGNAL(configureRequest()),                           &theQVwConfig, SLOT(show()));
     connect(&theQVwMain, SIGNAL(closeRequest()),                               &application,   SLOT(quit()));
 
     // Setup message view
-    connect(&messageView, SIGNAL(closeRequest()),                            &messageView,   SLOT(hide()));
-    connect(&messageView, SIGNAL(sendRequest(const QString &)),              &messageView,   SLOT(hide()));
-    connect(&messageView, SIGNAL(sendRequest(const QString &)),                              SLOT(handleMessageSend(const QString &)));
+    connect(&theQVwMsg, SIGNAL(closeRequest()),                            &theQVwMsg,   SLOT(hide()));
+    connect(&theQVwMsg, SIGNAL(sendRequest(const QString &)),              &theQVwMsg,   SLOT(hide()));
+    connect(&theQVwMsg, SIGNAL(sendRequest(const QString &)),                              SLOT(handleMessageSend(const QString &)));
 
     // Setup engine
     connect(&engine, SIGNAL(messageReceived(quint64, const QByteArray &)),                   SLOT(handleReceivedMessage(quint64, const QByteArray &)));

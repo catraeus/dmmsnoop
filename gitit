@@ -1,5 +1,7 @@
-git add gitit
-git add src/QVwAbout.hpp
-git add src/QVwConfig.cpp
-git add src/QVwMain.cpp
+#!/bin/sh
+git add install/util.py
+git add src/QVwMsg.cpp
+git add src/QVwMsg.hpp
+git add src/controller.cpp
+git add src/controller.h
 

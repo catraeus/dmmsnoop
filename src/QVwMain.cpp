@@ -21,11 +21,11 @@
 
 #include <QtWidgets/QApplication>
 
-#include "QVW_Main.hpp"
+#include "QVwMain.hpp"
 #include "util.h"
 
      QVwMain::QVwMain(QObject *parent)
-: DesignerView(":/dmmsnoop/QVW_Main.ui", parent)
+: DesignerView(":/dmmsnoop/QVwMain.ui", parent)
 {
     QWidget *widget = getRootWidget();
 

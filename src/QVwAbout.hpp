@@ -17,20 +17,20 @@
  * Ave, Cambridge, MA 02139, USA.
  */
 
-#ifndef __QVW_ABOUT_HPP__
-#define __QVW_ABOUT_HPP__
+#ifndef __QVwABOUT_HPP__
+#define __QVwABOUT_HPP__
 
 #include <QtWidgets/QLabel>
 #include <QtWidgets/QPushButton>
 
 #include "dialogview.h"
 
-class QVW_About: public DialogView {
+class QVwAbout: public DialogView {
   Q_OBJECT
 
 public:
-  explicit  QVW_About(QObject *parent=0);
-           ~QVW_About();
+  explicit  QVwAbout(QObject *parent=0);
+           ~QVwAbout();
 
 public slots:
   void setMajorVersion(int majorVersion);

@@ -20,7 +20,7 @@
 #include "QVwMsg.hpp"
 #include "util.h"
 
-     MessageView::MessageView(QObject *parent)
+     QVwMsg::QVwMsg(QObject *parent)
 : DesignerView(":/dmmsnoop/QVwMsg.ui", parent) {
   QWidget *rootWidget = getRootWidget();
 
@@ -33,6 +33,6 @@
   connect(sendButton, SIGNAL(clicked()), SLOT(handleSendButtonClick()));
 }
 
-     MessageView::~MessageView() {}
-void MessageView::handleSendButtonClick() { emit sendRequest(message->toPlainText());  }
+     QVwMsg::~QVwMsg() {}
+void QVwMsg::handleSendButtonClick() { emit sendRequest(message->toPlainText());  }
 

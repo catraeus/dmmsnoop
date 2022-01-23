@@ -50,10 +50,10 @@ private:
 
   Engine         engine;
 
-  QVwAbout       theQVwAbout;
-  QVwConfig      theQVwConfig;
   QVwMain        theQVwMain;
-  MessageView    theQVwMsg;
+  QVwConfig      theQVwConfig;
+  QVwAbout       theQVwAbout;
+  QVwMsg         theQVwMsg;
   ErrorView      errorView;
 
   QString        dataDescription;

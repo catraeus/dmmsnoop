@@ -17,20 +17,20 @@
  * Ave, Cambridge, MA 02139, USA.
  */
 
-#ifndef __MESSAGEVIEW_H__
-#define __MESSAGEVIEW_H__
+#ifndef __QVW_MSG_HPP__
+#define __QVW_MSG_HPP__
 
 #include <QtWidgets/QPlainTextEdit>
 #include <QtWidgets/QPushButton>
 
 #include "designerview.h"
 
-class MessageView: public DesignerView {
+class QVwMsg: public DesignerView {
   Q_OBJECT
 
 public:
-  explicit        MessageView(QObject *parent=0);
-                 ~MessageView();
+  explicit        QVwMsg(QObject *parent=0);
+                 ~QVwMsg();
 
 signals:
            void   sendRequest(const QString &data);

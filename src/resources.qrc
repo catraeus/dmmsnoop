@@ -9,10 +9,10 @@
     <file>images/16x16/quit.png</file>
     <file>images/32x32/error.png</file>
     <file>images/32x32/information.png</file>
-    <file>QVW_About.ui</file>
-    <file>QVW_Config.ui</file>
+    <file>QVwAbout.ui</file>
+    <file>QVwConfig.ui</file>
     <file>errorview.ui</file>
-    <file>QVW_Main.ui</file>
+    <file>QVwMain.ui</file>
     <file>messageview.ui</file>
   </qresource>
 </RCC>

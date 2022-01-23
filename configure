@@ -71,7 +71,7 @@ def main():
 
     prefix = options.prefix
     if prefix is None:
-        prefix = "/usr/local"
+        prefix = "/usr"
     else:
         prefix = abspath(prefix)
 

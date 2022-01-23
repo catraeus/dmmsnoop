@@ -17,8 +17,8 @@
  * Ave, Cambridge, MA 02139, USA.
  */
 
-#ifndef __MAINVIEW_H__
-#define __MAINVIEW_H__
+#ifndef __QVW_MAIN_HPP__
+#define __QVW_MAIN_HPP__
 
 #include <QtGui/QStandardItemModel>
 #include <QtWidgets/QAction>
@@ -28,13 +28,13 @@
 #include "designerview.h"
 #include "messagetabledelegate.h"
 
-class MainView: public DesignerView {
+class QVwMain: public DesignerView {
     Q_OBJECT
 
 public:
 
-  explicit  MainView(QObject *parent=0);
-           ~MainView();
+  explicit  QVwMain(QObject *parent=0);
+           ~QVwMain();
 
 public slots:
 

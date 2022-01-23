@@ -1,9 +1,8 @@
-git commit gitit
-git commit install/util.py
-git commit src/QVW_Main.cpp
-git commit src/QVW_Main.hpp
-git commit src/controller.cpp
-git commit src/controller.h
-git commit src/resources.qrc
-git commit src/src.pro
+git add gitit
+git add install/util.py
+git add src/QVW_Main.cpp
+git add src/QVW_Main.hpp
+git add src/controller.h
+git add src/resources.qrc
+git add src/src.pro
 

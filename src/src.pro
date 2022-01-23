@@ -18,13 +18,13 @@ isEmpty(MAKEDIR) {
 }
 
 isEmpty(MAJOR_VERSION) {
-    MAJOR_VERSION = 0
+    MAJOR_VERSION = 9
 }
 isEmpty(MINOR_VERSION) {
-    MINOR_VERSION = 1
+    MINOR_VERSION = 9
 }
 isEmpty(REVISION) {
-    REVISION = 3
+    REVISION = 9
 }
 DMMSNOOP_VERSION = $${MAJOR_VERSION}.$${MINOR_VERSION}.$${REVISION}
 
@@ -78,7 +78,7 @@ HEADERS += QVW_About.hpp \
     engine.h \
     error.h \
     errorview.h \
-    ViewMain.hpp \
+    QVW_Main.hpp \
     messagetabledelegate.h \
     messageview.h \
     util.h \
@@ -100,7 +100,7 @@ SOURCES += QVW_About.cpp \
     error.cpp \
     errorview.cpp \
     _main.cpp \
-    ViewMain.cpp \
+    QVW_Main.cpp \
     messagetabledelegate.cpp \
     messageview.cpp \
     util.cpp \

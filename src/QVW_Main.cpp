@@ -21,11 +21,11 @@
 
 #include <QtWidgets/QApplication>
 
-#include "ViewMain.hpp"
+#include "QVW_Main.hpp"
 #include "util.h"
 
-     MainView::MainView(QObject *parent)
-: DesignerView(":/dmmsnoop/ViewMain.ui", parent)
+     QVwMain::QVwMain(QObject *parent)
+: DesignerView(":/dmmsnoop/QVW_Main.ui", parent)
 {
     QWidget *widget = getRootWidget();
 
@@ -46,15 +46,15 @@
     timeZero = 0;
 }
 
-MainView::~MainView() {}
+QVwMain::~QVwMain() {}
 
-void MainView::SetTimeZero(qint64 i_timeZero) {
+void QVwMain::SetTimeZero(qint64 i_timeZero) {
   timeZero = i_timeZero;
   return;
 }
 
 
-int MainView::MsgAdd(quint64 timeStamp, const QString &statusDescription, const QString &dataDescription, bool valid) {
+int QVwMain::MsgAdd(quint64 timeStamp, const QString &statusDescription, const QString &dataDescription, bool valid) {
   int   count    = tableModel.rowCount();
   
   tableModel.insertRow(count); // WARNING There is no check for insertion, insertRow returns a bool
@@ -73,11 +73,11 @@ int MainView::MsgAdd(quint64 timeStamp, const QString &statusDescription, const 
   return count;
 }
 
-void MainView::addReceivedMessage(quint64 timeStamp,  const QString &statusDescription,  const QString &dataDescription, bool valid) {
+void QVwMain::addReceivedMessage(quint64 timeStamp,  const QString &statusDescription,  const QString &dataDescription, bool valid) {
   MsgAdd(timeStamp, statusDescription, dataDescription, valid);
 }
 
-void MainView::MsgAddTX(quint64 timeStamp, const QString &statusDescription, const QString &dataDescription, bool valid) {
+void QVwMain::MsgAddTX(quint64 timeStamp, const QString &statusDescription, const QString &dataDescription, bool valid) {
     int   index = MsgAdd(timeStamp, statusDescription, dataDescription, valid);
     const QBrush &brush = qApp->palette().alternateBase();
     setModelData(index, MESSAGETABLECOLUMN_DATA,      brush, Qt::BackgroundRole);
@@ -85,18 +85,18 @@ void MainView::MsgAddTX(quint64 timeStamp, const QString &statusDescription, con
     setModelData(index, MESSAGETABLECOLUMN_TIMESTAMP, brush, Qt::BackgroundRole);
 }
 
-void MainView::clearMessages() {
+void QVwMain::clearMessages() {
   int count = tableModel.rowCount();
   if(count > 0) {
     tableModel.removeRows(0, tableModel.rowCount()); // WARNING there is no check here for removal, removeRows returns a bool.
   }
 }
 
-void MainView::setMessageSendEnabled(bool enabled) {
+void QVwMain::setMessageSendEnabled(bool enabled) {
   addAction->setEnabled(enabled);
 }
 
-void MainView::setModelData(int row, int column, const QVariant &value, int role) {
+void QVwMain::setModelData(int row, int column, const QVariant &value, int role) {
   bool result = tableModel.setData(tableModel.index(row, column), value, role);
   assert(result);
 }

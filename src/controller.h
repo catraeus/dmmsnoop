@@ -25,7 +25,7 @@
 #include "QVW_Config.hpp"
 #include "engine.h"
 #include "errorview.h"
-#include "ViewMain.hpp"
+#include "QVW_Main.hpp"
 #include "messageview.h"
 
 class Controller: public QObject {
@@ -52,7 +52,7 @@ private:
   QString        dataDescription;
   Engine         engine;
   ErrorView      errorView;
-  MainView       mainView;
+  QVwMain        theQVwMain;
   MessageView    messageView;
   QString        statusDescription;
   bool           valid;

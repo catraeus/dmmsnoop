@@ -1,7 +1,9 @@
-git add src/QVW_About.cpp
-git add src/QVW_About.hpp
-git add src/controller.cpp
-git add src/controller.h
-git add src/resources.qrc
-git add src/src.pro
+git commit gitit
+git commit install/util.py
+git commit src/QVW_Main.cpp
+git commit src/QVW_Main.hpp
+git commit src/controller.cpp
+git commit src/controller.h
+git commit src/resources.qrc
+git commit src/src.pro
 

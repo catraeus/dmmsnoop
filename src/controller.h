@@ -24,7 +24,7 @@
 #include "application.h"
 #include "QVwConfig.hpp"
 #include "engine.h"
-#include "errorview.h"
+#include "QVwError.hpp"
 #include "QVwMain.hpp"
 #include "messageview.h"
 
@@ -46,14 +46,15 @@ private:
   void    parseMessage(const QByteArray &message);
   void    showError(const QString &message);
 
-  QVwAbout      theQVwAbout;
+  QVwMain        theQVwMain;
+  QVwAbout       theQVwAbout;
+  QVwConfig      theQVwConfig;
+  QVwError       theQVwError;
+  MessageView    messageView;
+
   Application   &application;
-  QVwConfig     theQVwConfig;
   QString        dataDescription;
   Engine         engine;
-  ErrorView      errorView;
-  QVwMain        theQVwMain;
-  MessageView    messageView;
   QString        statusDescription;
   bool           valid;
 };

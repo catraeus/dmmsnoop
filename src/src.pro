@@ -77,7 +77,7 @@ HEADERS += QVwAbout.hpp \
     dialogview.h \
     engine.h \
     error.h \
-    errorview.h \
+    QVwError.hpp \
     QVwMain.hpp \
     messagetabledelegate.h \
     messageview.h \
@@ -98,7 +98,7 @@ SOURCES += QVwAbout.cpp \
     dialogview.cpp \
     engine.cpp \
     error.cpp \
-    errorview.cpp \
+    QVwError.cpp \
     _main.cpp \
     QVwMain.cpp \
     messagetabledelegate.cpp \

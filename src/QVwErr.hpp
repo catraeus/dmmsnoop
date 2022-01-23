@@ -17,35 +17,26 @@
  * Ave, Cambridge, MA 02139, USA.
  */
 
-#ifndef __ERRORVIEW_H__
-#define __ERRORVIEW_H__
+#ifndef __QVW_ERR_HPP__
+#define __QVW_ERR_HPP__
 
 #include <QtWidgets/QLabel>
 #include <QtWidgets/QPushButton>
 
 #include "dialogview.h"
 
-class ErrorView: public DialogView {
-
+class QVwErr: public DialogView {
     Q_OBJECT
 
 public:
-
-    explicit
-    ErrorView(QObject *parent=0);
-
-    ~ErrorView();
-
+  explicit        QVwErr(QObject *parent=0);
+                 ~QVwErr();
 public slots:
-
-    void
-    setMessage(const QString &message);
+           void   setMessage(const QString &message);
 
 private:
-
     QPushButton *closeButton;
-    QLabel *message;
-
+    QLabel      *message;
 };
 
 #endif

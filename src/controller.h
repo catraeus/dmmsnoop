@@ -20,13 +20,14 @@
 #ifndef __CONTROLLER_H__
 #define __CONTROLLER_H__
 
-#include "QVwAbout.hpp"
 #include "application.h"
-#include "QVwConfig.hpp"
 #include "engine.h"
-#include "errorview.h"
+
 #include "QVwMain.hpp"
+#include "QVwConfig.hpp"
 #include "QVwMsg.hpp"
+#include "QVwAbout.hpp"
+#include "QVwErr.hpp"
 
 class Controller: public QObject {
   Q_OBJECT
@@ -54,7 +55,7 @@ private:
   QVwConfig      theQVwConfig;
   QVwAbout       theQVwAbout;
   QVwMsg         theQVwMsg;
-  ErrorView      errorView;
+  QVwErr         theQVwErr;
 
   QString        dataDescription;
   QString        statusDescription;

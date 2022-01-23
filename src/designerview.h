@@ -20,9 +20,9 @@
 #ifndef __DESIGNERVIEW_H__
 #define __DESIGNERVIEW_H__
 
-#include "QoVw.hpp"
+#include "view.h"
 
-class DesignerView: public QoVw {
+class DesignerView: public View {
   Q_OBJECT
 protected:
   explicit DesignerView(const QString &path, QObject *parent=0);

@@ -24,33 +24,61 @@
 
 #include "closeeventfilter.h"
 
-class QoVw: public QObject {
+class View: public QObject {
+
     Q_OBJECT
 
 public:
-          bool    isCloseEnabled() const;
-          bool    isVisible() const;
+
+    bool
+    isCloseEnabled() const;
+
+    bool
+    isVisible() const;
 
 public slots:
-          void    hide();
-  virtual void    setCloseEnabled(bool enabled);
-  virtual void    setVisible(bool visible);
-          void    show();
 
-       signals:
-          void    closeEnabledChanged(bool enabled);
-          void    closeRequest();
-          void    visibilityChanged(bool visible);
+    void
+    hide();
+
+    virtual void
+    setCloseEnabled(bool enabled);
+
+    virtual void
+    setVisible(bool visible);
+
+    void
+    show();
+
+signals:
+
+    void
+    closeEnabledChanged(bool enabled);
+
+    void
+    closeRequest();
+
+    void
+    visibilityChanged(bool visible);
 
 protected:
-  explicit           QoVw(QWidget *rootWidget, QObject *parent=0);
-  virtual           ~QoVw();
-  const    QWidget  *getRootWidget() const;
-           QWidget  *getRootWidget();
+
+    explicit
+    View(QWidget *rootWidget, QObject *parent=0);
+
+    virtual
+    ~View();
+
+    const QWidget *
+    getRootWidget() const;
+
+    QWidget *
+    getRootWidget();
 
 private:
-    CloseEventFilter  closeEventFilter;
-    QWidget          *rootWidget;
+
+    CloseEventFilter closeEventFilter;
+    QWidget *rootWidget;
 
 };
 

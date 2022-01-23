@@ -82,7 +82,7 @@ HEADERS += QVwAbout.hpp \
     messagetabledelegate.h \
     messageview.h \
     util.h \
-    QoVw.hpp
+    view.h
 LIBS += -lrtmidi
 MOC_DIR = $${MAKEDIR}
 OBJECTS_DIR = $${MAKEDIR}
@@ -104,7 +104,7 @@ SOURCES += QVwAbout.cpp \
     messagetabledelegate.cpp \
     messageview.cpp \
     util.cpp \
-    QoVw.cpp
+    view.cpp
 TARGET = dmmsnoop
 TEMPLATE = app
 VERSION = $${DMMSNOOP_VERSION}

@@ -1,10 +1,9 @@
-#!/bin/sh
-git add gitit
-git add install/util.py
-git add src/QoVw.cpp
-git add src/designerview.cpp
-git add src/designerview.h
-git add src/src.pro
-git add src/view.h
-git add src/QoVw.hpp
+git add  gitit
+git add  install/util.py
+git add  src/TheApp.cpp
+git add  src/TheApp.hpp
+git add  src/_main.cpp
+git add  src/controller.cpp
+git add  src/controller.h
+git add  src/src.pro
 

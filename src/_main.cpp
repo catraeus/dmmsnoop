@@ -31,7 +31,7 @@
 #include "error.h"
 
 int main(int argc, char **argv) {
-  Application   theApp(argc, argv);
+  TheApp   theApp(argc, argv);
   QString       errorMessage;
   QTranslator   qtTranslator;
   QTranslator   translator;

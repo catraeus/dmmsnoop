@@ -21,18 +21,19 @@
 #define __CONTROLLER_H__
 
 #include "QVwAbout.hpp"
-#include "application.h"
 #include "QVwConfig.hpp"
-#include "engine.h"
-#include "QVwError.hpp"
 #include "QVwMain.hpp"
+#include "QVwError.hpp"
+
+#include "TheApp.hpp"
+#include "engine.h"
 #include "messageview.h"
 
 class Controller: public QObject {
   Q_OBJECT
 
 public:
-  explicit  Controller(Application &application, QObject *parent=0);
+  explicit  Controller(TheApp &i_theApp, QObject *parent=0);
            ~Controller();
   void run();
 
@@ -52,7 +53,7 @@ private:
   QVwError       theQVwError;
   MessageView    messageView;
 
-  Application   &application;
+  TheApp        &theApp;
   QString        dataDescription;
   Engine         engine;
   QString        statusDescription;

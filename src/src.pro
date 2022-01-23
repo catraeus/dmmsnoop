@@ -69,7 +69,7 @@ DEFINES += DMMSNOOP_MAJOR_VERSION=$${MAJOR_VERSION} \
     DMMSNOOP_REVISION=$${REVISION}
 DESTDIR = $${BUILDDIR}/$${DMMSNOOP_APP_SUFFIX}
 HEADERS += QVwAbout.hpp \
-    application.h \
+    TheApp.hpp \
     closeeventfilter.h \
     QVwConfig.hpp \
     controller.h \
@@ -90,7 +90,7 @@ QT += core gui uitools widgets
 RCC_DIR = $${MAKEDIR}
 RESOURCES += resources.qrc
 SOURCES += QVwAbout.cpp \
-    application.cpp \
+    TheApp.cpp \
     closeeventfilter.cpp \
     QVwConfig.cpp \
     controller.cpp \

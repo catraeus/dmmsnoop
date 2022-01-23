@@ -19,29 +19,12 @@
 
 #include <stdexcept>
 
-#include "application.h"
+#include "TheApp.hpp"
 #include "error.h"
 
-Application::Application(int &argc, char **argv):
-    QApplication(argc, argv)
-{
-    // Empty
-}
+     TheApp::TheApp(int &argc, char **argv) : QApplication(argc, argv) {}
+     TheApp::~TheApp() {}
 
-Application::~Application()
-{
-    // Empty
-}
-
-bool
-Application::notify(QObject *receiver, QEvent *event)
-{
-    try {
-        return QApplication::notify(receiver, event);
-    } catch (Error &e) {
-        emit eventError(e.getMessage());
-    } catch (std::exception &e) {
-        emit eventError(e.what());
-    }
-    return false;
+bool TheApp::notify(QObject *receiver, QEvent *event) {
+  return QApplication::notify(receiver, event);
 }

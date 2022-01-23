@@ -1,9 +1,9 @@
-git add  gitit
-git add  install/util.py
-git add  src/TheApp.cpp
-git add  src/TheApp.hpp
-git add  src/_main.cpp
-git add  src/controller.cpp
-git add  src/controller.h
-git add  src/src.pro
+git add gitit
+git add install/util.py
+git add src/QVwError.cpp
+git add src/QVwError.hpp
+git add src/controller.cpp
+git add src/controller.h
+git add src/resources.qrc
+git add src/src.pro
 

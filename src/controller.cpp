@@ -33,9 +33,9 @@ const int statusLengths[0x80] = {
 
 // Class definition
 
-Controller::Controller(TheApp &i_theApp, QObject *parent)
+Controller::Controller(Application &application, QObject *parent)
 : QObject(parent)
-, theApp(i_theApp) {
+, application(application) {
     // Setup about view
     theQVwAbout.setMajorVersion(DMMSNOOP_MAJOR_VERSION);
     theQVwAbout.setMinorVersion(DMMSNOOP_MINOR_VERSION);
@@ -76,7 +76,7 @@ Controller::Controller(TheApp &i_theApp, QObject *parent)
     connect(&theQVwMain, SIGNAL(addMessageRequest()),                          &messageView,   SLOT(show()));
     connect(&theQVwMain, SIGNAL(clearMessagesRequest()),                       &theQVwMain,      SLOT(clearMessages()));
     connect(&theQVwMain, SIGNAL(configureRequest()),                           &theQVwConfig, SLOT(show()));
-    connect(&theQVwMain, SIGNAL(closeRequest()),                               &theApp,   SLOT(quit()));
+    connect(&theQVwMain, SIGNAL(closeRequest()),                               &application,   SLOT(quit()));
 
     // Setup message view
     connect(&messageView, SIGNAL(closeRequest()),                            &messageView,   SLOT(hide()));
@@ -99,9 +99,9 @@ Controller::Controller(TheApp &i_theApp, QObject *parent)
     connect(&engine, SIGNAL(outputPortChanged(int)),                                         SLOT(handleDriverChange()));
     connect(&engine, SIGNAL(outputPortRemoved(int)),                         &theQVwConfig, SLOT(removeOutputPort(int)));
 
-    // Setup theApp
-    connect(&theApp, SIGNAL(eventError(QString)),                &theQVwError, SLOT(setMessage(QString)));
-    connect(&theApp, SIGNAL(eventError(QString)),                &theQVwError, SLOT(show()));
+    // Setup application
+    connect(&application, SIGNAL(eventError(QString)),                &theQVwError, SLOT(setMessage(QString)));
+    connect(&application, SIGNAL(eventError(QString)),                &theQVwError, SLOT(show()));
 }
 
 Controller::~Controller() {
@@ -435,7 +435,7 @@ void Controller::parseMessage(const QByteArray &message) {
 
 void Controller::run() {
     theQVwMain.show();
-    theApp.exec();
+    application.exec();
 }
 
 void Controller::showError(const QString &message) {

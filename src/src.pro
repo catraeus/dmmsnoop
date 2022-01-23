@@ -68,17 +68,17 @@ DEFINES += DMMSNOOP_MAJOR_VERSION=$${MAJOR_VERSION} \
     DMMSNOOP_MINOR_VERSION=$${MINOR_VERSION} \
     DMMSNOOP_REVISION=$${REVISION}
 DESTDIR = $${BUILDDIR}/$${DMMSNOOP_APP_SUFFIX}
-HEADERS += QVW_About.hpp \
+HEADERS += QVwAbout.hpp \
     application.h \
     closeeventfilter.h \
-    QVW_Config.hpp \
+    QVwConfig.hpp \
     controller.h \
     designerview.h \
     dialogview.h \
     engine.h \
     error.h \
     errorview.h \
-    QVW_Main.hpp \
+    QVwMain.hpp \
     messagetabledelegate.h \
     messageview.h \
     util.h \
@@ -89,10 +89,10 @@ OBJECTS_DIR = $${MAKEDIR}
 QT += core gui uitools widgets
 RCC_DIR = $${MAKEDIR}
 RESOURCES += resources.qrc
-SOURCES += QVW_About.cpp \
+SOURCES += QVwAbout.cpp \
     application.cpp \
     closeeventfilter.cpp \
-    QVW_Config.cpp \
+    QVwConfig.cpp \
     controller.cpp \
     designerview.cpp \
     dialogview.cpp \
@@ -100,7 +100,7 @@ SOURCES += QVW_About.cpp \
     error.cpp \
     errorview.cpp \
     _main.cpp \
-    QVW_Main.cpp \
+    QVwMain.cpp \
     messagetabledelegate.cpp \
     messageview.cpp \
     util.cpp \

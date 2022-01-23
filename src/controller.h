@@ -20,7 +20,7 @@
 #ifndef __CONTROLLER_H__
 #define __CONTROLLER_H__
 
-#include "aboutview.h"
+#include "QVW_About.hpp"
 #include "application.h"
 #include "QVW_Config.hpp"
 #include "engine.h"
@@ -46,7 +46,7 @@ private:
   void    parseMessage(const QByteArray &message);
   void    showError(const QString &message);
 
-  AboutView      aboutView;
+  QVW_About      theQVwAbout;
   Application   &application;
   QVW_Config     theQVwConfig;
   QString        dataDescription;

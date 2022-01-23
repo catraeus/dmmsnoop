@@ -17,46 +17,34 @@
  * Ave, Cambridge, MA 02139, USA.
  */
 
-#ifndef __ABOUTVIEW_H__
-#define __ABOUTVIEW_H__
+#ifndef __QVW_ABOUT_HPP__
+#define __QVW_ABOUT_HPP__
 
 #include <QtWidgets/QLabel>
 #include <QtWidgets/QPushButton>
 
 #include "dialogview.h"
 
-class AboutView: public DialogView {
-
-    Q_OBJECT
+class QVW_About: public DialogView {
+  Q_OBJECT
 
 public:
-
-    explicit
-    AboutView(QObject *parent=0);
-
-    ~AboutView();
+  explicit  QVW_About(QObject *parent=0);
+           ~QVW_About();
 
 public slots:
-
-    void
-    setMajorVersion(int majorVersion);
-
-    void
-    setMinorVersion(int minorVersion);
-
-    void
-    setRevision(int revision);
+  void setMajorVersion(int majorVersion);
+  void setMinorVersion(int minorVersion);
+  void setRevision    (int revision);
 
 private:
+  void updateVersion();
 
-    void
-    updateVersion();
-
-    QPushButton *closeButton;
-    int majorVersion;
-    int minorVersion;
-    int revision;
-    QLabel *version;
+  QPushButton *closeButton;
+    int        majorVersion;
+    int        minorVersion;
+    int        revision;
+    QLabel    *version;
 
 };
 

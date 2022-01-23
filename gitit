@@ -1,6 +1,5 @@
-git add gitit
-git add src/QVW_Config.cpp
-git add src/QVW_Config.hpp
+git add src/QVW_About.cpp
+git add src/QVW_About.hpp
 git add src/controller.cpp
 git add src/controller.h
 git add src/resources.qrc

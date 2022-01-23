@@ -38,10 +38,10 @@ Controller::Controller(Application &application, QObject *parent)
 , application(application)
 {
     // Setup about view
-    aboutView.setMajorVersion(DMMSNOOP_MAJOR_VERSION);
-    aboutView.setMinorVersion(DMMSNOOP_MINOR_VERSION);
-    aboutView.setRevision(DMMSNOOP_REVISION);
-    connect(&aboutView, SIGNAL(closeRequest()), &aboutView, SLOT(hide()));
+    theQVwAbout.setMajorVersion(DMMSNOOP_MAJOR_VERSION);
+    theQVwAbout.setMinorVersion(DMMSNOOP_MINOR_VERSION);
+    theQVwAbout.setRevision(DMMSNOOP_REVISION);
+    connect(&theQVwAbout, SIGNAL(closeRequest()), &theQVwAbout, SLOT(hide()));
 
     // Setup configure view
     int driverCount = engine.getDriverCount();
@@ -73,7 +73,7 @@ Controller::Controller(Application &application, QObject *parent)
     // Setup main view
     mainView.setMessageSendEnabled((driver != -1) && (outputPort != -1));
     mainView.SetTimeZero(engine.TimeGet());
-    connect(&mainView, SIGNAL(aboutRequest()),                               &aboutView,     SLOT(show()));
+    connect(&mainView, SIGNAL(aboutRequest()),                               &theQVwAbout,     SLOT(show()));
     connect(&mainView, SIGNAL(addMessageRequest()),                          &messageView,   SLOT(show()));
     connect(&mainView, SIGNAL(clearMessagesRequest()),                       &mainView,      SLOT(clearMessages()));
     connect(&mainView, SIGNAL(configureRequest()),                           &theQVwConfig, SLOT(show()));

@@ -19,12 +19,11 @@
 
 #include <QtCore/QLocale>
 
-#include "aboutview.h"
+#include "QVW_About.hpp"
 #include "util.h"
 
-AboutView::AboutView(QObject *parent):
-    DialogView(":/dmmsnoop/aboutview.ui", parent)
-{
+QVW_About::QVW_About(QObject *parent):
+    DialogView(":/dmmsnoop/QVW_About.ui", parent) {
     closeButton = getChild<QPushButton>(dialog, "closeButton");
     connect(closeButton, SIGNAL(clicked()), SIGNAL(closeRequest()));
 
@@ -37,38 +36,28 @@ AboutView::AboutView(QObject *parent):
     updateVersion();
 }
 
-AboutView::~AboutView()
-{
-    // Empty
-}
+QVW_About::~QVW_About() {}
 
-void
-AboutView::setMajorVersion(int majorVersion)
-{
+void QVW_About::setMajorVersion(int majorVersion) {
     this->majorVersion = majorVersion;
     updateVersion();
 }
 
-void
-AboutView::setMinorVersion(int minorVersion)
-{
+void QVW_About::setMinorVersion(int minorVersion) {
     this->minorVersion = minorVersion;
     updateVersion();
 }
 
-void
-AboutView::setRevision(int revision)
-{
+void QVW_About::setRevision(int revision) {
     this->revision = revision;
     updateVersion();
 }
 
-void
-AboutView::updateVersion()
-{
+void QVW_About::updateVersion() {
     QLocale locale = QLocale::system();
     version->setText(tr("%1.%2.%3", "versionFormat").
                      arg(locale.toString(majorVersion)).
                      arg(locale.toString(minorVersion)).
                      arg(locale.toString(revision)));
 }
+

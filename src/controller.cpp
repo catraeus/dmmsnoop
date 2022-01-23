@@ -71,13 +71,13 @@ Controller::Controller(Application &application, QObject *parent)
     connect(&errorView, SIGNAL(closeRequest()),                              &errorView,     SLOT(hide()));
 
     // Setup main view
-    mainView.setMessageSendEnabled((driver != -1) && (outputPort != -1));
-    mainView.SetTimeZero(engine.TimeGet());
-    connect(&mainView, SIGNAL(aboutRequest()),                               &theQVwAbout,     SLOT(show()));
-    connect(&mainView, SIGNAL(addMessageRequest()),                          &messageView,   SLOT(show()));
-    connect(&mainView, SIGNAL(clearMessagesRequest()),                       &mainView,      SLOT(clearMessages()));
-    connect(&mainView, SIGNAL(configureRequest()),                           &theQVwConfig, SLOT(show()));
-    connect(&mainView, SIGNAL(closeRequest()),                               &application,   SLOT(quit()));
+    theQVwMain.setMessageSendEnabled((driver != -1) && (outputPort != -1));
+    theQVwMain.SetTimeZero(engine.TimeGet());
+    connect(&theQVwMain, SIGNAL(aboutRequest()),                               &theQVwAbout,     SLOT(show()));
+    connect(&theQVwMain, SIGNAL(addMessageRequest()),                          &messageView,   SLOT(show()));
+    connect(&theQVwMain, SIGNAL(clearMessagesRequest()),                       &theQVwMain,      SLOT(clearMessages()));
+    connect(&theQVwMain, SIGNAL(configureRequest()),                           &theQVwConfig, SLOT(show()));
+    connect(&theQVwMain, SIGNAL(closeRequest()),                               &application,   SLOT(quit()));
 
     // Setup message view
     connect(&messageView, SIGNAL(closeRequest()),                            &messageView,   SLOT(hide()));
@@ -131,7 +131,7 @@ QString Controller::getGenericDataDescription(const QByteArray &message, int las
 void
 Controller::handleDriverChange()
 {
-    mainView.setMessageSendEnabled((engine.getDriver() != -1) &&
+    theQVwMain.setMessageSendEnabled((engine.getDriver() != -1) &&
                                    (engine.getOutputPort() != -1));
 }
 
@@ -163,14 +163,14 @@ Controller::handleMessageSend(const QString &message)
 
     // Send the message.
     quint64 timeStamp = engine.sendMessage(msg);
-    mainView.MsgAddTX(timeStamp, statusDescription, dataDescription,                                valid);
+    theQVwMain.MsgAddTX(timeStamp, statusDescription, dataDescription,                                valid);
 }
 
 void
 Controller::handleReceivedMessage(quint64 timeStamp, const QByteArray &message)
 {
     parseMessage(message);
-    mainView.addReceivedMessage(timeStamp, statusDescription, dataDescription,                                    valid);
+    theQVwMain.addReceivedMessage(timeStamp, statusDescription, dataDescription,                                    valid);
 }
 
 void
@@ -445,7 +445,7 @@ Controller::parseMessage(const QByteArray &message)
 void
 Controller::run()
 {
-    mainView.show();
+    theQVwMain.show();
     application.exec();
 }
 

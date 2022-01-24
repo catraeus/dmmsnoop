@@ -18,7 +18,7 @@
  */
 
 #include "QVwErr.hpp"
-#include "util.h"
+#include "util/util.hpp"
 
         QVwErr::QVwErr(QObject *parent)
 : DialogView(":/dmmsnoop/QVwErr.ui", parent) {

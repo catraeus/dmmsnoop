@@ -18,7 +18,7 @@
  */
 
 #include "QVwMsg.hpp"
-#include "util.h"
+#include "util/util.hpp"
 
      QVwMsg::QVwMsg(QObject *parent)
 : DesignerView(":/dmmsnoop/QVwMsg.ui", parent) {

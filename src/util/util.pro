@@ -11,10 +11,10 @@ DMMSNOOP_DATA_SUFFIX = share
 }
 
 isEmpty(BUILDDIR) {
-    BUILDDIR = ../build
+    BUILDDIR = ../../build
 }
 isEmpty(MAKEDIR) {
-    MAKEDIR = ../make
+    MAKEDIR = ../../make/util
 }
 
 isEmpty(MAJOR_VERSION) {
@@ -68,43 +68,14 @@ DEFINES += DMMSNOOP_MAJOR_VERSION=$${MAJOR_VERSION} \
     DMMSNOOP_MINOR_VERSION=$${MINOR_VERSION} \
     DMMSNOOP_REVISION=$${REVISION}
 DESTDIR = $${BUILDDIR}/$${DMMSNOOP_APP_SUFFIX}
-HEADERS += QVwAbout.hpp \
-    application.h \
-    closeeventfilter.h \
-    QVwConfig.hpp \
-    controller.h \
-    designerview.h \
-    dialogview.h \
-    engine.h \
-    error.h \
-    QVwErr.hpp \
-    QVwMain.hpp \
-    messagetabledelegate.h \
-    QVwMsg.hpp \
-    util/util.hpp \
-    view.h
+HEADERS += util.hpp
 LIBS += -lrtmidi
 MOC_DIR = $${MAKEDIR}
 OBJECTS_DIR = $${MAKEDIR}
 QT += core gui uitools widgets
 RCC_DIR = $${MAKEDIR}
-RESOURCES += resources.qrc
-SOURCES += QVwAbout.cpp \
-    application.cpp \
-    closeeventfilter.cpp \
-    QVwConfig.cpp \
-    controller.cpp \
-    designerview.cpp \
-    dialogview.cpp \
-    engine.cpp \
-    error.cpp \
-    QVwErr.cpp \
-    _main.cpp \
-    QVwMain.cpp \
-    messagetabledelegate.cpp \
-    QVwMsg.cpp \
-    util/util.cpp \
-    view.cpp
+RESOURCES += ../resources.qrc
+SOURCES += util.cpp
 TARGET = dmmsnoop
 TEMPLATE = app
 VERSION = $${DMMSNOOP_VERSION}
@@ -113,22 +84,4 @@ VERSION = $${DMMSNOOP_VERSION}
 # Install
 ################################################################################
 
-icon.files = template/dmmsnoop.svg
 
-unix:!macx {
-    icon.path = $${DMMSNOOP_DATA_INSTALL_PATH}/icons/gnome/scalable/apps
-
-    desktop.CONFIG += no_check_exist
-    desktop.extra = ../install/build-desktop-file \
-        '$${DMMSNOOP_APP_INSTALL_PATH}' '$${DMMSNOOP_DATA_INSTALL_PATH}'
-    desktop.files = ../resources/dmmsnoop.desktop
-    desktop.path = $${DMMSNOOP_DATA_INSTALL_PATH}/applications
-    INSTALLS += desktop
-
-} else {
-    icon.path = $${DMMSNOOP_DATA_INSTALL_PATH}
-}
-INSTALLS += icon
-
-target.path = $${DMMSNOOP_APP_INSTALL_PATH}
-INSTALLS += target

@@ -20,7 +20,7 @@
 #include <QtCore/QLocale>
 
 #include "QVwAbout.hpp"
-#include "util.h"
+#include "util/util.hpp"
 
 QVwAbout::QVwAbout(QObject *parent):
     DialogView(":/dmmsnoop/QVwAbout.ui", parent) {

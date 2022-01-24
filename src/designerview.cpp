@@ -18,7 +18,7 @@
  */
 
 #include "designerview.h"
-#include "util.h"
+#include "util/util.hpp"
 
 DesignerView::DesignerView(const QString &path, QObject *parent) : View(loadForm(path), parent) {}
 DesignerView::~DesignerView() {}

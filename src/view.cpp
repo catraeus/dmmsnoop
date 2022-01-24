@@ -17,7 +17,7 @@
  * Ave, Cambridge, MA 02139, USA.
  */
 
-#include "util.h"
+#include "util/util.hpp"
 #include "view.h"
 
 View::View(QWidget *rootWidget, QObject *parent):

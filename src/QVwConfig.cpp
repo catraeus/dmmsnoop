@@ -18,7 +18,7 @@
  */
 
 #include "QVwConfig.hpp"
-#include "util.h"
+#include "util/util.hpp"
 
 QVwConfig::QVwConfig(QObject *parent):
     DesignerView(":/dmmsnoop/QVwConfig.ui", parent) {

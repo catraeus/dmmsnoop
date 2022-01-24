@@ -22,7 +22,7 @@
 #include <QtWidgets/QApplication>
 
 #include "QVwMain.hpp"
-#include "util.h"
+#include "util/util.hpp"
 
      QVwMain::QVwMain(QObject *parent)
 : DesignerView(":/dmmsnoop/QVwMain.ui", parent)

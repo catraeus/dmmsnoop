@@ -22,24 +22,16 @@
 
 #include <QtWidgets/QApplication>
 
-class Application: public QApplication {
-
+class App: public QApplication {
     Q_OBJECT
 
 public:
-
-    Application(int &argc, char **argv);
-
-    ~Application();
-
-    bool
-    notify(QObject *receiver, QEvent *event);
+            App(int &argc, char **argv);
+           ~App();
+  bool      notify(QObject *receiver, QEvent *event);
 
 signals:
-
-    void
-    eventError(const QString &message);
-
+  void      eventError(const QString &message);
 };
 
 #endif

@@ -33,9 +33,9 @@ const int statusLengths[0x80] = {
 
 // Class definition
 
-Controller::Controller(Application &application, QObject *parent)
-: QObject(parent)
-, application(application) {
+Controller::Controller(App &i_theApp, QObject *i_parent)
+: QObject(i_parent)
+, theApp(i_theApp) {
     // Setup about view
     theQVwAbout.setMajorVersion(DMMSNOOP_MAJOR_VERSION);
     theQVwAbout.setMinorVersion(DMMSNOOP_MINOR_VERSION);
@@ -76,7 +76,7 @@ Controller::Controller(Application &application, QObject *parent)
     connect(&theQVwMain, SIGNAL(addMessageRequest()),                          &theQVwMsg,   SLOT(show()));
     connect(&theQVwMain, SIGNAL(clearMessagesRequest()),                       &theQVwMain,      SLOT(clearMessages()));
     connect(&theQVwMain, SIGNAL(configureRequest()),                           &theQVwConfig, SLOT(show()));
-    connect(&theQVwMain, SIGNAL(closeRequest()),                               &application,   SLOT(quit()));
+    connect(&theQVwMain, SIGNAL(closeRequest()),                               &theApp,   SLOT(quit()));
 
     // Setup message view
     connect(&theQVwMsg, SIGNAL(closeRequest()),                            &theQVwMsg,   SLOT(hide()));
@@ -99,9 +99,9 @@ Controller::Controller(Application &application, QObject *parent)
     connect(&engine, SIGNAL(outputPortChanged(int)),                                         SLOT(handleDriverChange()));
     connect(&engine, SIGNAL(outputPortRemoved(int)),                         &theQVwConfig, SLOT(removeOutputPort(int)));
 
-    // Setup application
-    connect(&application, SIGNAL(eventError(QString)),                &theQVwErr, SLOT(setMessage(QString)));
-    connect(&application, SIGNAL(eventError(QString)),                &theQVwErr, SLOT(show()));
+    // Setup theApp
+    connect(&theApp, SIGNAL(eventError(QString)),                &theQVwErr, SLOT(setMessage(QString)));
+    connect(&theApp, SIGNAL(eventError(QString)),                &theQVwErr, SLOT(show()));
 }
 
 Controller::~Controller() {
@@ -158,20 +158,20 @@ void Controller::handleMessageSend(const QString &message) {
 
     // Send the message.
     quint64 timeStamp = engine.sendMessage(msg);
-    theQVwMain.MsgAddTX(timeStamp, statusDescription, dataDescription,                                valid);
+    theQVwMain.MsgAddTX(timeStamp, sMidiStatus, sMidiData,                                valid);
 }
 
 void Controller::handleReceivedMessage(quint64 timeStamp, const QByteArray &message) {
     parseMessage(message);
-    theQVwMain.addReceivedMessage(timeStamp, statusDescription, dataDescription,                                    valid);
+    theQVwMain.addReceivedMessage(timeStamp, sMidiStatus, sMidiData,                                    valid);
 }
 
 void Controller::parseMessage(const QByteArray &message) {
     // Make sure we have an actual message.
     int length = message.count();
     if(! length) {
-        dataDescription = "";
-        statusDescription = tr("empty message");
+        sMidiData = "";
+        sMidiStatus = tr("empty message");
         valid = false;
         return;
     }
@@ -179,8 +179,8 @@ void Controller::parseMessage(const QByteArray &message) {
     // Validate status byte.
     quint8 status = static_cast<quint8>(message[0]);
     if(status < 0x80) {
-        dataDescription = getGenericDataDescription(message);
-        statusDescription = tr("%1 (invalid status)").
+        sMidiData = getGenericDataDescription(message);
+        sMidiStatus = tr("%1 (invalid status)").
             arg(static_cast<uint>(status), 2, 16, QChar('0'));
         valid = false;
         return;
@@ -193,22 +193,22 @@ void Controller::parseMessage(const QByteArray &message) {
     switch (expectedLength) {
 
     case -1:
-        dataDescription = getGenericDataDescription(message);
-        statusDescription = tr("%1 (undefined status)").
+        sMidiData = getGenericDataDescription(message);
+        sMidiStatus = tr("%1 (undefined status)").
             arg(static_cast<uint>(status), 2, 16, QChar('0'));
         valid = false;
         return;
 
     case 0:
         if(length == 1) {
-            dataDescription = "";
-            statusDescription = tr("System Exclusive (no data)");
+            sMidiData = "";
+            sMidiStatus = tr("System Exclusive (no data)");
             valid = false;
             return;
         }
         if(static_cast<quint8>(message[length - 1]) != 0xf7) {
-            dataDescription = getGenericDataDescription(message);
-            statusDescription = tr("System Exclusive (end not found)");
+            sMidiData = getGenericDataDescription(message);
+            sMidiStatus = tr("System Exclusive (end not found)");
             valid = false;
             return;
         }
@@ -217,8 +217,8 @@ void Controller::parseMessage(const QByteArray &message) {
 
     default:
         if(length != expectedLength) {
-            dataDescription = getGenericDataDescription(message);
-            statusDescription = tr("%1 (incorrect length)").
+            sMidiData = getGenericDataDescription(message);
+            sMidiStatus = tr("%1 (incorrect length)").
                 arg(static_cast<uint>(status), 2, 16, QChar('0'));
             valid = false;
             return;
@@ -229,8 +229,8 @@ void Controller::parseMessage(const QByteArray &message) {
     // Validate data bytes.
     for (int i = 1; i <= lastDataIndex; i++) {
         if(static_cast<quint8>(message[i]) >= 0x80) {
-            dataDescription = getGenericDataDescription(message);
-            statusDescription = tr("%1 (invalid data)").
+            sMidiData = getGenericDataDescription(message);
+            sMidiStatus = tr("%1 (invalid data)").
                 arg(static_cast<uint>(status), 2, 16, QChar('0'));
             valid = false;
             return;
@@ -244,62 +244,62 @@ void Controller::parseMessage(const QByteArray &message) {
     switch (status & 0xf0) {
 
     case 0x80:
-        dataDescription = tr("Note: %1, Velocity: %2").
+        sMidiData = tr("Note: %1, Velocity: %2").
             arg(getMIDINoteString(static_cast<quint8>(message[1]))).
             arg(static_cast<quint8>(message[2]));
-        statusDescription = tr("Note Off, Channel %1").arg((status & 0xf) + 1);
+        sMidiStatus = tr("Note Off, Channel %1").arg((status & 0xf) + 1);
         break;
 
     case 0x90:
-        dataDescription = tr("Note: %1, Velocity: %2").
+        sMidiData = tr("Note: %1, Velocity: %2").
             arg(getMIDINoteString(static_cast<quint8>(message[1]))).
             arg(static_cast<quint8>(message[2]));
-        statusDescription = tr("Note On, Channel %1").arg((status & 0xf) + 1);
+        sMidiStatus = tr("Note On, Channel %1").arg((status & 0xf) + 1);
         break;
 
     case 0xa0:
-        dataDescription = tr("Note: %1, Pressure: %2").
+        sMidiData = tr("Note: %1, Pressure: %2").
             arg(getMIDINoteString(static_cast<quint8>(message[1]))).
             arg(static_cast<quint8>(message[2]));
-        statusDescription = tr("Aftertouch, Channel %1").
+        sMidiStatus = tr("Aftertouch, Channel %1").
             arg((status & 0xf) + 1);
         break;
 
     case 0xb0:
-        dataDescription = tr("Controller: %1, Value: %2").
+        sMidiData = tr("Controller: %1, Value: %2").
             arg(getMIDIControlString(static_cast<quint8>(message[1]))).
             arg(static_cast<quint8>(message[2]));
-        statusDescription = tr("Controller, Channel %1").
+        sMidiStatus = tr("Controller, Channel %1").
             arg((status & 0xf) + 1);
         break;
 
     case 0xc0:
-        dataDescription = tr("Number: %1").arg(static_cast<quint8>(message[1]));
-        statusDescription = tr("Program Change, Channel %1").
+        sMidiData = tr("Number: %1").arg(static_cast<quint8>(message[1]));
+        sMidiStatus = tr("Program Change, Channel %1").
             arg((status & 0xf) + 1);
         break;
 
     case 0xd0:
-        dataDescription = tr("Pressure: %1").
+        sMidiData = tr("Pressure: %1").
             arg(static_cast<quint8>(message[1]));
-        statusDescription = tr("Channel Pressure, Channel %1").
+        sMidiStatus = tr("Channel Pressure, Channel %1").
             arg((status & 0xf) + 1);
         break;
 
     case 0xe0:
-        dataDescription = tr("Value: %1").
+        sMidiData = tr("Value: %1").
             arg((((static_cast<qint16>(message[2])) << 7) |
                  (static_cast<qint16>(message[1]))) - 0x2000);
-        statusDescription = tr("Pitch Wheel, Channel %1").
+        sMidiStatus = tr("Pitch Wheel, Channel %1").
             arg((status & 0xf) + 1);
         break;
 
     case 0xf0:
-        switch (status & 0xf) {
+        switch (status & 0x0f) {
 
         case 0x0:
-            dataDescription = getGenericDataDescription(message, lastDataIndex);
-            statusDescription = tr("System Exclusive");
+            sMidiData = getGenericDataDescription(message, lastDataIndex);
+            sMidiStatus = tr("System Exclusive");
             break;
 
         case 0x1:
@@ -307,31 +307,31 @@ void Controller::parseMessage(const QByteArray &message) {
             switch (message[0] & 0x70) {
 
             case 0x00:
-                dataDescription = tr("Frames Low Nibble: %1").arg(value);
+                sMidiData = tr("Frames Low Nibble: %1").arg(value);
                 break;
 
             case 0x10:
-                dataDescription = tr("Frames High Nibble: %1").arg(value);
+                sMidiData = tr("Frames High Nibble: %1").arg(value);
                 break;
 
             case 0x20:
-                dataDescription = tr("Seconds Low Nibble: %1").arg(value);
+                sMidiData = tr("Seconds Low Nibble: %1").arg(value);
                 break;
 
             case 0x30:
-                dataDescription = tr("Seconds High Nibble: %1").arg(value);
+                sMidiData = tr("Seconds High Nibble: %1").arg(value);
                 break;
 
             case 0x40:
-                dataDescription = tr("Minutes Low Nibble: %1").arg(value);
+                sMidiData = tr("Minutes Low Nibble: %1").arg(value);
                 break;
 
             case 0x50:
-                dataDescription = tr("Minutes High Nibble: %1").arg(value);
+                sMidiData = tr("Minutes High Nibble: %1").arg(value);
                 break;
 
             case 0x60:
-                dataDescription = tr("Hours Low Nibble: %1").arg(value);
+                sMidiData = tr("Hours Low Nibble: %1").arg(value);
                 break;
 
             case 0x70:
@@ -357,7 +357,7 @@ void Controller::parseMessage(const QByteArray &message) {
                     // We shouldn't get here.
                     assert(false);
                 }
-                dataDescription = tr("Hours High Nibble: %1, SMPTE Type: %2").
+                sMidiData = tr("Hours High Nibble: %1, SMPTE Type: %2").
                     arg(value & 1).arg(s);
                 break;
 
@@ -365,60 +365,60 @@ void Controller::parseMessage(const QByteArray &message) {
                 // We shouldn't get here.
                 assert(false);
             }
-            statusDescription = tr("MTC Quarter Frame");
+            sMidiStatus = tr("MTC Quarter Frame");
             break;
 
         case 0x2:
-            dataDescription = tr("MIDI Beat: %1").
+            sMidiData = tr("MIDI Beat: %1").
                 arg(((static_cast<qint16>(message[2])) << 7) |
                     (static_cast<qint16>(message[1])));
-            statusDescription = tr("Song Position Pointer");
+            sMidiStatus = tr("Song Position Pointer");
             break;
 
         case 0x3:
-            dataDescription = tr("Song Number: %1").
+            sMidiData = tr("Song Number: %1").
                 arg(static_cast<quint8>(message[1]));
-            statusDescription = tr("Song Select");
+            sMidiStatus = tr("Song Select");
             break;
 
         case 0x6:
-            dataDescription = "";
-            statusDescription = tr("Tune Request");
+            sMidiData = "";
+            sMidiStatus = tr("Tune Request");
             break;
 
         case 0x8:
-            dataDescription = "";
-            statusDescription = tr("MIDI Clock");
+            sMidiData = "";
+            sMidiStatus = tr("MIDI Clock");
             break;
 
         case 0x9:
-            dataDescription = "";
-            statusDescription = tr("MIDI Tick");
+            sMidiData = "";
+            sMidiStatus = tr("MIDI Tick");
             break;
 
         case 0xa:
-            dataDescription = "";
-            statusDescription = tr("MIDI Start");
+            sMidiData = "";
+            sMidiStatus = tr("MIDI Start");
             break;
 
         case 0xb:
-            dataDescription = "";
-            statusDescription = tr("MIDI Continue");
+            sMidiData = "";
+            sMidiStatus = tr("MIDI Continue");
             break;
 
         case 0xc:
-            dataDescription = "";
-            statusDescription = tr("MIDI Stop");
+            sMidiData = "";
+            sMidiStatus = tr("MIDI Stop");
             break;
 
         case 0xe:
-            dataDescription = "";
-            statusDescription = tr("Active Sense");
+            sMidiData = "";
+            sMidiStatus = tr("Active Sense");
             break;
 
         case 0xf:
-            dataDescription = "";
-            statusDescription = tr("Reset");
+            sMidiData = "";
+            sMidiStatus = tr("Reset");
             break;
 
         default:
@@ -435,7 +435,7 @@ void Controller::parseMessage(const QByteArray &message) {
 
 void Controller::run() {
     theQVwMain.show();
-    application.exec();
+    theApp.exec();
 }
 
 void Controller::showError(const QString &message) {

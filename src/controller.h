@@ -20,7 +20,7 @@
 #ifndef __CONTROLLER_H__
 #define __CONTROLLER_H__
 
-#include "application.h"
+#include "App.hpp"
 #include "engine.h"
 
 #include "QVwMain.hpp"
@@ -33,7 +33,7 @@ class Controller: public QObject {
   Q_OBJECT
 
 public:
-  explicit  Controller(Application &application, QObject *parent=0);
+  explicit  Controller(App &i_theApp, QObject *parent=0);
            ~Controller();
   void run();
 
@@ -47,7 +47,7 @@ private:
   void    parseMessage(const QByteArray &message);
   void    showError(const QString &message);
 
-  Application   &application;
+  App           &theApp;
 
   Engine         engine;
 
@@ -57,8 +57,8 @@ private:
   QVwMsg         theQVwMsg;
   QVwErr         theQVwErr;
 
-  QString        dataDescription;
-  QString        statusDescription;
+  QString        sMidiData;
+  QString        sMidiStatus;
 
   bool           valid;
 };

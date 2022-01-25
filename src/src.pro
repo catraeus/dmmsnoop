@@ -69,7 +69,7 @@ DEFINES += DMMSNOOP_MAJOR_VERSION=$${MAJOR_VERSION} \
     DMMSNOOP_REVISION=$${REVISION}
 DESTDIR = $${BUILDDIR}/$${DMMSNOOP_APP_SUFFIX}
 HEADERS +=                 \
-    application.h          \
+    App.hpp                \
     controller.h           \
     engine.h               \
     closeeventfilter.h     \
@@ -92,7 +92,7 @@ RCC_DIR = $${MAKEDIR}
 RESOURCES += resources.qrc
 SOURCES +=                   \
     _main.cpp                \
-    application.cpp          \
+    App.cpp          \
     controller.cpp           \
     engine.cpp               \
     closeeventfilter.cpp     \

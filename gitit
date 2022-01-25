@@ -1,6 +1,8 @@
 #!/bin/sh
-git add   configure
-git add   dmmsnoop.pro
-git add   install/util.py
+git add   src/App.cpp
+git add   src/App.hpp
+git add   src/_main.cpp
+git add   src/controller.cpp
+git add   src/controller.h
 git add   src/src.pro
 

@@ -28,24 +28,30 @@ def main():
     parser.add_option("--prefix",        action="store",      default=None,  dest="prefix",      help="Install prefix")
     options, args = parser.parse_args()
 
-    pkgConfigPath = findExecutable("pkg-config")
     rtMidiMinVer = "2.0.1"
 
+    stdout.write("\n------------------\n")
+    stdout.write("    Searching for important things.\n")
+    pkgConfigPath = findExecutable("pkg-config")
     if pkgConfigPath is None:
-      exit("FATAL: pkg-config not found\n")
+      exit("----FATAL: pkg-config not found\n")
+    stdout.write("    pkg-config was found\n")
         
     if call([pkgConfigPath, "--exists", "rtmidi"]) :
-      exit("FATAL: rtmidi not found\n")
-    else :
-      stdout.write("rtmidi dev libraries are present\n")
+      exit("----FATAL: rtmidi not found\n")
+    stdout.write("    rtmidi dev libraries are present\n")
     if call([pkgConfigPath, "--atleast-version=" + rtMidiMinVer, "rtmidi"]):
-      exit("FATAL: rtmidi version >= " + rtMidiMinVer + " is required for compilation")
-    else :
-      stdout.write("rtmidi dev libraries are at least" + rtMidiMinVer + "\n")
+      exit("----FATAL: rtmidi version >= " + rtMidiMinVer + " is required for compilation")
+    stdout.write("    Rt<idi dev libraries are at least" + rtMidiMinVer + "\n")
 
     qmakePath = findExecutable("qmake")
     if qmakePath is None:
-      exit("FATAL: qmake is required for build configuration")
+      exit("----FATAL: qmake is required for build configuration")
+    stdout.write("    qmake was found\n")
+    
+    stdout.write("\n")
+    stdout.write("=========================================================================\n")
+    stdout.write("Important tools are in place, going on to configure location and platform.\n")
 
     platform = getPlatform()
     platformArgs = []
@@ -97,6 +103,9 @@ def main():
     else:
         dataDir = abspath(join(prefix, dataDir))
 
+    stdout.write("\n")
+    stdout.write("=========================================================================\n")
+    stdout.write("Locations and parameters done.   Going on to qmake\n")
     # Run `qmake`
     qmakeArgs = [qmakePath, "-recursive"] + platformArgs + args + \
         ["MAJOR_VERSION=%d" % MAJOR_VERSION, "MINOR_VERSION=%d" % MINOR_VERSION,
@@ -109,8 +118,9 @@ def main():
     if call(qmakeArgs):
         parser.error("qmake returned an error")
 
-    stdout.write("Configure successful.  Run `make` to build, and "
-                 "`make install` to install.\n")
+    stdout.write("\n")
+    stdout.write("=========================================================================\n")
+    stdout.write("Configure successful.  Run `make` to build, and make install` to install.\n")
 
 if __name__ == "__main__":
     main()

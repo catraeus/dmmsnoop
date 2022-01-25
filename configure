@@ -27,6 +27,7 @@ def main():
     parser.add_option("--make-dir",      action="store",      default=None,  dest="makeDir",     help="Make directory")
     parser.add_option("--prefix",        action="store",      default=None,  dest="prefix",      help="Install prefix")
     options, args = parser.parse_args()
+    
 
     rtMidiMinVer = "2.0.1"
 
@@ -115,6 +116,11 @@ def main():
          "BINDIR=%s" % binDir, "DATADIR=%s" % dataDir]
     if options.debug:
         qmakeArgs.append("DEBUG=1")
+    for arg in qmakeArgs:
+      stdout.write("The args were found to be:" + arg + "\n")
+    stdout.write("\n")
+    stdout.write("=========================================================================\n")
+    stdout.write("Firing off qmake.\n")
     if call(qmakeArgs):
         parser.error("qmake returned an error")
 

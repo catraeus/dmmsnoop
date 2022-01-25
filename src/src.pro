@@ -1,10 +1,11 @@
 ################################################################################
 # Build
 ################################################################################
+QT += core gui uitools widgets
+CONFIG += console warn_on
 
 DMMSNOOP_APP_SUFFIX = bin
 DMMSNOOP_DATA_SUFFIX = share
-
 !isEmpty(DEBUG) {
     CONFIG += debug
     DEFINES += DMMSNOOP_DEBUG
@@ -63,47 +64,48 @@ isEmpty(DATADIR) {
     DMMSNOOP_DATA_INSTALL_PATH = $${DATADIR}
 }
 
-CONFIG += console warn_on
 DEFINES += DMMSNOOP_MAJOR_VERSION=$${MAJOR_VERSION} \
     DMMSNOOP_MINOR_VERSION=$${MINOR_VERSION} \
     DMMSNOOP_REVISION=$${REVISION}
 DESTDIR = $${BUILDDIR}/$${DMMSNOOP_APP_SUFFIX}
-HEADERS += QVwAbout.hpp \
-    application.h \
-    closeeventfilter.h \
-    QVwConfig.hpp \
-    controller.h \
-    designerview.h \
-    dialogview.h \
-    engine.h \
-    error.h \
-    QVwErr.hpp \
-    QVwMain.hpp \
+HEADERS +=                 \
+    application.h          \
+    controller.h           \
+    engine.h               \
+    closeeventfilter.h     \
     messagetabledelegate.h \
-    QVwMsg.hpp \
-    util/util.hpp \
+    QVwMain.hpp            \
+    QVwAbout.hpp           \
+    QVwConfig.hpp          \
+    QVwMsg.hpp             \
+    QVwErr.hpp             \
+    error.h                \
+    util/util.hpp          \
+    dialogview.h           \
+    designerview.h         \
     view.h
 LIBS += -lrtmidi
 MOC_DIR = $${MAKEDIR}
 OBJECTS_DIR = $${MAKEDIR}
-QT += core gui uitools widgets
+
 RCC_DIR = $${MAKEDIR}
 RESOURCES += resources.qrc
-SOURCES += QVwAbout.cpp \
-    application.cpp \
-    closeeventfilter.cpp \
-    QVwConfig.cpp \
-    controller.cpp \
-    designerview.cpp \
-    dialogview.cpp \
-    engine.cpp \
-    error.cpp \
-    QVwErr.cpp \
-    _main.cpp \
-    QVwMain.cpp \
+SOURCES +=                   \
+    _main.cpp                \
+    application.cpp          \
+    controller.cpp           \
+    engine.cpp               \
+    closeeventfilter.cpp     \
     messagetabledelegate.cpp \
-    QVwMsg.cpp \
-    util/util.cpp \
+    QVwMain.cpp              \
+    QVwAbout.cpp             \
+    QVwConfig.cpp            \
+    QVwMsg.cpp               \
+    QVwErr.cpp               \
+    error.cpp                \
+    util/util.cpp            \
+    dialogview.cpp           \
+    designerview.cpp         \
     view.cpp
 TARGET = dmmsnoop
 TEMPLATE = app

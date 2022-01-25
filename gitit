@@ -1,16 +1,6 @@
 #!/bin/sh
+git add   configure
 git add   dmmsnoop.pro
 git add   install/util.py
-git add   src/QVwAbout.cpp
-git add   src/QVwConfig.cpp
-git add   src/QVwErr.cpp
-git add   src/QVwMain.cpp
-git add   src/QVwMsg.cpp
-git add   src/controller.cpp
-git add   src/designerview.cpp
 git add   src/src.pro
-git add   src/util/util.cpp
-git add   src/util/util.hpp
-git add   src/view.cpp
-git add  src/util/util.pro
 

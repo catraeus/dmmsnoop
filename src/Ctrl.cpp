@@ -21,8 +21,8 @@
 
 #include <QtCore/QDebug>
 
-#include "controller.h"
-#include "error.h"
+#include "Ctrl.hpp"
+#include "util/Error.hpp"
 #include "util/util.hpp"
 
 // Static data
@@ -33,7 +33,7 @@ const int statusLengths[0x80] = {
 
 // Class definition
 
-Controller::Controller(App &i_theApp, QObject *i_parent)
+Ctrl::Ctrl(App &i_theApp, QObject *i_parent)
 : QObject(i_parent)
 , theApp(i_theApp) {
     // Setup about view
@@ -43,35 +43,35 @@ Controller::Controller(App &i_theApp, QObject *i_parent)
     connect(&theQVwAbout, SIGNAL(closeRequest()), &theQVwAbout, SLOT(hide()));
 
     // Setup configure view
-    int driverCount = engine.getDriverCount();
+    int driverCount = theMidi.getDriverCount();
     if(! driverCount) {
         throw Error(tr("no MIDI drivers found"));
     }
     for (int i = 0; i < driverCount; i++) {
-        theQVwConfig.addDriver(i, engine.getDriverName(i));
+        theQVwConfig.addDriver(i, theMidi.getDriverName(i));
     }
-    int driver = engine.getDriver();
-    int outputPort = engine.getOutputPort();
+    int driver = theMidi.getDriver();
+    int outputPort = theMidi.getOutputPort();
     theQVwConfig.setDriver                        (driver);
-    theQVwConfig.setInputPort(engine.getInputPort ());
-    theQVwConfig.setIgnoreActiveSensingEvents     (engine.getIgnoreActiveSensingEvents());
-    theQVwConfig.setIgnoreSystemExclusiveEvents   (engine.getIgnoreSystemExclusiveEvents());
-    theQVwConfig.setIgnoreTimeEvents              (engine.getIgnoreTimeEvents());
+    theQVwConfig.setInputPort(theMidi.getInputPort ());
+    theQVwConfig.setIgnoreActiveSensingEvents     (theMidi.getIgnoreActiveSensingEvents());
+    theQVwConfig.setIgnoreSystemExclusiveEvents   (theMidi.getIgnoreSystemExclusiveEvents());
+    theQVwConfig.setIgnoreTimeEvents              (theMidi.getIgnoreTimeEvents());
     theQVwConfig.setOutputPort                    (outputPort);
     connect(&theQVwConfig, SIGNAL(closeRequest()),                                   &theQVwConfig, SLOT(hide()));
-    connect(&theQVwConfig, SIGNAL(driverChangeRequest(int)),                         &engine, SLOT(setDriver(int)));
-    connect(&theQVwConfig, SIGNAL(ignoreActiveSensingEventsChangeRequest(bool)),     &engine, SLOT(setIgnoreActiveSensingEvents(bool)));
-    connect(&theQVwConfig, SIGNAL(ignoreSystemExclusiveEventsChangeRequest(bool)),   &engine, SLOT(setIgnoreSystemExclusiveEvents(bool)));
-    connect(&theQVwConfig, SIGNAL(ignoreTimeEventsChangeRequest(bool)),              &engine, SLOT(setIgnoreTimeEvents(bool)));
-    connect(&theQVwConfig, SIGNAL(inputPortChangeRequest(int)),                      &engine, SLOT(setInputPort(int)));
-    connect(&theQVwConfig, SIGNAL(outputPortChangeRequest(int)),                     &engine, SLOT(setOutputPort(int)));
+    connect(&theQVwConfig, SIGNAL(driverChangeRequest(int)),                         &theMidi, SLOT(setDriver(int)));
+    connect(&theQVwConfig, SIGNAL(ignoreActiveSensingEventsChangeRequest(bool)),     &theMidi, SLOT(setIgnoreActiveSensingEvents(bool)));
+    connect(&theQVwConfig, SIGNAL(ignoreSystemExclusiveEventsChangeRequest(bool)),   &theMidi, SLOT(setIgnoreSystemExclusiveEvents(bool)));
+    connect(&theQVwConfig, SIGNAL(ignoreTimeEventsChangeRequest(bool)),              &theMidi, SLOT(setIgnoreTimeEvents(bool)));
+    connect(&theQVwConfig, SIGNAL(inputPortChangeRequest(int)),                      &theMidi, SLOT(setInputPort(int)));
+    connect(&theQVwConfig, SIGNAL(outputPortChangeRequest(int)),                     &theMidi, SLOT(setOutputPort(int)));
 
     // Setup error view
     connect(&theQVwErr, SIGNAL(closeRequest()),                              &theQVwErr,     SLOT(hide()));
 
     // Setup main view
     theQVwMain.setMessageSendEnabled((driver != -1) && (outputPort != -1));
-    theQVwMain.SetTimeZero(engine.TimeGet());
+    theQVwMain.SetTimeZero(theMidi.TimeGet());
     connect(&theQVwMain, SIGNAL(aboutRequest()),                               &theQVwAbout,     SLOT(show()));
     connect(&theQVwMain, SIGNAL(addMessageRequest()),                          &theQVwMsg,   SLOT(show()));
     connect(&theQVwMain, SIGNAL(clearMessagesRequest()),                       &theQVwMain,      SLOT(clearMessages()));
@@ -83,37 +83,36 @@ Controller::Controller(App &i_theApp, QObject *i_parent)
     connect(&theQVwMsg, SIGNAL(sendRequest(const QString &)),              &theQVwMsg,   SLOT(hide()));
     connect(&theQVwMsg, SIGNAL(sendRequest(const QString &)),                              SLOT(handleMessageSend(const QString &)));
 
-    // Setup engine
-    connect(&engine, SIGNAL(messageReceived(quint64, const QByteArray &)),                   SLOT(handleReceivedMessage(quint64, const QByteArray &)));
-    connect(&engine, SIGNAL(driverChanged(int)),                             &theQVwConfig, SLOT(setDriver(int)));
-    connect(&engine, SIGNAL(driverChanged(int)),                                             SLOT(handleDriverChange()));
-    connect(&engine, SIGNAL(ignoreActiveSensingEventsChanged(bool)),         &theQVwConfig, SLOT(setIgnoreActiveSensingEvents(bool)));
-    connect(&engine, SIGNAL(ignoreSystemExclusiveEventsChanged(bool)),       &theQVwConfig, SLOT(setIgnoreSystemExclusiveEvents(bool)));
-    connect(&engine, SIGNAL(ignoreTimeEventsChanged(bool)),                  &theQVwConfig, SLOT(setIgnoreTimeEvents(bool)));
-    connect(&engine, SIGNAL(inputPortAdded(int, QString)),                   &theQVwConfig, SLOT(addInputPort(int, QString)));
-    connect(&engine, SIGNAL(inputPortChanged(int)),                          &theQVwConfig, SLOT(setInputPort(int)));
-    connect(&engine, SIGNAL(inputPortChanged(int)),                                          SLOT(handleDriverChange()));
-    connect(&engine, SIGNAL(inputPortRemoved(int)),                          &theQVwConfig, SLOT(removeInputPort(int)));
-    connect(&engine, SIGNAL(outputPortAdded(int, QString)),                  &theQVwConfig, SLOT(addOutputPort(int, QString)));
-    connect(&engine, SIGNAL(outputPortChanged(int)),                         &theQVwConfig, SLOT(setOutputPort(int)));
-    connect(&engine, SIGNAL(outputPortChanged(int)),                                         SLOT(handleDriverChange()));
-    connect(&engine, SIGNAL(outputPortRemoved(int)),                         &theQVwConfig, SLOT(removeOutputPort(int)));
+    // Setup theMidi
+    connect(&theMidi, SIGNAL(messageReceived(quint64, const QByteArray &)),                   SLOT(handleReceivedMessage(quint64, const QByteArray &)));
+    connect(&theMidi, SIGNAL(driverChanged(int)),                             &theQVwConfig, SLOT(setDriver(int)));
+    connect(&theMidi, SIGNAL(driverChanged(int)),                                             SLOT(handleDriverChange()));
+    connect(&theMidi, SIGNAL(ignoreActiveSensingEventsChanged(bool)),         &theQVwConfig, SLOT(setIgnoreActiveSensingEvents(bool)));
+    connect(&theMidi, SIGNAL(ignoreSystemExclusiveEventsChanged(bool)),       &theQVwConfig, SLOT(setIgnoreSystemExclusiveEvents(bool)));
+    connect(&theMidi, SIGNAL(ignoreTimeEventsChanged(bool)),                  &theQVwConfig, SLOT(setIgnoreTimeEvents(bool)));
+    connect(&theMidi, SIGNAL(inputPortAdded(int, QString)),                   &theQVwConfig, SLOT(addInputPort(int, QString)));
+    connect(&theMidi, SIGNAL(inputPortChanged(int)),                          &theQVwConfig, SLOT(setInputPort(int)));
+    connect(&theMidi, SIGNAL(inputPortChanged(int)),                                          SLOT(handleDriverChange()));
+    connect(&theMidi, SIGNAL(inputPortRemoved(int)),                          &theQVwConfig, SLOT(removeInputPort(int)));
+    connect(&theMidi, SIGNAL(outputPortAdded(int, QString)),                  &theQVwConfig, SLOT(addOutputPort(int, QString)));
+    connect(&theMidi, SIGNAL(outputPortChanged(int)),                         &theQVwConfig, SLOT(setOutputPort(int)));
+    connect(&theMidi, SIGNAL(outputPortChanged(int)),                                         SLOT(handleDriverChange()));
+    connect(&theMidi, SIGNAL(outputPortRemoved(int)),                         &theQVwConfig, SLOT(removeOutputPort(int)));
 
     // Setup theApp
     connect(&theApp, SIGNAL(eventError(QString)),                &theQVwErr, SLOT(setMessage(QString)));
     connect(&theApp, SIGNAL(eventError(QString)),                &theQVwErr, SLOT(show()));
 }
 
-Controller::~Controller() {
-    // Disconnect engine signals handled by the controller before the engine is
-    // deleted.
-    disconnect(&engine, SIGNAL(messageReceived(quint64, const QByteArray &)),                   this, SLOT(handleReceivedMessage(quint64, const QByteArray &)));
-    disconnect(&engine, SIGNAL(driverChanged(int)),                   this, SLOT(handleDriverChange()));
-    disconnect(&engine, SIGNAL(inputPortChanged(int)),                   this, SLOT(handleDriverChange()));
-    disconnect(&engine, SIGNAL(outputPortChanged(int)),                   this, SLOT(handleDriverChange()));
+Ctrl::~Ctrl() {
+    // Disconnect theMidi signals handled by the controller before the theMidi is deleted.
+    disconnect(&theMidi, SIGNAL(messageReceived(quint64, const QByteArray &)),                   this, SLOT(handleReceivedMessage(quint64, const QByteArray &)));
+    disconnect(&theMidi, SIGNAL(driverChanged(int)),                   this, SLOT(handleDriverChange()));
+    disconnect(&theMidi, SIGNAL(inputPortChanged(int)),                   this, SLOT(handleDriverChange()));
+    disconnect(&theMidi, SIGNAL(outputPortChanged(int)),                   this, SLOT(handleDriverChange()));
 }
 
-QString Controller::getGenericDataDescription(const QByteArray &message, int lastIndex) {
+QString Ctrl::getGenericDataDescription(const QByteArray &message, int lastIndex) {
   assert((lastIndex >= -1) && (lastIndex < message.count()));
   if(lastIndex == -1) {
     lastIndex = message.count() - 1;
@@ -127,12 +126,12 @@ QString Controller::getGenericDataDescription(const QByteArray &message, int las
     return dataParts.join(" ");
 }
 
-void Controller::handleDriverChange() {
-    theQVwMain.setMessageSendEnabled((engine.getDriver() != -1) &&
-                                   (engine.getOutputPort() != -1));
+void Ctrl::handleDriverChange() {
+    theQVwMain.setMessageSendEnabled((theMidi.getDriver() != -1) &&
+                                   (theMidi.getOutputPort() != -1));
 }
 
-void Controller::handleMessageSend(const QString &message) {
+void Ctrl::handleMessageSend(const QString &message) {
     // Convert the message to bytes.
     QStringList bytes = message.split(' ', QString::SkipEmptyParts);
     int count = bytes.count();
@@ -157,16 +156,16 @@ void Controller::handleMessageSend(const QString &message) {
     }
 
     // Send the message.
-    quint64 timeStamp = engine.sendMessage(msg);
+    quint64 timeStamp = theMidi.sendMessage(msg);
     theQVwMain.MsgAddTX(timeStamp, sMidiStatus, sMidiData,                                valid);
 }
 
-void Controller::handleReceivedMessage(quint64 timeStamp, const QByteArray &message) {
+void Ctrl::handleReceivedMessage(quint64 timeStamp, const QByteArray &message) {
     parseMessage(message);
     theQVwMain.addReceivedMessage(timeStamp, sMidiStatus, sMidiData,                                    valid);
 }
 
-void Controller::parseMessage(const QByteArray &message) {
+void Ctrl::parseMessage(const QByteArray &message) {
     // Make sure we have an actual message.
     int length = message.count();
     if(! length) {
@@ -266,10 +265,10 @@ void Controller::parseMessage(const QByteArray &message) {
         break;
 
     case 0xb0:
-        sMidiData = tr("Controller: %1, Value: %2").
+        sMidiData = tr("CC: %1, Value: %2").
             arg(getMIDIControlString(static_cast<quint8>(message[1]))).
             arg(static_cast<quint8>(message[2]));
-        sMidiStatus = tr("Controller, Channel %1").
+        sMidiStatus = tr("CC, Channel %1").
             arg((status & 0xf) + 1);
         break;
 
@@ -433,12 +432,12 @@ void Controller::parseMessage(const QByteArray &message) {
     }
 }
 
-void Controller::run() {
+void Ctrl::run() {
     theQVwMain.show();
     theApp.exec();
 }
 
-void Controller::showError(const QString &message) {
+void Ctrl::showError(const QString &message) {
     theQVwErr.setMessage(message);
     theQVwErr.show();
 }

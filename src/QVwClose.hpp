@@ -17,20 +17,28 @@
  * Ave, Cambridge, MA 02139, USA.
  */
 
-#include "error.h"
+#ifndef __CLOSEEVENTFILTER_H__
+#define __CLOSEEVENTFILTER_H__
 
-Error::Error(const QString &message)
-{
-    this->message = message;
-}
+#include <QtCore/QEvent>
+#include <QtCore/QObject>
 
-Error::~Error()
-{
-    // Empty
-}
+class QVwClose: public QObject {
+  Q_OBJECT
 
-QString
-Error::getMessage()
-{
-    return message;
-}
+public:
+  explicit          QVwClose(QObject *parent=0);
+                   ~QVwClose();
+           bool     eventFilter(QObject *obj, QEvent *event);
+           bool     isCloseEnabled() const;
+           void     setCloseEnabled(bool enabled);
+
+signals:
+           void     closeRequest();
+
+private:
+           bool     closeEnabled;
+
+};
+
+#endif

@@ -27,7 +27,7 @@
 #include <QtCore/QTranslator>
 #include <QtCore/QTextStream>
 
-#include "controller.h"
+#include "Ctrl.hpp"
 #include "error.h"
 
 int main(int argc, char **argv) {
@@ -44,29 +44,24 @@ int main(int argc, char **argv) {
 // Translations
   QString      directory = QLibraryInfo::location(QLibraryInfo::TranslationsPath);
   QString      language = QLocale::system().name();
-    
+
   qtTranslator.load("qt_" + language, directory);
   theApp.installTranslator(&qtTranslator);
-    
+
   translator.load("dmmsnoop_" + language);
   theApp.installTranslator(&translator);
   qDebug() <<   theApp.tr("Translations loaded.");
 
 //    try {
-// Controller
+// Ctrl
   qDebug() <<   theApp.tr("Creating core application objects ...");
-  Controller controller(  theApp);
+  Ctrl theCtrl(  theApp);
   qDebug() <<   theApp.tr("Core application objects created.");
 
 // Run the program
   qDebug() <<   theApp.tr("Running ...");
-  controller.run();
+  theCtrl.run();
 
-//    } catch (Error &e) {
-//        errorMessage = e.getMessage();
-//    } catch (std::exception &e) {
-//        errorMessage = e.what();
-//    }
 
     // Deal with errors.
   if (errorMessage.isEmpty()) {

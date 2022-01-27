@@ -21,7 +21,7 @@
 #define __CONTROLLER_H__
 
 #include "App.hpp"
-#include "engine.h"
+#include "Midi.hpp"
 
 #include "QVwMain.hpp"
 #include "QVwConfig.hpp"
@@ -29,12 +29,12 @@
 #include "QVwAbout.hpp"
 #include "QVwErr.hpp"
 
-class Controller: public QObject {
+class Ctrl: public QObject {
   Q_OBJECT
 
 public:
-  explicit  Controller(App &i_theApp, QObject *parent=0);
-           ~Controller();
+  explicit  Ctrl(App &i_theApp, QObject *parent=0);
+           ~Ctrl();
   void run();
 
 private slots:
@@ -49,7 +49,7 @@ private:
 
   App           &theApp;
 
-  Engine         engine;
+  Midi           theMidi;
 
   QVwMain        theQVwMain;
   QVwConfig      theQVwConfig;

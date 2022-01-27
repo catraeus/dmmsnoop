@@ -17,8 +17,15 @@
  * Ave, Cambridge, MA 02139, USA.
  */
 
-#include "designerview.h"
-#include "util/util.hpp"
+#include <cassert>
 
-DesignerView::DesignerView(const QString &path, QObject *parent) : View(loadForm(path), parent) {}
-DesignerView::~DesignerView() {}
+#include <QtWidgets/QLayout>
+
+#include "QVwDlg.hpp"
+
+QVwDlg::QVwDlg(const QString &path, QObject *parent) : QVwDesgn(path, parent) {
+  dialog = qobject_cast<QDialog *>(getRootWidget());
+  dialog->setWindowFlags(Qt::CustomizeWindowHint | Qt::Dialog | Qt::WindowCloseButtonHint);
+  dialog->setModal(true);
+}
+QVwDlg::~QVwDlg() {}

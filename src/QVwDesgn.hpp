@@ -17,24 +17,16 @@
  * Ave, Cambridge, MA 02139, USA.
  */
 
-#include <cassert>
+#ifndef __QVW_DESGN_HPP_
+#define __QVW_DESGN_HPP_
 
-#include <QtWidgets/QLayout>
+#include "QVwBase.hpp"
 
-#include "dialogview.h"
+class QVwDesgn: public QVwBase {
+  Q_OBJECT
+protected:
+  explicit QVwDesgn(const QString &path, QObject *parent=0);
+  virtual ~QVwDesgn();
+};
 
-DialogView::DialogView(const QString &path, QObject *parent):
-    DesignerView(path, parent)
-{
-    dialog = qobject_cast<QDialog *>(getRootWidget());
-    assert(dialog);
-
-    dialog->setWindowFlags(Qt::CustomizeWindowHint | Qt::Dialog |
-                           Qt::WindowCloseButtonHint);
-    dialog->setModal(true);
-}
-
-DialogView::~DialogView()
-{
-    // Empty
-}
+#endif

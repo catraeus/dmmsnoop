@@ -27,12 +27,12 @@
 
 #include <rtmidi/RtMidi.h>
 
-class Engine: public QObject {
+class Midi: public QObject {
     Q_OBJECT
 
 public:
-  explicit  Engine(QObject *parent=0);
-           ~Engine();
+  explicit  Midi(QObject *parent=0);
+           ~Midi();
   int       getDriver() const;
   int       getDriverCount() const;
   QString   getDriverName(int index) const;

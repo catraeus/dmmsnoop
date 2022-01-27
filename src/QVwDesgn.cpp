@@ -17,27 +17,8 @@
  * Ave, Cambridge, MA 02139, USA.
  */
 
-#ifndef __DIALOGVIEW_H__
-#define __DIALOGVIEW_H__
+#include "QVwDesgn.hpp"
+#include "util/util.hpp"
 
-#include <QtWidgets/QDialog>
-
-#include "designerview.h"
-
-class DialogView: public DesignerView {
-
-    Q_OBJECT
-
-protected:
-
-    explicit
-    DialogView(const QString &path, QObject *parent=0);
-
-    virtual
-    ~DialogView();
-
-    QDialog *dialog;
-
-};
-
-#endif
+QVwDesgn::QVwDesgn(const QString &path, QObject *parent) : QVwBase(loadForm(path), parent) {}
+QVwDesgn::~QVwDesgn() {}

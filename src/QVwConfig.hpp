@@ -24,94 +24,50 @@
 #include <QtWidgets/QComboBox>
 #include <QtWidgets/QPushButton>
 
-#include "designerview.h"
+#include "QVwDesgn.hpp"
 
-class QVwConfig: public DesignerView {
-
-    Q_OBJECT
+class QVwConfig: public QVwDesgn {
+  Q_OBJECT
 
 public:
-
-    explicit
-    QVwConfig(QObject *parent=0);
-
-    ~QVwConfig();
+  explicit          QVwConfig(QObject *parent=0);
+                   ~QVwConfig();
 
 public slots:
-
-    void
-    addDriver(int index, const QString &name);
-
-    void
-    addInputPort(int index, const QString &name);
-
-    void
-    addOutputPort(int index, const QString &name);
-
-    void
-    removeInputPort(int index);
-
-    void
-    removeOutputPort(int index);
-
-    void
-    setDriver(int index);
-
-    void
-    setIgnoreActiveSensingEvents(bool ignore);
-
-    void
-    setIgnoreSystemExclusiveEvents(bool ignore);
-
-    void
-    setIgnoreTimeEvents(bool ignore);
-
-    void
-    setInputPort(int index);
-
-    void
-    setOutputPort(int index);
+           void    addDriver                                 (int  index, const QString &name);
+           void    addInputPort                              (int  index, const QString &name);
+           void    addOutputPort                             (int  index, const QString &name);
+           void    removeInputPort                           (int  index);
+           void    removeOutputPort                          (int  index);
+           void    setDriver                                 (int  index);
+           void    setIgnoreActiveSensingEvents              (bool ignore);
+           void    setIgnoreSystemExclusiveEvents            (bool ignore);
+           void    setIgnoreTimeEvents                       (bool ignore);
+           void    setInputPort                              (int  index);
+           void    setOutputPort                             (int  index);
 
 signals:
-
-    void
-    driverChangeRequest(int index);
-
-    void
-    ignoreActiveSensingEventsChangeRequest(bool ignore);
-
-    void
-    ignoreSystemExclusiveEventsChangeRequest(bool ignore);
-
-    void
-    ignoreTimeEventsChangeRequest(bool ignore);
-
-    void
-    inputPortChangeRequest(int index);
-
-    void
-    outputPortChangeRequest(int index);
+           void    driverChangeRequest                       (int  index);
+           void    ignoreActiveSensingEventsChangeRequest    (bool ignore);
+           void    ignoreSystemExclusiveEventsChangeRequest  (bool ignore);
+           void    ignoreTimeEventsChangeRequest             (bool ignore);
+           void    inputPortChangeRequest                    (int  index);
+           void    outputPortChangeRequest                   (int  index);
 
 private slots:
-
-    void
-    handleDriverActivation(int index);
-
-    void
-    handleInputPortActivation(int index);
-
-    void
-    handleOutputPortActivation(int index);
+           void    handleDriverActivation                    (int index);
+           void    handleInputPortActivation                 (int index);
+           void    handleOutputPortActivation                (int index);
 
 private:
 
-    QPushButton *closeButton;
-    QComboBox *driver;
-    QCheckBox *ignoreActiveSensingEvents;
-    QCheckBox *ignoreSystemExclusiveEvents;
-    QCheckBox *ignoreTimeEvents;
-    QComboBox *inputPort;
-    QComboBox *outputPort;
+           QPushButton *closeButton;
+           QComboBox   *driver;
+           QCheckBox   *ignoreActiveSensingEvents;
+           QCheckBox   *ignoreSystemExclusiveEvents;
+           QCheckBox   *ignoreTimeEvents;
+           QComboBox   *inputPort;
+           QComboBox   *outputPort;
 
 };
 

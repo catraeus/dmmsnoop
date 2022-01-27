@@ -24,9 +24,7 @@
 #include "QVwMain.hpp"
 #include "util/util.hpp"
 
-     QVwMain::QVwMain(QObject *parent)
-: DesignerView(":/dmmsnoop/QVwMain.ui", parent)
-{
+     QVwMain::QVwMain(QObject *parent) : QVwDesgn(":/dmmsnoop/QVwMain.ui", parent) {
     QWidget *widget = getRootWidget();
 
     aboutAction     = getChild<QAction>(widget, "aboutAction"    );    connect(aboutAction,     SIGNAL(triggered()), SIGNAL(aboutRequest         ()));
@@ -45,18 +43,12 @@
     tableView->setModel(&tableModel);
     timeZero = 0;
 }
+     QVwMain::~QVwMain() {}
 
-QVwMain::~QVwMain() {}
-
-void QVwMain::SetTimeZero(qint64 i_timeZero) {
-  timeZero = i_timeZero;
-  return;
-}
-
-
-int QVwMain::MsgAdd(quint64 timeStamp, const QString &statusDescription, const QString &dataDescription, bool valid) {
+void QVwMain::SetTimeZero(qint64 i_timeZero) {  timeZero = i_timeZero;  return;}
+int  QVwMain::MsgAdd(quint64 timeStamp, const QString &statusDescription, const QString &dataDescription, bool valid) {
   int   count    = tableModel.rowCount();
-  
+
   tableModel.insertRow(count); // WARNING There is no check for insertion, insertRow returns a bool
 
   Qt::AlignmentFlag alignment = Qt::AlignTop;
@@ -72,11 +64,9 @@ int QVwMain::MsgAdd(quint64 timeStamp, const QString &statusDescription, const Q
   tableView->scrollToBottom();
   return count;
 }
-
 void QVwMain::addReceivedMessage(quint64 timeStamp,  const QString &statusDescription,  const QString &dataDescription, bool valid) {
   MsgAdd(timeStamp, statusDescription, dataDescription, valid);
 }
-
 void QVwMain::MsgAddTX(quint64 timeStamp, const QString &statusDescription, const QString &dataDescription, bool valid) {
     int   index = MsgAdd(timeStamp, statusDescription, dataDescription, valid);
     const QBrush &brush = qApp->palette().alternateBase();
@@ -84,20 +74,16 @@ void QVwMain::MsgAddTX(quint64 timeStamp, const QString &statusDescription, cons
     setModelData(index, MESSAGETABLECOLUMN_STATUS,    brush, Qt::BackgroundRole);
     setModelData(index, MESSAGETABLECOLUMN_TIMESTAMP, brush, Qt::BackgroundRole);
 }
-
 void QVwMain::clearMessages() {
   int count = tableModel.rowCount();
   if(count > 0) {
     tableModel.removeRows(0, tableModel.rowCount()); // WARNING there is no check here for removal, removeRows returns a bool.
   }
 }
-
 void QVwMain::setMessageSendEnabled(bool enabled) {
   addAction->setEnabled(enabled);
 }
-
 void QVwMain::setModelData(int row, int column, const QVariant &value, int role) {
   bool result = tableModel.setData(tableModel.index(row, column), value, role);
   assert(result);
 }
-

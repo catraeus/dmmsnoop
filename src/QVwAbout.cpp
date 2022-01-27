@@ -22,8 +22,7 @@
 #include "QVwAbout.hpp"
 #include "util/util.hpp"
 
-QVwAbout::QVwAbout(QObject *parent):
-    DialogView(":/dmmsnoop/QVwAbout.ui", parent) {
+QVwAbout::QVwAbout(QObject *parent) : QVwDlg(":/dmmsnoop/QVwAbout.ui", parent) {
     closeButton = getChild<QPushButton>(dialog, "closeButton");
     connect(closeButton, SIGNAL(clicked()), SIGNAL(closeRequest()));
 

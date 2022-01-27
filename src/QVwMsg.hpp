@@ -23,9 +23,9 @@
 #include <QtWidgets/QPlainTextEdit>
 #include <QtWidgets/QPushButton>
 
-#include "designerview.h"
+#include "QVwDesgn.hpp"
 
-class QVwMsg: public DesignerView {
+class QVwMsg: public QVwDesgn {
   Q_OBJECT
 
 public:

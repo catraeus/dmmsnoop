@@ -17,36 +17,20 @@
  * Ave, Cambridge, MA 02139, USA.
  */
 
-#ifndef __MESSAGETABLEDELEGATE_H__
-#define __MESSAGETABLEDELEGATE_H__
+#ifndef __QVW_DLG_HPP_
+#define __QVW_DLG_HPP_
 
-#include <QtWidgets/QStyledItemDelegate>
+#include <QtWidgets/QDialog>
 
-class MessageTableDelegate: public QStyledItemDelegate {
+#include "QVwDesgn.hpp"
 
-    Q_OBJECT
+class QVwDlg: public QVwDesgn {
+  Q_OBJECT
 
-public:
-
-    explicit
-    MessageTableDelegate(QObject *parent=0);
-
-    ~MessageTableDelegate();
-
-    QWidget *
-    createEditor(QWidget *parent, const QStyleOptionViewItem &option,
-                 const QModelIndex &index) const;
-
-    void
-    setEditorData(QWidget *editor, const QModelIndex &index) const;
-
-    void
-    setModelData(QWidget *editor, QAbstractItemModel *model,
-                 const QModelIndex &index) const;
-
-    void
-    updateEditorGeometry(QWidget *editor, const QStyleOptionViewItem &option,
-                         const QModelIndex &index) const;
+protected:
+  explicit          QVwDlg(const QString &path, QObject *parent=0);
+  virtual          ~QVwDlg();
+           QDialog *dialog;
 
 };
 

@@ -17,40 +17,22 @@
  * Ave, Cambridge, MA 02139, USA.
  */
 
-#include "closeeventfilter.h"
+#ifndef __TB_MSG_DELG_H_
+#define __TB_MSG_DELG_H_
 
-CloseEventFilter::CloseEventFilter(QObject *parent):
-    QObject(parent)
-{
-    closeEnabled = true;
-}
+#include <QtWidgets/QStyledItemDelegate>
 
-CloseEventFilter::~CloseEventFilter()
-{
-    // Empty
-}
+class DelgMsgTbl: public QStyledItemDelegate {
+  Q_OBJECT
 
-bool
-CloseEventFilter::eventFilter(QObject *obj, QEvent *event)
-{
-    if (event->type() == QEvent::Close) {
-        event->ignore();
-        if (closeEnabled) {
-            emit closeRequest();
-        }
-        return true;
-    }
-    return QObject::eventFilter(obj, event);
-}
+public:
+  explicit            DelgMsgTbl  (QObject *parent=0);
+                     ~DelgMsgTbl  ();
+           QWidget   *createEditor          (QWidget *parent, const QStyleOptionViewItem &option, const QModelIndex &index ) const;
+           void       setEditorData         (QWidget *editor, const QModelIndex &index                                     ) const;
+           void       setModelData          (QWidget *editor,       QAbstractItemModel *model, const QModelIndex &index    ) const;
+           void       updateEditorGeometry  (QWidget *editor, const QStyleOptionViewItem &option, const QModelIndex &index ) const;
 
-bool
-CloseEventFilter::isCloseEnabled() const
-{
-    return closeEnabled;
-}
+};
 
-void
-CloseEventFilter::setCloseEnabled(bool enabled)
-{
-    closeEnabled = enabled;
-}
+#endif

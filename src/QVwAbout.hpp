@@ -23,9 +23,9 @@
 #include <QtWidgets/QLabel>
 #include <QtWidgets/QPushButton>
 
-#include "dialogview.h"
+#include "QVwDlg.hpp"
 
-class QVwAbout: public DialogView {
+class QVwAbout: public QVwDlg {
   Q_OBJECT
 
 public:

@@ -20,8 +20,7 @@
 #include "QVwErr.hpp"
 #include "util/util.hpp"
 
-        QVwErr::QVwErr(QObject *parent)
-: DialogView(":/dmmsnoop/QVwErr.ui", parent) {
+        QVwErr::QVwErr(QObject *parent) : QVwDlg(":/dmmsnoop/QVwErr.ui", parent) {
   closeButton = getChild<QPushButton>(dialog, "closeButton");
   connect(closeButton, SIGNAL(clicked()), SIGNAL(closeRequest()));
 

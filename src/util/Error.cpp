@@ -17,16 +17,9 @@
  * Ave, Cambridge, MA 02139, USA.
  */
 
-#ifndef __DESIGNERVIEW_H__
-#define __DESIGNERVIEW_H__
+#include "Error.hpp"
 
-#include "view.h"
+        Error::Error(const QString &i_msg) {    this->message = i_msg; }
+        Error::~Error(){}
 
-class DesignerView: public View {
-  Q_OBJECT
-protected:
-  explicit DesignerView(const QString &path, QObject *parent=0);
-  virtual ~DesignerView();
-};
-
-#endif
+QString Error::getMessage()  {    return message; }

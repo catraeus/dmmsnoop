@@ -20,8 +20,7 @@
 #include "QVwConfig.hpp"
 #include "util/util.hpp"
 
-QVwConfig::QVwConfig(QObject *parent):
-    DesignerView(":/dmmsnoop/QVwConfig.ui", parent) {
+     QVwConfig::QVwConfig(QObject *parent) : QVwDesgn(":/dmmsnoop/QVwConfig.ui", parent) {
     QWidget *rootWidget = getRootWidget();
 
     driver = getChild<QComboBox>(rootWidget, "driver");
@@ -47,8 +46,7 @@ QVwConfig::QVwConfig(QObject *parent):
     closeButton = getChild<QPushButton>(rootWidget, "closeButton");
     connect(closeButton, SIGNAL(clicked()), SIGNAL(closeRequest()));
 }
-
-QVwConfig::~QVwConfig() {}
+     QVwConfig::~QVwConfig() {}
 
 void QVwConfig::addDriver                      (int  index, const QString &name) {                      driver->insertItem              (index + 1, name); }
 void QVwConfig::addInputPort                   (int  index, const QString &name) {                   inputPort->insertItem              (index + 1, name); }

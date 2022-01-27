@@ -68,45 +68,45 @@ DEFINES += DMMSNOOP_MAJOR_VERSION=$${MAJOR_VERSION} \
     DMMSNOOP_MINOR_VERSION=$${MINOR_VERSION} \
     DMMSNOOP_REVISION=$${REVISION}
 DESTDIR = $${BUILDDIR}/$${DMMSNOOP_APP_SUFFIX}
-HEADERS +=                 \
-    App.hpp                \
-    controller.h           \
-    engine.h               \
-    closeeventfilter.h     \
-    messagetabledelegate.h \
-    QVwMain.hpp            \
-    QVwAbout.hpp           \
-    QVwConfig.hpp          \
-    QVwMsg.hpp             \
-    QVwErr.hpp             \
-    error.h                \
-    util/util.hpp          \
-    dialogview.h           \
-    designerview.h         \
-    view.h
+HEADERS +=          \
+    App.hpp         \
+    Ctrl.hpp        \
+    Midi.hpp        \
+    QVwClose.hpp    \
+    DelgMsgTbl.hpp  \
+    QVwMain.hpp     \
+    QVwAbout.hpp    \
+    QVwConfig.hpp   \
+    QVwMsg.hpp      \
+    QVwErr.hpp      \
+    QVwDlg.hpp      \
+    QVwDesgn.hpp    \
+    QVwBase.hpp     \
+    util/Error.h    \
+    util/util.hpp
 LIBS += -lrtmidi
 MOC_DIR = $${MAKEDIR}
 OBJECTS_DIR = $${MAKEDIR}
 
 RCC_DIR = $${MAKEDIR}
 RESOURCES += resources.qrc
-SOURCES +=                   \
-    _main.cpp                \
-    App.cpp          \
-    controller.cpp           \
-    engine.cpp               \
-    closeeventfilter.cpp     \
-    messagetabledelegate.cpp \
-    QVwMain.cpp              \
-    QVwAbout.cpp             \
-    QVwConfig.cpp            \
-    QVwMsg.cpp               \
-    QVwErr.cpp               \
-    error.cpp                \
-    util/util.cpp            \
-    dialogview.cpp           \
-    designerview.cpp         \
-    view.cpp
+SOURCES +=          \
+    _main.cpp       \
+    App.cpp         \
+    Ctrl.cpp        \
+    Midi.cpp        \
+    QVwClose.cpp    \
+    DelgMsgTbl.cpp  \
+    QVwMain.cpp     \
+    QVwAbout.cpp    \
+    QVwConfig.cpp   \
+    QVwMsg.cpp      \
+    QVwErr.cpp      \
+    QVwDlg.cpp      \
+    QVwDesgn.cpp    \
+    QVwBase.cpp     \
+    util/Error.cpp  \
+    util/util.cpp
 TARGET = dmmsnoop
 TEMPLATE = app
 VERSION = $${DMMSNOOP_VERSION}

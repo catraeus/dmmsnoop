@@ -17,18 +17,18 @@
  * Ave, Cambridge, MA 02139, USA.
  */
 
-#ifndef __QVwMAIN_HPP__
-#define __QVwMAIN_HPP__
+#ifndef __QVW_MAIN_HPP__
+#define __QVW_MAIN_HPP__
 
 #include <QtGui/QStandardItemModel>
 #include <QtWidgets/QAction>
 #include <QtWidgets/QMainWindow>
 #include <QtWidgets/QTableView>
 
-#include "designerview.h"
-#include "messagetabledelegate.h"
+#include "QVwDesgn.hpp"
+#include "DelgMsgTbl.hpp"
 
-class QVwMain: public DesignerView {
+class QVwMain: public QVwDesgn {
     Q_OBJECT
 
 public:
@@ -61,7 +61,7 @@ private:
     MESSAGETABLECOLUMN_TOTAL     = 3
   };
   qint64 timeZero;
-  
+
   int  MsgAdd(quint64 timeStamp, const QString &statusDescription, const QString &dataDescription, bool valid);
   void setModelData(int row, int column, const QVariant &value, int role=Qt::DisplayRole);
 
@@ -69,7 +69,7 @@ private:
   QAction              *addAction;
   QAction              *QA_ClearMsgMon;
   QAction              *configureAction;
-  MessageTableDelegate  tableDelegate;
+  DelgMsgTbl            tableDelegate;
   QAction              *quitAction;
   QStandardItemModel    tableModel;
   QTableView           *tableView;

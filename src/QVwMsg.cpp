@@ -20,8 +20,7 @@
 #include "QVwMsg.hpp"
 #include "util/util.hpp"
 
-     QVwMsg::QVwMsg(QObject *parent)
-: DesignerView(":/dmmsnoop/QVwMsg.ui", parent) {
+     QVwMsg::QVwMsg(QObject *parent) : QVwDesgn(":/dmmsnoop/QVwMsg.ui", parent) {
   QWidget *rootWidget = getRootWidget();
 
   closeButton = getChild<QPushButton>(rootWidget, "closeButton");

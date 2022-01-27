@@ -17,68 +17,40 @@
  * Ave, Cambridge, MA 02139, USA.
  */
 
-#ifndef __VIEW_H__
-#define __VIEW_H__
+#ifndef __QVW_BASE_HPP__
+#define __QVW_BASE_HPP__
 
 #include <QtWidgets/QWidget>
 
-#include "closeeventfilter.h"
+#include "QVwClose.hpp"
 
-class View: public QObject {
-
-    Q_OBJECT
+class QVwBase: public QObject {
+  Q_OBJECT
 
 public:
-
-    bool
-    isCloseEnabled() const;
-
-    bool
-    isVisible() const;
+           bool           isCloseEnabled() const;
+           bool           isVisible() const;
 
 public slots:
-
-    void
-    hide();
-
-    virtual void
-    setCloseEnabled(bool enabled);
-
-    virtual void
-    setVisible(bool visible);
-
-    void
-    show();
+           void           hide();
+  virtual  void           setCloseEnabled(bool enabled);
+  virtual  void           setVisible(bool visible);
+           void           show();
 
 signals:
-
-    void
-    closeEnabledChanged(bool enabled);
-
-    void
-    closeRequest();
-
-    void
-    visibilityChanged(bool visible);
+           void           closeEnabledChanged(bool enabled);
+           void           closeRequest();
+           void           visibilityChanged(bool visible);
 
 protected:
-
-    explicit
-    View(QWidget *rootWidget, QObject *parent=0);
-
-    virtual
-    ~View();
-
-    const QWidget *
-    getRootWidget() const;
-
-    QWidget *
-    getRootWidget();
+  explicit                QVwBase(QWidget *rootWidget, QObject *parent=0);
+  virtual                ~QVwBase();
+  const    QWidget       *getRootWidget() const;
+           QWidget       *getRootWidget();
 
 private:
-
-    CloseEventFilter closeEventFilter;
-    QWidget *rootWidget;
+    QVwClose      closeEventFilter;
+    QWidget              *rootWidget;
 
 };
 

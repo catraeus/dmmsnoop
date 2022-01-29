@@ -7,7 +7,12 @@
 //
 // Description        :
 /* Architecture
-    This class
+    This class gives us the following:
+      strings as non constants so we don't have to coerce const to non-const
+      Movable, triple-starred old-school strings so we can instantly shift languages.
+      an enum framework for groups of messages based on what part of the MIDI spec ehty come from
+      an enum framework for language specification that is easily growable for the whole world.
+      Dang, you can even change language on the fly!
 */
 //=================================================================================================
 /*

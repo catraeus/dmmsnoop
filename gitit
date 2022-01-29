@@ -1,6 +1,4 @@
 #!/bin/sh
-git add   dmmsnoop.pro
-git add   src/Ctrl.cpp
-git add   src/Ctrl.hpp
-git add   src/src.pro
-
+git add   dmmsnoop.geany
+git add   src/util/TrMsg.cpp
+git add gitit

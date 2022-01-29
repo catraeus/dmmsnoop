@@ -28,7 +28,11 @@ long_line_behaviour=1
 long_line_column=72
 
 [files]
-current_page=-1
+current_page=3
+FILE_NAME_0=1798;C++;0;EUTF-8;0;1;0;%2Fway%2Fdev%2FSW%2Fforeign%2Fmusic%2Fdmmsnoop%2Fsrc%2FCtrl.hpp;0;2
+FILE_NAME_1=1587;C++;0;EUTF-8;0;1;0;%2Fway%2Fdev%2FSW%2Fforeign%2Fmusic%2Fdmmsnoop%2Fsrc%2FCtrl.cpp;0;2
+FILE_NAME_2=1321;C++;0;EUTF-8;0;1;0;%2Fway%2Fdev%2FSW%2Fforeign%2Fmusic%2Fdmmsnoop%2Fsrc%2Futil%2FTrMsg.hpp;0;2
+FILE_NAME_3=766;C++;0;EUTF-8;0;1;0;%2Fway%2Fdev%2FSW%2Fforeign%2Fmusic%2Fdmmsnoop%2Fsrc%2Futil%2FTrMsg.cpp;0;2
 
 [VTE]
 last_dir=/home/duncang

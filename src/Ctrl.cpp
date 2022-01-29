@@ -36,6 +36,9 @@ const int statusLengths[0x80] = {
 Ctrl::Ctrl(App &i_theApp, QObject *i_parent)
 : QObject(i_parent)
 , theApp(i_theApp) {
+
+// Gain access to a message string machine
+  theTrMsg = new TrMsg(TrMsg::DEL_ENGLISH);
     // Setup about view
     theQVwAbout.setMajorVersion(DMMSNOOP_MAJOR_VERSION);
     theQVwAbout.setMinorVersion(DMMSNOOP_MINOR_VERSION);

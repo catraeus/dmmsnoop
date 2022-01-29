@@ -1,31 +1,6 @@
 #!/bin/sh
-git add   install/util.py
+git add   dmmsnoop.pro
 git add   src/Ctrl.cpp
 git add   src/Ctrl.hpp
-git add   src/DelgMsgTbl.cpp
-git add   src/DelgMsgTbl.hpp
-git add   src/Midi.cpp
-git add   src/Midi.hpp
-git add   src/QVwAbout.cpp
-git add   src/QVwAbout.hpp
-git add   src/QVwBase.cpp
-git add   src/QVwBase.hpp
-git add   src/QVwClose.cpp
-git add   src/QVwClose.hpp
-git add   src/QVwConfig.cpp
-git add   src/QVwConfig.hpp
-git add   src/QVwDesgn.cpp
-git add   src/QVwDesgn.hpp
-git add   src/QVwDlg.cpp
-git add   src/QVwDlg.hpp
-git add   src/QVwErr.cpp
-git add   src/QVwErr.hpp
-git add   src/QVwMain.cpp
-git add   src/QVwMain.hpp
-git add   src/QVwMsg.cpp
-git add   src/QVwMsg.hpp
-git add   src/_main.cpp
 git add   src/src.pro
-git add   src/util/Error.cpp
-git add   src/util/Error.hpp
 

@@ -82,7 +82,8 @@ HEADERS +=          \
     QVwDlg.hpp      \
     QVwDesgn.hpp    \
     QVwBase.hpp     \
-    util/Error.h    \
+    util/Error.hpp  \
+    util/TrMsg.hpp  \
     util/util.hpp
 LIBS += -lrtmidi
 MOC_DIR = $${MAKEDIR}
@@ -106,6 +107,7 @@ SOURCES +=          \
     QVwDesgn.cpp    \
     QVwBase.cpp     \
     util/Error.cpp  \
+    util/TrMsg.cpp  \
     util/util.cpp
 TARGET = dmmsnoop
 TEMPLATE = app

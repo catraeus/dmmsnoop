@@ -29,6 +29,8 @@
 #include "QVwAbout.hpp"
 #include "QVwErr.hpp"
 
+#include "util/TrMsg.hpp"
+
 class Ctrl: public QObject {
   Q_OBJECT
 
@@ -59,6 +61,8 @@ private:
 
   QString        sMidiData;
   QString        sMidiStatus;
+
+  TrMsg         *theTrMsg;
 
   bool           valid;
 };

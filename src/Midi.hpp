@@ -20,10 +20,14 @@
 #ifndef __ENGINE_H__
 #define __ENGINE_H__
 
+#include <stdint.h>
+
 #include <QtCore/QByteArray>
 #include <QtCore/QStringList>
 #include <QtCore/QVector>
 #include <QtCore/QObject>
+
+#include "util/TrMsg.hpp"
 
 #include <rtmidi/RtMidi.h>
 
@@ -47,8 +51,7 @@ public:
   QString   getOutputPortName(int index) const;
 
 public slots:
-
-  quint64   sendMessage(const QByteArray &message);
+  quint64   OnMiMsgTx(const QByteArray &message);
   void      setDriver(int index);
   void      setIgnoreActiveSensingEvents(bool ignore);
   void      setIgnoreSystemExclusiveEvents(bool ignore);
@@ -57,26 +60,27 @@ public slots:
   void      setOutputPort(int index);
 
 signals:
-  void      driverChanged(int index);
+  void      EmDrvChange(int index);
   void      ignoreActiveSensingEventsChanged(bool ignore);
   void      ignoreSystemExclusiveEventsChanged(bool ignore);
   void      ignoreTimeEventsChanged(bool ignore);
   void      inputPortAdded(int index, const QString &name);
   void      inputPortChanged(int index);
   void      inputPortRemoved(int index);
-  void      messageReceived(quint64 timeStamp, const QByteArray &message);
   void      outputPortAdded(int index, const QString &name);
   void      outputPortChanged(int index);
   void      outputPortRemoved(int index);
+  void      EmMiMsgRx(quint64 timeStamp, const QByteArray &message);
 
 public:
          quint64 TimeGet() const;
 private:
-  static void    handleMidiInput(double timeStamp, std::vector<unsigned char> *message, void *engine);
-         void    handleMidiInput(double timeStamp, const std::vector<unsigned char> &message);
+  static void    handleMidiInput(double timeStamp, std::vector<uint8_t> *message, void *engine);
+         void    handleMidiInput(double timeStamp, const std::vector<uint8_t> &message);
          void    removePorts();
          void    updateEventFilter();
 
+    TrMsg               *theTrMsg;
     int                  driver;
     QList<RtMidi::Api>   driverAPIs;
     QStringList          driverNames;
@@ -86,7 +90,7 @@ private:
     RtMidiIn            *input;
     int                  inputPort;
     QStringList          inputPortNames;
-    RtMidiOut           *output;
+    RtMidiOut           *theRtMidiOut;
     int                  outputPort;
     QStringList          outputPortNames;
     bool                 virtualPortsAdded;

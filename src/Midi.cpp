@@ -34,49 +34,42 @@
 
 // Class definition
 
-Midi::Midi(QObject *parent)
-: QObject(parent) {
-    RtMidi::Api api;
-    char        tStr[256];
-    // Get available MIDI drivers.
-    std::vector<RtMidi::Api> apis;
-    RtMidi::getCompiledApi(apis);
-    int apiCount = apis.size();
-    api = apis[0];
-    qWarning("QWarning Will Robinson ... Danger ...  %d    DANGER!!!!\n", static_cast<int>(api));
+Midi::Midi(QObject *parent) : QObject(parent) {
+              RtMidi::Api    theMidiAPI;
+              char           tStr[256];
+  std::vector<RtMidi::Api>   midiAPIlist;
+              int            numAPIs;
 
-    for (int i = 0; i < apiCount; i++) {
-        api = apis[i];
-        switch (api) {
-        case RtMidi::LINUX_ALSA:
-            driverNames.append(tr("ALSA Sequencer"));
-            break;
-        case RtMidi::MACOSX_CORE:
-            driverNames.append(tr("CoreMidi"));
-            break;
-        case RtMidi::UNIX_JACK:
-            driverNames.append(tr("JACK Audio Connection Kit"));
-            break;
-        case RtMidi::WINDOWS_MM:
-            driverNames.append(tr("Windows Multimedia MIDI"));
-            break;
-        default:
-            sprintf(tStr, "Unexpected MIDI API constant: %d",static_cast<int>(api)) ;
-            //qWarning("Unexpected MIDI API constant: %1").arg(static_cast<int>(api));
-            // Fallthrough on purpose, unknown, RTMIDI_DUMMY and UNSPECIFIED all get out of the for loop
-        case RtMidi::RTMIDI_DUMMY:
-        case RtMidi::UNSPECIFIED:
-            continue;
-        }
-        driverAPIs.append(api);
+  theTrMsg = TrMsg::GetInstance(TrMsg::DEL_ENGLISH);
+//Get available MIDI drivers.
+  RtMidi::getCompiledApi(midiAPIlist);
+  numAPIs = midiAPIlist.size();
+  theMidiAPI = midiAPIlist[0];
+  fprintf(stdout, "Setting up MIDI APIs with RtMidi.\n"); fflush(stdout);
+  fprintf(stdout, "RtMidi says we have %d of them available.\n", numAPIs); fflush(stdout);
+
+  for(int i=0; i<numAPIs; i++) {
+    theMidiAPI = midiAPIlist[i];
+    switch (theMidiAPI) {
+      case RtMidi::LINUX_ALSA : driverNames.append(tr("ALSA Seq"     )); break;
+      case RtMidi::MACOSX_CORE: driverNames.append(tr("CoreMidi"     )); break;
+      case RtMidi::UNIX_JACK  : driverNames.append(tr("JACK"         )); break;
+      case RtMidi::WINDOWS_MM : driverNames.append(tr("Win MM MIDI"  )); break;
+      default                 : sprintf(tStr, "Bad MIDI API enum: %d",static_cast<int>(theMidiAPI)) ;
+          // Fallthrough on purpose, unknown, RTMIDI_DUMMY and UNSPECIFIED all get out of the for loop
+      case RtMidi::RTMIDI_DUMMY:
+      case RtMidi::UNSPECIFIED:
+        continue;
     }
+    driverAPIs.append(theMidiAPI);
+  }
 
-    driver = -1;
-    ignoreActiveSensingEvents = true;
-    ignoreSystemExclusiveEvents = true;
-    ignoreTimeEvents = true;
-    inputPort = -1;
-    outputPort = -1;
+  driver = -1;
+  ignoreActiveSensingEvents = true;
+  ignoreSystemExclusiveEvents = true;
+  ignoreTimeEvents = true;
+  inputPort = -1;
+  outputPort = -1;
 }
 
         Midi::~Midi                          (         )       {        setDriver(-1)                ; }
@@ -93,7 +86,7 @@ int     Midi::getOutputPort                  (         ) const { return outputPo
 int     Midi::getOutputPortCount             (         ) const { return outputPortNames.count()      ; }
 QString Midi::getOutputPortName              (int index) const { return outputPortNames[index]       ; }
 
-void Midi::handleMidiInput(double timeStamp, std::vector<unsigned char> *message, void *engine) {
+void Midi::handleMidiInput(double timeStamp, std::vector<uint8_t> *message, void *engine) {
     static_cast<Midi *>(engine)->handleMidiInput(timeStamp, *message);
 }
 
@@ -103,7 +96,7 @@ quint64 Midi::TimeGet() const {
     return QDateTime::currentDateTime().toMSecsSinceEpoch();
 #else
     struct timeval time;
-    if (gettimeofday(&time, 0) == -1) {
+    if(gettimeofday(&time, 0) == -1) {
         throw Error(tr("failed to get time of day: %1").arg(strerror(errno)));
     }
     return (static_cast<quint64>(time.tv_sec) * 1000) +
@@ -112,10 +105,10 @@ quint64 Midi::TimeGet() const {
 
 }
 
-void Midi::handleMidiInput(double /*timeStamp*/, const std::vector<unsigned char> &message) {
+void Midi::handleMidiInput(double /*timeStamp*/, const std::vector<uint8_t> &message) {
     switch (message[0]) {
     case 0xf0:
-        if (ignoreSystemExclusiveEvents) {
+        if(ignoreSystemExclusiveEvents) {
             qWarning() << "RtMidi did not filter system exclusive event";
             return;
         }
@@ -123,13 +116,13 @@ void Midi::handleMidiInput(double /*timeStamp*/, const std::vector<unsigned char
     case 0xf1:
     case 0xf8:
     case 0xf9:
-        if (ignoreTimeEvents) {
+        if(ignoreTimeEvents) {
             qWarning() << "RtMidi did not filter time event";
             return;
         }
         break;
     case 0xfe:
-        if (ignoreActiveSensingEvents) {
+        if(ignoreActiveSensingEvents) {
             qWarning() << "RtMidi did not filter active sensing event";
             return;
         }
@@ -137,68 +130,68 @@ void Midi::handleMidiInput(double /*timeStamp*/, const std::vector<unsigned char
     quint64 timeStamp = TimeGet();
     QByteArray msg;
     int size = static_cast<int>(message.size());
-    for (int i = 0; i < size; i++) {
+    for(int i = 0; i < size; i++) {
         msg.append(message[i]);
     }
-    emit messageReceived(timeStamp, msg);
+    emit EmMiMsgRx(timeStamp, msg);
 }
 
 void Midi::removePorts() {
     setInputPort(-1);
     setOutputPort(-1);
-    for (int i = inputPortNames.count() - 1; i >= 0; i--) {
+    for(int i = inputPortNames.count() - 1; i >= 0; i--) {
         inputPortNames.removeAt(i);
         emit inputPortRemoved(i);
     }
-    for (int i = outputPortNames.count() - 1; i >= 0; i--) {
+    for(int i = outputPortNames.count() - 1; i >= 0; i--) {
         outputPortNames.removeAt(i);
         emit outputPortRemoved(i);
     }
 }
 
-quint64 Midi::sendMessage(const QByteArray &message) {
+quint64 Midi::OnMiMsgTx(const QByteArray &message) {
     assert(outputPort != -1);
-    std::vector<unsigned char> msg;
-    for (int i = 0; i < message.count(); i++) {
-        msg.push_back(static_cast<unsigned char>(message[i]));
+    std::vector<uint8_t> msg;
+    for(int i = 0; i < message.count(); i++) {
+        msg.push_back(static_cast<uint8_t>(message[i]));
     }
-        output->sendMessage(&msg);
+        theRtMidiOut->sendMessage(&msg);
     return TimeGet();
 }
 
 void Midi::setDriver(int index) {
     assert((index >= -1) && (index < driverAPIs.count()));
-    if (driver != index) {
+    if(driver != index) {
 
         // Close the currently open MIDI driver.
-        if (driver != -1) {
+        if(driver != -1) {
             removePorts();
             delete input;
-            delete output;
+            delete theRtMidiOut;
             driver = -1;
-            emit driverChanged(-1);
+            emit EmDrvChange(-1);
         }
 
         // Open the new driver.
-        if (index != -1) {
+        if(index != -1) {
             RtMidi::Api api = driverAPIs[index];
                 input = new RtMidiIn(api, "dmmsnoop");
                 QScopedPointer<RtMidiIn> inputPtr(input);
-                output = new RtMidiOut(api, "dmmsnoop");
-                QScopedPointer<RtMidiOut> outputPtr(output);
+                theRtMidiOut = new RtMidiOut(api, "dmmsnoop");
+                QScopedPointer<RtMidiOut> outputPtr(theRtMidiOut);
                 input->setCallback(handleMidiInput, this);
 
                 // Add ports.
                     unsigned int count = input->getPortCount();
                     QString name;
-                    for (unsigned int i = 0; i < count; i++) {
+                    for(unsigned int i = 0; i < count; i++) {
                         name = QString::fromStdString(input->getPortName(i));
                         inputPortNames.append(name);
                         emit inputPortAdded(i, name);
                     }
-                    count = output->getPortCount();
-                    for (unsigned int i = 0; i < count; i++) {
-                        name = QString::fromStdString(output->getPortName(i));
+                    count = theRtMidiOut->getPortCount();
+                    for(unsigned int i = 0; i < count; i++) {
+                        name = QString::fromStdString(theRtMidiOut->getPortName(i));
                         outputPortNames.append(name);
                         emit outputPortAdded(i, name);
                     }
@@ -222,7 +215,7 @@ void Midi::setDriver(int index) {
                 inputPtr.take();
                 outputPtr.take();
             driver = index;
-            emit driverChanged(index);
+            emit EmDrvChange(index);
         }
     }
 }
@@ -230,7 +223,7 @@ void Midi::setDriver(int index) {
 void
 Midi::setIgnoreActiveSensingEvents(bool ignore)
 {
-    if (ignoreActiveSensingEvents != ignore) {
+    if(ignoreActiveSensingEvents != ignore) {
         ignoreActiveSensingEvents = ignore;
         updateEventFilter();
         emit ignoreActiveSensingEventsChanged(ignore);
@@ -240,7 +233,7 @@ Midi::setIgnoreActiveSensingEvents(bool ignore)
 void
 Midi::setIgnoreSystemExclusiveEvents(bool ignore)
 {
-    if (ignoreSystemExclusiveEvents != ignore) {
+    if(ignoreSystemExclusiveEvents != ignore) {
         ignoreSystemExclusiveEvents = ignore;
         updateEventFilter();
         emit ignoreSystemExclusiveEventsChanged(ignore);
@@ -250,7 +243,7 @@ Midi::setIgnoreSystemExclusiveEvents(bool ignore)
 void
 Midi::setIgnoreTimeEvents(bool ignore)
 {
-    if (ignoreTimeEvents != ignore) {
+    if(ignoreTimeEvents != ignore) {
         ignoreTimeEvents = ignore;
         updateEventFilter();
         emit ignoreTimeEventsChanged(ignore);
@@ -261,18 +254,18 @@ void
 Midi::setInputPort(int index)
 {
     assert((index >= -1) && (index < inputPortNames.count()));
-    if (inputPort != index) {
+    if(inputPort != index) {
 
         // Close the currently open input port.
-        if (inputPort != -1) {
+        if(inputPort != -1) {
                 input->closePort();
             inputPort = -1;
             emit inputPortChanged(-1);
         }
 
         // Open the new input port.
-        if (index != -1) {
-                if (virtualPortsAdded &&
+        if(index != -1) {
+                if(virtualPortsAdded &&
                     (index == (inputPortNames.count() - 1))) {
                     input->openVirtualPort("MIDI Input");
                 } else {
@@ -287,22 +280,22 @@ Midi::setInputPort(int index)
 
 void Midi::setOutputPort(int index) {
     assert((index >= -1) && (index < outputPortNames.count()));
-    if (outputPort != index) {
+    if(outputPort != index) {
 
         // Close the currently open output port.
-        if (outputPort != -1) {
-                output->closePort();
+        if(outputPort != -1) {
+                theRtMidiOut->closePort();
             outputPort = -1;
             emit outputPortChanged(-1);
         }
 
         // Open the new output port.
-        if (index != -1) {
-                if (virtualPortsAdded &&
+        if(index != -1) {
+                if(virtualPortsAdded &&
                     (index == (outputPortNames.count() - 1))) {
-                    output->openVirtualPort("MIDI Output");
+                    theRtMidiOut->openVirtualPort("MIDI Output");
                 } else {
-                    output->openPort(index, "MIDI Output");
+                    theRtMidiOut->openPort(index, "MIDI Output");
                 }
             outputPort = index;
             emit outputPortChanged(index);
@@ -311,7 +304,7 @@ void Midi::setOutputPort(int index) {
 }
 
 void Midi::updateEventFilter() {
-    if (inputPort != -1) {
+    if(inputPort != -1) {
         input->ignoreTypes(ignoreSystemExclusiveEvents, ignoreTimeEvents,
                            ignoreActiveSensingEvents);
     }

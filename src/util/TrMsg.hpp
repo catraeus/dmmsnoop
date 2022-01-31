@@ -31,32 +31,57 @@
 
 #ifndef __TR_MSG_HPP_
 #define __TR_MSG_HPP_
+#include <stdint.h>
+#include <stdlib.h>
 
+#define __IN_TR_MSG_HPP_
 
 class TrMsg {
   public:
     enum eLang {
-      DEL_ENGLISH,
-      DEL_FRANCAIS,
-      DEL_DEUTSCH
+      DEL_ENGLISH    = 0x00000000U,
+      DEL_FRANCAIS   = 0x00000001U,
+      DEL_DEUTSCH    = 0x00000002U,
+      DEL_ESPANOL    = 0x00000003U,
+      DEL_NUM_LANG   = 0x00000005U,
+      DEL_LANG_BIG   = 0xFFFFFFFFU
     };
-    enum eMsgType {
-      DET_STATUS,
-      DET_CC
-    };
+  #include "TrMsgApp.hpp"
+  #include "TrMsgMiMeta.hpp"
+  #include "TrMsgMiStat.hpp"
+  #include "TrMsgMiSys.hpp"
+  private:
   public:
-            TrMsg(eLang i_lang);
+  private:
+            TrMsg(eLang i_lang);       // For singleton pattern
+  public:
+    static  TrMsg  *GetInstance(eLang i_lang); // For singleton pattern
            ~TrMsg();
-    char   *MsgGet(eMsgType i_msgType);
+    void    SetLang(eLang i_lang);
+    void    ByteToString(uint i_byte, char *o_str);
   private:
     eLang   lang;
-    char  **msgMidiStat;
-    char ***msgMidiStatPile;
-    char  **msgMidiStatEn;
-    char  **msgMidiStatFr;
-    char  **msgMidiStatDe;
-private:
 
+    static const char hexAscii[16];
+
+    char  **msgMiCc;
+    char ***msgMiCcPile;
+    char  **msgMiCcEn;
+    char  **msgMiCcFr;
+    char  **msgMiCcDe;
+    char  **msgMiCcEs;
+
+    char  **msgMiCcMode;
+    char ***msgMiCcModePile;
+    char  **msgMiCcModeEn;
+    char  **msgMiCcModeFr;
+    char  **msgMiCcModeDe;
+    char  **msgMiCcModeEs;
+
+private:
+  static TrMsg *theTrMsgInstance;
 };
+
+#undef __IN_TR_MSG_HPP_
 
 #endif

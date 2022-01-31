@@ -17,27 +17,19 @@
  * Ave, Cambridge, MA 02139, USA.
  */
 
-#include <cstdio>
-#include <cstdlib>
-//#include <exception>
-
-#include <QtCore/QDebug>
-#include <QtCore/QLibraryInfo>
-#include <QtCore/QLocale>
-#include <QtCore/QTranslator>
-#include <QtCore/QTextStream>
-
-#include "Ctrl.hpp"
-#include "error.h"
+#include "_main.hpp"
 
 int main(int argc, char **argv) {
   App           theApp(argc, argv);
   QString       errorMessage;
   QTranslator   qtTranslator;
   QTranslator   translator;
+  TrMsg        *theTrMsg;
   int           result;
 
-  theApp.setApplicationName("dmmsnoop");
+  theTrMsg = TrMsg::GetInstance(TrMsg::DEL_ENGLISH);
+
+  theApp.setApplicationName(theTrMsg->MsgAppGet(TrMsg::DAT_APP_DOM));
   theApp.setOrganizationDomain("dmmsnoop.catraeus.com");
   theApp.setOrganizationName("dmmsnoop.catraeus.com");
 
@@ -52,11 +44,10 @@ int main(int argc, char **argv) {
   theApp.installTranslator(&translator);
   qDebug() <<   theApp.tr("Translations loaded.");
 
-//    try {
 // Ctrl
-  qDebug() <<   theApp.tr("Creating core application objects ...");
+  fprintf(stdout, "Instantiating the Controller\n");  fflush(stdout);
   Ctrl theCtrl(  theApp);
-  qDebug() <<   theApp.tr("Core application objects created.");
+  fprintf(stdout, "Controller instantiated.\n");  fflush(stdout);
 
 // Run the program
   qDebug() <<   theApp.tr("Running ...");
@@ -64,7 +55,7 @@ int main(int argc, char **argv) {
 
 
     // Deal with errors.
-  if (errorMessage.isEmpty()) {
+  if(errorMessage.isEmpty()) {
     qDebug() <<   theApp.tr("Exiting without errors ...");
     result = EXIT_SUCCESS;
   }

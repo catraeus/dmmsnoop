@@ -37,17 +37,17 @@ class Ctrl: public QObject {
 public:
   explicit  Ctrl(App &i_theApp, QObject *parent=0);
            ~Ctrl();
-  void run();
+  void      run();  // RESEARCH Might be Inherited via QThread::run
 
 private slots:
-  void handleDriverChange();
-  void handleMessageSend(const QString &message);
-  void handleReceivedMessage(quint64 timeStamp, const QByteArray &message);
+  void      OnDrvChange();
+  void      OnMiMsgTx(const QString &message);
+  void      OnMiMsgRx(quint64 timeStamp, const QByteArray &message);
 
 private:
-  QString getGenericDataDescription(const QByteArray &message, int lastIndex=-1);
-  void    parseMessage(const QByteArray &message);
-  void    showError(const QString &message);
+  QString   MiMsgDatBytesStr(const QByteArray &message, int lastIndex=-1);
+  void      MiMsgParse(const QByteArray &i_msg);
+  void      QVwErrShow(const QString &message);
 
   App           &theApp;
 
@@ -59,12 +59,15 @@ private:
   QVwMsg         theQVwMsg;
   QVwErr         theQVwErr;
 
-  QString        sMidiData;
-  QString        sMidiStatus;
+  QString        strMiData;
+  QString        strMiStat;
 
   TrMsg         *theTrMsg;
 
   bool           valid;
+
+static       int lenMidiSpecAry[];
+
 };
 
 #endif

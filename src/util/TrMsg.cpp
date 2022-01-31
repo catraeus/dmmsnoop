@@ -35,18 +35,50 @@
  */
 
 #include "TrMsg.hpp"
+#include <stdio.h>
 
-        TrMsg::TrMsg(eLang i_lang) {
-  lang = i_lang;
-  msgMidiStatPile   = new char**[32];
-  msgMidiStatEn     = new char*[32];
-  msgMidiStatFr     = new char*[32];
-  msgMidiStatDe     = new char*[32];
-  msgMidiStatPile[DEL_ENGLISH]  = msgMidiStatEn;
-  msgMidiStatPile[DEL_FRANCAIS] = msgMidiStatFr;
-  msgMidiStatPile[DEL_DEUTSCH]  = msgMidiStatDe;
-  msgMidiStat = msgMidiStatPile[i_lang];
+        TrMsg *TrMsg::theTrMsgInstance = (TrMsg *)0;
+  const char   TrMsg::hexAscii[] = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F'};
+
+         TrMsg::TrMsg(eLang i_lang) {
+  char **tStrAry; // Only really for use in the following language files
+  #include "TrMsgApp.hpp"
+  #include "TrMsgMiMeta.hpp"
+  #include "TrMsgMiStat.hpp"
+  #include "TrMsgMiSys.hpp"
+  SetLang(i_lang);
+  return;
+}
+TrMsg  *TrMsg::GetInstance(eLang i_lang) {
+  if((uint64_t)theTrMsgInstance != (uint64_t)0) {
+    fprintf(stdout, "TrMsg already built.\n");  fflush(stdout);
+    theTrMsgInstance->SetLang(i_lang);
+  }
+  else {
+    fprintf(stdout, "TrMsg must be built.\n");  fflush(stdout);
+    theTrMsgInstance = new TrMsg(i_lang);
+    fprintf(stdout, "TrMsg was built.\n");  fflush(stdout);
+  }
+  fprintf(stdout, "###### WE ARE HERE 2 ######\n");  fflush(stdout);
+  return theTrMsgInstance;
 }
         TrMsg::~TrMsg(){}
 
-char   *TrMsg::MsgGet(eMsgType i_theType)  { (void)i_theType;    return (char *)0; }
+void    TrMsg::SetLang(eLang i_lang) {
+  fprintf(stdout, "Early in SetLang(%d).\n", (int)i_lang);  fflush(stdout);
+  if(i_lang >= DEL_NUM_LANG)
+    i_lang = DEL_ENGLISH;
+  msgMiMeta   = msgMiMetaPile  [i_lang];
+  msgMiStat   = msgMiStatPile  [i_lang];  // MAGICK, the enum has been defined so this array location stuff just works.
+  msgMiSys    = msgMiSysPile   [i_lang];  // MAGICK, the enum has been defined so this array location stuff just works.
+//msgMiCc     = msgMiCcPile    [i_lang];
+//msgMiCcMode = msgMiCcModePile[i_lang];
+  return;
+}
+void    TrMsg::ByteToString(uint i_byte, char *o_str) {
+  o_str[0] = hexAscii[((i_byte & 0x000000F0U) >> 8)];
+  o_str[1] = hexAscii[((i_byte & 0x0000000FU) >> 0)];
+  o_str[2] = '\0';
+  return;
+}
+

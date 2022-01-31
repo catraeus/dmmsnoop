@@ -17,40 +17,20 @@
  * Ave, Cambridge, MA 02139, USA.
  */
 
-#ifndef __QVwABOUT_HPP__
-#define __QVwABOUT_HPP__
+#ifndef  ___MAIN_HPP_
+#define ___MAIN_HPP_
 
-#include <QtWidgets/QLabel>
-#include <QtWidgets/QPushButton>
+#include <cstdio>
+#include <cstdlib>
 
-#include "QVwDlg.hpp"
+#include <QtCore/QDebug>
+#include <QtCore/QLibraryInfo>
+#include <QtCore/QLocale>
+#include <QtCore/QTranslator>
+#include <QtCore/QTextStream>
 
+#include "Ctrl.hpp"
+#include "error.h"
 #include "util/TrMsg.hpp"
-
-class QVwAbout: public QVwDlg {
-  Q_OBJECT
-
-public:
-  explicit  QVwAbout(QObject *parent=0);
-           ~QVwAbout();
-
-public slots:
-  void setMajorVersion(int majorVersion);
-  void setMinorVersion(int minorVersion);
-  void setRevision    (int revision);
-
-private:
-  void updateVersion();
-
-  QPushButton *closeButton;
-    int        majorVersion;
-    int        minorVersion;
-    int        revision;
-    QLabel    *version;
-    QLabel    *url_home;
-
-    TrMsg     *theTrMsg;
-
-};
 
 #endif

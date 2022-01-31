@@ -1,0 +1,6 @@
+#!/bin/sh
+rm -Rf make
+rm Makefile
+rm src/Makefile
+rm build/bin/dmmsnoop
+exit

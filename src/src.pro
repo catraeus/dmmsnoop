@@ -3,6 +3,7 @@
 ################################################################################
 QT += core gui uitools widgets
 CONFIG += console warn_on
+QMAKE_CFLAGS +=  -Wno-array-bounds
 
 DMMSNOOP_APP_SUFFIX = bin
 DMMSNOOP_DATA_SUFFIX = share
@@ -84,6 +85,10 @@ HEADERS +=          \
     QVwBase.hpp     \
     util/Error.hpp  \
     util/TrMsg.hpp  \
+    util/TrMsgApp.hpp  \
+    util/TrMsgMiMeta.hpp  \
+    util/TrMsgMiStat.hpp  \
+    util/TrMsgMiSys.hpp  \
     util/util.hpp
 LIBS += -lrtmidi
 MOC_DIR = $${MAKEDIR}

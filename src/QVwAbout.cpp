@@ -17,6 +17,8 @@
  * Ave, Cambridge, MA 02139, USA.
  */
 
+#include <stdio.h>
+
 #include <QtCore/QLocale>
 
 #include "QVwAbout.hpp"
@@ -25,14 +27,21 @@
 QVwAbout::QVwAbout(QObject *parent) : QVwDlg(":/dmmsnoop/QVwAbout.ui", parent) {
     closeButton = getChild<QPushButton>(dialog, "closeButton");
     connect(closeButton, SIGNAL(clicked()), SIGNAL(closeRequest()));
+    char tStr[256];
 
     majorVersion = 0;
     minorVersion = 0;
     revision = 0;
 
-    version = getChild<QLabel>(dialog, "version");
+    theTrMsg = TrMsg::GetInstance(TrMsg::DEL_ENGLISH);
 
+    version  = getChild<QLabel>(dialog, "version");
     updateVersion();
+    url_home = getChild<QLabel>(dialog, "url_home");
+  //strcpy(tStr, theTrMsg->MsgAppGet(TrMsg::DAT_APP_URL_CODE));
+    strcpy(tStr, "&lt;a href=&quot;https://github.com/catraeus/dmmsnoop&quot;&gt;https://github.com/catraeus/dmmsnoop&lt;/a&gt;");
+    fprintf(stdout, "Why isn't this working? %s\n", tStr); fflush(stdout);
+    url_home->setText(tStr);
 }
 
 QVwAbout::~QVwAbout() {}

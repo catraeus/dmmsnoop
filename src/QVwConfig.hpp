@@ -34,40 +34,40 @@ public:
                    ~QVwConfig();
 
 public slots:
-           void    addDriver                                 (int  index, const QString &name);
-           void    addInputPort                              (int  index, const QString &name);
-           void    addOutputPort                             (int  index, const QString &name);
-           void    removeInputPort                           (int  index);
-           void    removeOutputPort                          (int  index);
-           void    setDriver                                 (int  index);
-           void    setIgnoreActiveSensingEvents              (bool ignore);
-           void    setIgnoreSystemExclusiveEvents            (bool ignore);
-           void    setIgnoreTimeEvents                       (bool ignore);
-           void    setInputPort                              (int  index);
-           void    setOutputPort                             (int  index);
+           void    OnMidiDrvAdd        (int  i_dex, const QString &i_name);
+           void    OnPortInpAdd        (int  i_dex, const QString &i_name);
+           void    OnPortOutAdd        (int  i_dex, const QString &i_name);
+           void    OnPortInpDel        (int  i_dex);
+           void    OnPortOutDel        (int  i_dex);
+           void    OnMidiDrvChg        (int  i_dex);
+           void    OnModeIgnActSnChg   (bool i_ign);
+           void    OnModeIgnSysExChg   (bool i_ign);
+           void    OnModeIgnMiTimChg   (bool i_ign);
+           void    OnPortInpChg        (int  i_dex);
+           void    OnPortOutChg        (int  i_dex);
 
 signals:
-           void    driverChangeRequest                       (int  index);
-           void    ignoreActiveSensingEventsChangeRequest    (bool ignore);
-           void    ignoreSystemExclusiveEventsChangeRequest  (bool ignore);
-           void    ignoreTimeEventsChangeRequest             (bool ignore);
-           void    inputPortChangeRequest                    (int  index);
-           void    outputPortChangeRequest                   (int  index);
+           void    EmMidiDrvChg        (int  i_dex);
+           void    EmModeIgnActSnChg   (bool i_ign);
+           void    EmModeIgnSysExChg   (bool i_ign);
+           void    EmModeIgnMiTimChg   (bool i_ign);
+           void    EmPortInpChg        (int  i_dex);
+           void    EmPortOutChg        (int  i_dex);
 
 private slots:
-           void    handleDriverActivation                    (int index);
-           void    handleInputPortActivation                 (int index);
-           void    handleOutputPortActivation                (int index);
+           void    DoMidiDrvChg        (int i_dex);
+           void    DoPortInpChg        (int i_dex);
+           void    DoPortOutChg        (int i_dex);
 
 private:
 
-           QPushButton *closeButton;
-           QComboBox   *driver;
-           QCheckBox   *ignoreActiveSensingEvents;
-           QCheckBox   *ignoreSystemExclusiveEvents;
-           QCheckBox   *ignoreTimeEvents;
-           QComboBox   *inputPort;
-           QComboBox   *outputPort;
+           QPushButton *QPbDlgClose;
+           QComboBox   *QCoMidiDrv;
+           QComboBox   *QCoPortInp;
+           QComboBox   *QCoPortOut;
+           QCheckBox   *QChModeIgnActSn;
+           QCheckBox   *QChModeIgnSysEx;
+           QCheckBox   *QChModeIgnMiTim;
 
 };
 

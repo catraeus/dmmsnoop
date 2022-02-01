@@ -40,7 +40,7 @@
          </widget>
         </item>
         <item row="0" column="1">
-         <widget class="QComboBox" name="driver">
+         <widget class="QComboBox" name="QCoMidiDrv">
           <item>
            <property name="text">
             <string>--none selected--</string>
@@ -56,7 +56,7 @@
          </widget>
         </item>
         <item row="1" column="1">
-         <widget class="QComboBox" name="inputPort">
+         <widget class="QComboBox" name="QCoPortInp">
           <item>
            <property name="text">
             <string>--none selected--</string>
@@ -72,7 +72,7 @@
          </widget>
         </item>
         <item row="2" column="1">
-         <widget class="QComboBox" name="outputPort">
+         <widget class="QComboBox" name="QCoPortOut">
           <item>
            <property name="text">
             <string>--none selected--</string>
@@ -92,23 +92,23 @@
      </property>
      <layout class="QVBoxLayout">
       <item>
-       <widget class="QCheckBox" name="ignoreSystemExclusiveEvents">
+       <widget class="QCheckBox" name="QChModeIgnSysEx">
         <property name="text">
-         <string>Ignore System Exclusive Events</string>
+         <string>Ignore SysEx Messages</string>
         </property>
        </widget>
       </item>
       <item>
-       <widget class="QCheckBox" name="ignoreTimeEvents">
+       <widget class="QCheckBox" name="QChModeIgnMiTim">
         <property name="text">
-         <string>Ignore Time Events</string>
+         <string>Ignore MIDI Time Messages</string>
         </property>
        </widget>
       </item>
       <item>
-       <widget class="QCheckBox" name="ignoreActiveSensingEvents">
+       <widget class="QCheckBox" name="QChModeIgnActSn">
         <property name="text">
-         <string>Ignore Active Sensing Events</string>
+         <string>Ignore Active Sensing Messages</string>
         </property>
        </widget>
       </item>
@@ -131,7 +131,7 @@
       </spacer>
      </item>
      <item>
-      <widget class="QPushButton" name="closeButton">
+      <widget class="QPushButton" name="QPbDlgClose">
        <property name="text">
         <string>Close</string>
        </property>

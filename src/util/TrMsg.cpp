@@ -51,26 +51,22 @@
 }
 TrMsg  *TrMsg::GetInstance(eLang i_lang) {
   if((uint64_t)theTrMsgInstance != (uint64_t)0) {
-    fprintf(stdout, "TrMsg already built.\n");  fflush(stdout);
     theTrMsgInstance->SetLang(i_lang);
   }
   else {
-    fprintf(stdout, "TrMsg must be built.\n");  fflush(stdout);
     theTrMsgInstance = new TrMsg(i_lang);
-    fprintf(stdout, "TrMsg was built.\n");  fflush(stdout);
   }
-  fprintf(stdout, "###### WE ARE HERE 2 ######\n");  fflush(stdout);
   return theTrMsgInstance;
 }
         TrMsg::~TrMsg(){}
 
 void    TrMsg::SetLang(eLang i_lang) {
-  fprintf(stdout, "Early in SetLang(%d).\n", (int)i_lang);  fflush(stdout);
   if(i_lang >= DEL_NUM_LANG)
     i_lang = DEL_ENGLISH;
   msgMiMeta   = msgMiMetaPile  [i_lang];
   msgMiStat   = msgMiStatPile  [i_lang];  // MAGICK, the enum has been defined so this array location stuff just works.
   msgMiSys    = msgMiSysPile   [i_lang];  // MAGICK, the enum has been defined so this array location stuff just works.
+  msgApp      = msgAppPile     [i_lang];
 //msgMiCc     = msgMiCcPile    [i_lang];
 //msgMiCcMode = msgMiCcModePile[i_lang];
   return;

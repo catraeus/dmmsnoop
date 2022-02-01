@@ -89,7 +89,7 @@
           </widget>
          </item>
          <item row="0" column="1">
-          <widget class="QLabel" name="version">
+          <widget class="QLabel" name="QLbAppVer">
            <property name="text">
             <string>0.2.1</string>
            </property>
@@ -154,7 +154,7 @@
           </widget>
          </item>
          <item row="4" column="1">
-          <widget class="QLabel" name="label">
+          <widget class="QLabel" name="QLbAppUrl">
            <property name="text">
             <string>&lt;a href=&quot;https://github.com/catraeus/dmmsnoop&quot;&gt;https://github.com/catraeus/dmmsnoop&lt;/a&gt;</string>
            </property>

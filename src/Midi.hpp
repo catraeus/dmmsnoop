@@ -40,9 +40,9 @@ public:
   int       getDriver() const;
   int       getDriverCount() const;
   QString   getDriverName(int index) const;
-  bool      getIgnoreActiveSensingEvents() const;
-  bool      getIgnoreSystemExclusiveEvents() const;
-  bool      getIgnoreTimeEvents() const;
+  bool      ModeIgnActSnGet() const;
+  bool      ModeIgnSysExGet() const;
+  bool      ModeIgnMiTimGet() const;
   int       getInputPort() const;
   int       getInputPortCount() const;
   QString   getInputPortName(int index) const;
@@ -51,22 +51,22 @@ public:
   QString   getOutputPortName(int index) const;
 
 public slots:
-  quint64   OnMiMsgTx(const QByteArray &message);
   void      setDriver(int index);
-  void      setIgnoreActiveSensingEvents(bool ignore);
-  void      setIgnoreSystemExclusiveEvents(bool ignore);
-  void      setIgnoreTimeEvents(bool ignore);
+  void      OnModeIgnActSnChg(bool ignore);
+  void      OnModeIgnSysExChg(bool ignore);
+  void      OnModeIgnMiTimChg(bool ignore);
   void      setInputPort(int index);
   void      setOutputPort(int index);
+  quint64   OnMiMsgTx(const QByteArray &message);
 
 signals:
   void      EmDrvChange(int index);
-  void      ignoreActiveSensingEventsChanged(bool ignore);
-  void      ignoreSystemExclusiveEventsChanged(bool ignore);
-  void      ignoreTimeEventsChanged(bool ignore);
-  void      inputPortAdded(int index, const QString &name);
-  void      inputPortChanged(int index);
-  void      inputPortRemoved(int index);
+  void      EmModeIgnActSnChg(bool ignore);
+  void      EmModeIgnSysExChg(bool ignore);
+  void      EmModeIgnMiTimChg(bool ignore);
+  void      EmPortInpAdd(int index, const QString &name);
+  void      EmPortInpChg(int index);
+  void      EmPortInpDel(int index);
   void      outputPortAdded(int index, const QString &name);
   void      outputPortChanged(int index);
   void      outputPortRemoved(int index);
@@ -75,7 +75,7 @@ signals:
 public:
          quint64 TimeGet() const;
 private:
-  static void    handleMidiInput(double timeStamp, std::vector<uint8_t> *message, void *engine);
+  static void    handleMidiInput(double timeStamp,       std::vector<uint8_t> *message, void *engine);
          void    handleMidiInput(double timeStamp, const std::vector<uint8_t> &message);
          void    removePorts();
          void    updateEventFilter();
@@ -84,9 +84,9 @@ private:
     int                  driver;
     QList<RtMidi::Api>   driverAPIs;
     QStringList          driverNames;
-    bool                 ignoreActiveSensingEvents;
-    bool                 ignoreSystemExclusiveEvents;
-    bool                 ignoreTimeEvents;
+    bool                 modeIgnActSn;
+    bool                 modeIgnSysEx;
+    bool                 modeIgnMiTim;
     RtMidiIn            *input;
     int                  inputPort;
     QStringList          inputPortNames;

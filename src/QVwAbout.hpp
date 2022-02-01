@@ -43,13 +43,13 @@ private:
   void updateVersion();
 
   QPushButton *closeButton;
-    int        majorVersion;
-    int        minorVersion;
-    int        revision;
-    QLabel    *version;
-    QLabel    *url_home;
+  int        majorVersion;
+  int        minorVersion;
+  int        revision;
+  QLabel    *QLbAppVer;
+  QLabel    *QLbAppUrl;
 
-    TrMsg     *theTrMsg;
+  TrMsg     *theTrMsg;
 
 };
 

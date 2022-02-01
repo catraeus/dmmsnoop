@@ -27,7 +27,6 @@
 QVwAbout::QVwAbout(QObject *parent) : QVwDlg(":/dmmsnoop/QVwAbout.ui", parent) {
     closeButton = getChild<QPushButton>(dialog, "closeButton");
     connect(closeButton, SIGNAL(clicked()), SIGNAL(closeRequest()));
-    char tStr[256];
 
     majorVersion = 0;
     minorVersion = 0;
@@ -35,13 +34,11 @@ QVwAbout::QVwAbout(QObject *parent) : QVwDlg(":/dmmsnoop/QVwAbout.ui", parent) {
 
     theTrMsg = TrMsg::GetInstance(TrMsg::DEL_ENGLISH);
 
-    version  = getChild<QLabel>(dialog, "version");
+    QLbAppVer = getChild<QLabel>(dialog, "QLbAppVer");
     updateVersion();
-    url_home = getChild<QLabel>(dialog, "url_home");
-  //strcpy(tStr, theTrMsg->MsgAppGet(TrMsg::DAT_APP_URL_CODE));
-    strcpy(tStr, "&lt;a href=&quot;https://github.com/catraeus/dmmsnoop&quot;&gt;https://github.com/catraeus/dmmsnoop&lt;/a&gt;");
-    fprintf(stdout, "Why isn't this working? %s\n", tStr); fflush(stdout);
-    url_home->setText(tStr);
+
+    QLbAppUrl = getChild<QLabel>(dialog, "QLbAppUrl");
+    QLbAppUrl->setText(theTrMsg->MsgAppGet(TrMsg::DAT_APP_URL_CODE));
 }
 
 QVwAbout::~QVwAbout() {}
@@ -63,7 +60,7 @@ void QVwAbout::setRevision(int revision) {
 
 void QVwAbout::updateVersion() {
     QLocale locale = QLocale::system();
-    version->setText(tr("%1.%2.%3", "versionFormat").
+    QLbAppVer->setText(tr("%1.%2.%3", "versionFormat").
                      arg(locale.toString(majorVersion)).
                      arg(locale.toString(minorVersion)).
                      arg(locale.toString(revision)));

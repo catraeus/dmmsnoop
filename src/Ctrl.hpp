@@ -40,7 +40,7 @@ public:
   void      run();  // RESEARCH Might be Inherited via QThread::run
 
 private slots:
-  void      OnDrvChange();
+  void      OnMidiDrvChg();
   void      OnMiMsgTx(const QString &message);
   void      OnMiMsgRx(quint64 timeStamp, const QByteArray &message);
 

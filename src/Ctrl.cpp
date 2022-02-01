@@ -49,42 +49,40 @@
 // Class definition
 
         Ctrl::Ctrl(App &i_theApp, QObject *i_parent) : QObject(i_parent), theApp(i_theApp) {
-
+int driverCount;
+int driver;
+int outputPort;
 //==================================================================================================
 //==== Gain access to a message string machine
   theTrMsg = TrMsg::GetInstance(TrMsg::DEL_ENGLISH);
 
 //==================================================================================================
 //==== Setup About
-    theQVwAbout.setMajorVersion(DMMSNOOP_MAJOR_VERSION);
-    theQVwAbout.setMinorVersion(DMMSNOOP_MINOR_VERSION);
-    theQVwAbout.setRevision(DMMSNOOP_REVISION);
-    connect(&theQVwAbout, SIGNAL(closeRequest()), &theQVwAbout, SLOT(hide()));
+  theQVwAbout.setMajorVersion(DMMSNOOP_MAJOR_VERSION);
+  theQVwAbout.setMinorVersion(DMMSNOOP_MINOR_VERSION);
+  theQVwAbout.setRevision(DMMSNOOP_REVISION);
+  connect(&theQVwAbout, SIGNAL(closeRequest()), &theQVwAbout, SLOT(hide()));
 
 //==================================================================================================
 //==== Setup Config
-    int driverCount = theMidi.getDriverCount();
-    if(! driverCount) {
-        throw Error(tr("no MIDI drivers found"));
-    }
-    for(int i = 0; i < driverCount; i++) {
-        theQVwConfig.addDriver(i, theMidi.getDriverName(i));
-    }
-    int driver = theMidi.getDriver();
-    int outputPort = theMidi.getOutputPort();
-    theQVwConfig.setDriver                        (driver);
-    theQVwConfig.setInputPort(theMidi.getInputPort ());
-    theQVwConfig.setIgnoreActiveSensingEvents     (theMidi.getIgnoreActiveSensingEvents());
-    theQVwConfig.setIgnoreSystemExclusiveEvents   (theMidi.getIgnoreSystemExclusiveEvents());
-    theQVwConfig.setIgnoreTimeEvents              (theMidi.getIgnoreTimeEvents());
-    theQVwConfig.setOutputPort                    (outputPort);
-    connect(&theQVwConfig, SIGNAL(closeRequest()),                                   &theQVwConfig, SLOT(hide()));
-    connect(&theQVwConfig, SIGNAL(driverChangeRequest(int)),                         &theMidi, SLOT(setDriver(int)));
-    connect(&theQVwConfig, SIGNAL(ignoreActiveSensingEventsChangeRequest(bool)),     &theMidi, SLOT(setIgnoreActiveSensingEvents(bool)));
-    connect(&theQVwConfig, SIGNAL(ignoreSystemExclusiveEventsChangeRequest(bool)),   &theMidi, SLOT(setIgnoreSystemExclusiveEvents(bool)));
-    connect(&theQVwConfig, SIGNAL(ignoreTimeEventsChangeRequest(bool)),              &theMidi, SLOT(setIgnoreTimeEvents(bool)));
-    connect(&theQVwConfig, SIGNAL(inputPortChangeRequest(int)),                      &theMidi, SLOT(setInputPort(int)));
-    connect(&theQVwConfig, SIGNAL(outputPortChangeRequest(int)),                     &theMidi, SLOT(setOutputPort(int)));
+    driverCount = theMidi.getDriverCount();
+    if(! driverCount)        throw Error(tr("no MIDI drivers found"));
+    for(int i = 0; i < driverCount; i++)        theQVwConfig.OnMidiDrvAdd(i, theMidi.getDriverName(i));
+    driver = theMidi.getDriver();
+    outputPort = theMidi.getOutputPort();
+    theQVwConfig.OnMidiDrvChg                        (driver);
+    theQVwConfig.OnPortInpChg(theMidi.getInputPort ());
+    theQVwConfig.OnModeIgnActSnChg   (theMidi.ModeIgnActSnGet());
+    theQVwConfig.OnModeIgnSysExChg   (theMidi.ModeIgnSysExGet());
+    theQVwConfig.OnModeIgnMiTimChg   (theMidi.ModeIgnMiTimGet());
+    theQVwConfig.OnPortOutChg       (outputPort);
+    connect(&theQVwConfig, SIGNAL(closeRequest()),               &theQVwConfig, SLOT(hide()));
+    connect(&theQVwConfig, SIGNAL(EmMidiDrvChg(int)),     &theMidi, SLOT(setDriver(int)));
+    connect(&theQVwConfig, SIGNAL(EmModeIgnActSnChg(bool)),      &theMidi, SLOT(OnModeIgnActSnChg(bool)));
+    connect(&theQVwConfig, SIGNAL(EmModeIgnSysExChg(bool)),      &theMidi, SLOT(OnModeIgnSysExChg(bool)));
+    connect(&theQVwConfig, SIGNAL(EmModeIgnMiTimChg(bool)),      &theMidi, SLOT(OnModeIgnMiTimChg(bool)));
+    connect(&theQVwConfig, SIGNAL(EmPortInpChg(int)),            &theMidi, SLOT(setInputPort(int)));
+    connect(&theQVwConfig, SIGNAL(EmPortOutChg(int)),            &theMidi, SLOT(setOutputPort(int)));
 
 //==================================================================================================
 //==== Setup Error
@@ -109,19 +107,19 @@
 //==================================================================================================
 //==== Setup Midi worker  FIXME, there are multiple "overloads and multiple inheritances" of these.  Does order matter ! ? ! ?
     connect(&theMidi, SIGNAL(EmMiMsgRx(quint64, const QByteArray &)),          this,         SLOT(OnMiMsgRx(quint64, const QByteArray &)));
-    connect(&theMidi, SIGNAL(EmDrvChange(int)),                               &theQVwConfig, SLOT(setDriver(int)));
-    connect(&theMidi, SIGNAL(EmDrvChange(int)),                                this,         SLOT(OnDrvChange()));
-    connect(&theMidi, SIGNAL(ignoreActiveSensingEventsChanged(bool)),         &theQVwConfig, SLOT(setIgnoreActiveSensingEvents(bool)));
-    connect(&theMidi, SIGNAL(ignoreSystemExclusiveEventsChanged(bool)),       &theQVwConfig, SLOT(setIgnoreSystemExclusiveEvents(bool)));
-    connect(&theMidi, SIGNAL(ignoreTimeEventsChanged(bool)),                  &theQVwConfig, SLOT(setIgnoreTimeEvents(bool)));
-    connect(&theMidi, SIGNAL(inputPortAdded(int, QString)),                   &theQVwConfig, SLOT(addInputPort(int, QString)));
-    connect(&theMidi, SIGNAL(inputPortChanged(int)),                          &theQVwConfig, SLOT(setInputPort(int)));
-    connect(&theMidi, SIGNAL(inputPortChanged(int)),                           this,         SLOT(OnDrvChange()));
-    connect(&theMidi, SIGNAL(inputPortRemoved(int)),                          &theQVwConfig, SLOT(removeInputPort(int)));
-    connect(&theMidi, SIGNAL(outputPortAdded(int, QString)),                  &theQVwConfig, SLOT(addOutputPort(int, QString)));
-    connect(&theMidi, SIGNAL(outputPortChanged(int)),                         &theQVwConfig, SLOT(setOutputPort(int)));
-    connect(&theMidi, SIGNAL(outputPortChanged(int)),                          this,         SLOT(OnDrvChange()));
-    connect(&theMidi, SIGNAL(outputPortRemoved(int)),                         &theQVwConfig, SLOT(removeOutputPort(int)));
+    connect(&theMidi, SIGNAL(EmDrvChange(int)),                               &theQVwConfig, SLOT(OnMidiDrvChg(int)));
+    connect(&theMidi, SIGNAL(EmDrvChange(int)),                                this,         SLOT(OnMidiDrvChg()));
+    connect(&theMidi, SIGNAL(EmModeIgnActSnChg(bool)),       &theQVwConfig, SLOT(OnModeIgnActSnChg(bool)));
+    connect(&theMidi, SIGNAL(EmModeIgnSysExChg(bool)),       &theQVwConfig, SLOT(OnModeIgnSysExChg(bool)));
+    connect(&theMidi, SIGNAL(EmModeIgnMiTimChg(bool)),       &theQVwConfig, SLOT(OnModeIgnMiTimChg(bool)));
+    connect(&theMidi, SIGNAL(EmPortInpAdd(int, QString)),    &theQVwConfig, SLOT(OnPortInpAdd(int, QString)));
+    connect(&theMidi, SIGNAL(EmPortInpChg(int)),             &theQVwConfig, SLOT(OnPortInpChg(int)));
+    connect(&theMidi, SIGNAL(EmPortInpChg(int)),             this,          SLOT(OnMidiDrvChg()));
+    connect(&theMidi, SIGNAL(EmPortInpDel(int)),             &theQVwConfig, SLOT(OnPortInpDel(int)));
+    connect(&theMidi, SIGNAL(outputPortAdded(int, QString)), &theQVwConfig, SLOT(OnPortOutAdd(int, QString)));
+    connect(&theMidi, SIGNAL(outputPortChanged(int)),        &theQVwConfig, SLOT(OnPortOutChg(int)));
+    connect(&theMidi, SIGNAL(outputPortChanged(int)),        this,          SLOT(OnMidiDrvChg()));
+    connect(&theMidi, SIGNAL(outputPortRemoved(int)),        &theQVwConfig, SLOT(OnPortOutDel(int)));
 
 //==================================================================================================
 //==== Setup theApp
@@ -132,9 +130,9 @@
 // Disconnect theMidi signals handled by the controller before the theMidi is deleted.
   delete  theTrMsg;
   disconnect(&theMidi, SIGNAL(EmMiMsgRx(quint64, const QByteArray &)),                   this, SLOT(OnMiMsgRx(quint64, const QByteArray &)));
-  disconnect(&theMidi, SIGNAL(EmDrvChange(int)),                   this, SLOT(OnDrvChange()));
-  disconnect(&theMidi, SIGNAL(inputPortChanged(int)),                   this, SLOT(OnDrvChange()));
-  disconnect(&theMidi, SIGNAL(outputPortChanged(int)),                   this, SLOT(OnDrvChange()));
+  disconnect(&theMidi, SIGNAL(EmDrvChange(int)),                   this, SLOT(OnMidiDrvChg()));
+  disconnect(&theMidi, SIGNAL(EmPortInpChg(int)),                   this, SLOT(OnMidiDrvChg()));
+  disconnect(&theMidi, SIGNAL(outputPortChanged(int)),                   this, SLOT(OnMidiDrvChg()));
 }
 
 void    Ctrl::run() { // Overridden from QApplicatoin
@@ -158,7 +156,7 @@ QString Ctrl::MiMsgDatBytesStr(const QByteArray &message, int lastIndex) {
     dataParts += tr("(%1 bytes)").arg(lastIndex);
     return dataParts.join(" ");
 }
-void    Ctrl::OnDrvChange() {
+void    Ctrl::OnMidiDrvChg() {
   theQVwMain.setMessageSendEnabled((theMidi.getDriver() != -1) && (theMidi.getOutputPort() != -1));
 }
 void    Ctrl::OnMiMsgTx(const QString &message) {

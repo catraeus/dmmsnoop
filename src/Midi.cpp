@@ -34,7 +34,7 @@
 
 // Class definition
 
-Midi::Midi(QObject *parent) : QObject(parent) {
+        Midi::Midi(QObject *parent) : QObject(parent) {
               RtMidi::Api    theMidiAPI;
               char           tStr[256];
   std::vector<RtMidi::Api>   midiAPIlist;
@@ -65,83 +65,68 @@ Midi::Midi(QObject *parent) : QObject(parent) {
   }
 
   driver = -1;
-  ignoreActiveSensingEvents = true;
-  ignoreSystemExclusiveEvents = true;
-  ignoreTimeEvents = true;
+  modeIgnActSn = true;
+  modeIgnSysEx = true;
+  modeIgnMiTim = true;
   inputPort = -1;
   outputPort = -1;
 }
+        Midi::~Midi                (         )       {        setDriver(-1)                ; }
 
-        Midi::~Midi                          (         )       {        setDriver(-1)                ; }
-int     Midi::getDriver                      (         ) const { return driver                       ; }
-int     Midi::getDriverCount                 (         ) const { return driverAPIs.count()           ; }
-QString Midi::getDriverName                  (int index) const { return driverNames[index]           ; }
-bool    Midi::getIgnoreActiveSensingEvents   (         ) const { return ignoreActiveSensingEvents    ; }
-bool    Midi::getIgnoreSystemExclusiveEvents (         ) const { return ignoreSystemExclusiveEvents  ; }
-bool    Midi::getIgnoreTimeEvents            (         ) const { return ignoreTimeEvents             ; }
-int     Midi::getInputPort                   (         ) const { return inputPort                    ; }
-int     Midi::getInputPortCount              (         ) const { return inputPortNames.count()       ; }
-QString Midi::getInputPortName               (int index) const { return inputPortNames[index]        ; }
-int     Midi::getOutputPort                  (         ) const { return outputPort                   ; }
-int     Midi::getOutputPortCount             (         ) const { return outputPortNames.count()      ; }
-QString Midi::getOutputPortName              (int index) const { return outputPortNames[index]       ; }
+int     Midi::getDriver            (         ) const { return driver                       ; }
+int     Midi::getDriverCount       (         ) const { return driverAPIs.count()           ; }
+QString Midi::getDriverName        (int i_dex) const { return driverNames[i_dex]           ; }
+bool    Midi::ModeIgnActSnGet      (         ) const { return modeIgnActSn ; }
+bool    Midi::ModeIgnSysExGet      (         ) const { return modeIgnSysEx ; }
+bool    Midi::ModeIgnMiTimGet      (         ) const { return modeIgnMiTim ; }
+int     Midi::getInputPort         (         ) const { return inputPort                    ; }
+int     Midi::getInputPortCount    (         ) const { return inputPortNames.count()       ; }
+QString Midi::getInputPortName     (int i_dex) const { return inputPortNames[i_dex]        ; }
+int     Midi::getOutputPort        (         ) const { return outputPort                   ; }
+int     Midi::getOutputPortCount   (         ) const { return outputPortNames.count()      ; }
+QString Midi::getOutputPortName    (int i_dex) const { return outputPortNames[i_dex]       ; }
 
 void Midi::handleMidiInput(double timeStamp, std::vector<uint8_t> *message, void *engine) {
     static_cast<Midi *>(engine)->handleMidiInput(timeStamp, *message);
 }
-
 quint64 Midi::TimeGet() const {
-
-#if QT_VERSION >= 0x040700
-    return QDateTime::currentDateTime().toMSecsSinceEpoch();
-#else
-    struct timeval time;
-    if(gettimeofday(&time, 0) == -1) {
-        throw Error(tr("failed to get time of day: %1").arg(strerror(errno)));
-    }
-    return (static_cast<quint64>(time.tv_sec) * 1000) +
-        (static_cast<quint64>(time.tv_usec) / 1000);
-#endif
-
+  return QDateTime::currentDateTime().toMSecsSinceEpoch();
 }
+void Midi::handleMidiInput(double i_TS, const std::vector<uint8_t> &message) {
+  QByteArray msg;
+  quint64    TS;
+  int        msgSize;
+  (void)i_TS;
 
-void Midi::handleMidiInput(double /*timeStamp*/, const std::vector<uint8_t> &message) {
-    switch (message[0]) {
-    case 0xf0:
-        if(ignoreSystemExclusiveEvents) {
-            qWarning() << "RtMidi did not filter system exclusive event";
-            return;
-        }
-        break;
-    case 0xf1:
-    case 0xf8:
-    case 0xf9:
-        if(ignoreTimeEvents) {
-            qWarning() << "RtMidi did not filter time event";
-            return;
-        }
-        break;
-    case 0xfe:
-        if(ignoreActiveSensingEvents) {
-            qWarning() << "RtMidi did not filter active sensing event";
-            return;
-        }
-    }
-    quint64 timeStamp = TimeGet();
-    QByteArray msg;
-    int size = static_cast<int>(message.size());
-    for(int i = 0; i < size; i++) {
-        msg.append(message[i]);
-    }
-    emit EmMiMsgRx(timeStamp, msg);
+  switch (message[0]) {
+    case 0xF0: if(modeIgnSysEx) { qWarning() << theTrMsg->MsgMiMetaGet(TrMsg::DEM_RTM_FLT_FAIL); return; } break;  // SysEx
+    case 0xF1: if(modeIgnMiTim) { qWarning() << theTrMsg->MsgMiMetaGet(TrMsg::DEM_RTM_FLT_FAIL); return; } break;  // TimeCode Qtr Frm
+    case 0xF2: if(modeIgnMiTim) { qWarning() << theTrMsg->MsgMiMetaGet(TrMsg::DEM_RTM_FLT_FAIL); return; } break;  // Song Position Pointer
+    case 0xF3: if(modeIgnMiTim) { qWarning() << theTrMsg->MsgMiMetaGet(TrMsg::DEM_RTM_FLT_FAIL); return; } break;  // Song Select
+    case 0xF4:                  { qWarning() << theTrMsg->MsgMiMetaGet(TrMsg::DEM_STAT_UNDEF  ); return; } break;  // Undefined
+    case 0xF5:                  { qWarning() << theTrMsg->MsgMiMetaGet(TrMsg::DEM_STAT_UNDEF  ); return; } break;  // Undefined
+    case 0xF6: if(modeIgnMiTim) { qWarning() << theTrMsg->MsgMiMetaGet(TrMsg::DEM_RTM_FLT_FAIL); return; } break;  // Tune Request
+    case 0xF7: if(modeIgnSysEx) { qWarning() << theTrMsg->MsgMiMetaGet(TrMsg::DEM_RTM_FLT_FAIL); return; } break;  // SysEx End
+    case 0xF8: if(modeIgnMiTim) { qWarning() << theTrMsg->MsgMiMetaGet(TrMsg::DEM_RTM_FLT_FAIL); return; } break;  // Time Clock
+    case 0xF9:                  { qWarning() << theTrMsg->MsgMiMetaGet(TrMsg::DEM_STAT_UNDEF  ); return; } break;  // Undefined
+    case 0xFA: if(modeIgnMiTim) { qWarning() << theTrMsg->MsgMiMetaGet(TrMsg::DEM_RTM_FLT_FAIL); return; } break;  // Song Start
+    case 0xFB: if(modeIgnMiTim) { qWarning() << theTrMsg->MsgMiMetaGet(TrMsg::DEM_RTM_FLT_FAIL); return; } break;  // Song Continue
+    case 0xFC: if(modeIgnMiTim) { qWarning() << theTrMsg->MsgMiMetaGet(TrMsg::DEM_RTM_FLT_FAIL); return; } break;  // Song Stop
+    case 0xFD:                  { qWarning() << theTrMsg->MsgMiMetaGet(TrMsg::DEM_STAT_UNDEF  ); return; } break;  // Undefined
+    case 0xFE: if(modeIgnActSn) { qWarning() << theTrMsg->MsgMiMetaGet(TrMsg::DEM_RTM_FLT_FAIL); return; } break;  // Active Sense
+    case 0xFF:                                                                                             break;  // Reset
+  }
+  TS      = TimeGet();
+  msgSize = static_cast<int>(message.size());
+  for(int i=0; i<msgSize; i++) msg.append(message[i]);
+  emit EmMiMsgRx(TS, msg);
 }
-
 void Midi::removePorts() {
     setInputPort(-1);
     setOutputPort(-1);
     for(int i = inputPortNames.count() - 1; i >= 0; i--) {
         inputPortNames.removeAt(i);
-        emit inputPortRemoved(i);
+        emit EmPortInpDel(i);
     }
     for(int i = outputPortNames.count() - 1; i >= 0; i--) {
         outputPortNames.removeAt(i);
@@ -159,9 +144,9 @@ quint64 Midi::OnMiMsgTx(const QByteArray &message) {
     return TimeGet();
 }
 
-void Midi::setDriver(int index) {
-    assert((index >= -1) && (index < driverAPIs.count()));
-    if(driver != index) {
+void Midi::setDriver(int i_dex) {
+    assert((i_dex >= -1) && (i_dex < driverAPIs.count()));
+    if(driver != i_dex) {
 
         // Close the currently open MIDI driver.
         if(driver != -1) {
@@ -173,8 +158,8 @@ void Midi::setDriver(int index) {
         }
 
         // Open the new driver.
-        if(index != -1) {
-            RtMidi::Api api = driverAPIs[index];
+        if(i_dex != -1) {
+            RtMidi::Api api = driverAPIs[i_dex];
                 input = new RtMidiIn(api, "dmmsnoop");
                 QScopedPointer<RtMidiIn> inputPtr(input);
                 theRtMidiOut = new RtMidiOut(api, "dmmsnoop");
@@ -187,7 +172,7 @@ void Midi::setDriver(int index) {
                     for(unsigned int i = 0; i < count; i++) {
                         name = QString::fromStdString(input->getPortName(i));
                         inputPortNames.append(name);
-                        emit inputPortAdded(i, name);
+                        emit EmPortInpAdd(i, name);
                     }
                     count = theRtMidiOut->getPortCount();
                     for(unsigned int i = 0; i < count; i++) {
@@ -203,7 +188,7 @@ void Midi::setDriver(int index) {
                     case RtMidi::UNIX_JACK:
                         name = tr("[virtual input]");
                         inputPortNames.append(name);
-                        emit inputPortAdded(inputPortNames.count() - 1, name);
+                        emit EmPortInpAdd(inputPortNames.count() - 1, name);
                         name = tr("[virtual output]");
                         outputPortNames.append(name);
                         emit outputPortAdded(outputPortNames.count() - 1, name);
@@ -214,45 +199,16 @@ void Midi::setDriver(int index) {
                     }
                 inputPtr.take();
                 outputPtr.take();
-            driver = index;
-            emit EmDrvChange(index);
+            driver = i_dex;
+            emit EmDrvChange(i_dex);
         }
     }
 }
 
-void
-Midi::setIgnoreActiveSensingEvents(bool ignore)
-{
-    if(ignoreActiveSensingEvents != ignore) {
-        ignoreActiveSensingEvents = ignore;
-        updateEventFilter();
-        emit ignoreActiveSensingEventsChanged(ignore);
-    }
-}
-
-void
-Midi::setIgnoreSystemExclusiveEvents(bool ignore)
-{
-    if(ignoreSystemExclusiveEvents != ignore) {
-        ignoreSystemExclusiveEvents = ignore;
-        updateEventFilter();
-        emit ignoreSystemExclusiveEventsChanged(ignore);
-    }
-}
-
-void
-Midi::setIgnoreTimeEvents(bool ignore)
-{
-    if(ignoreTimeEvents != ignore) {
-        ignoreTimeEvents = ignore;
-        updateEventFilter();
-        emit ignoreTimeEventsChanged(ignore);
-    }
-}
-
-void
-Midi::setInputPort(int index)
-{
+void Midi::OnModeIgnActSnChg(bool i_ign) { if(modeIgnActSn != i_ign) { modeIgnActSn = i_ign; updateEventFilter(); emit EmModeIgnActSnChg(i_ign); }}
+void Midi::OnModeIgnSysExChg(bool i_ign) { if(modeIgnSysEx != i_ign) { modeIgnSysEx = i_ign; updateEventFilter(); emit EmModeIgnSysExChg(i_ign); }}
+void Midi::OnModeIgnMiTimChg(bool i_ign) { if(modeIgnMiTim != i_ign) { modeIgnMiTim = i_ign; updateEventFilter(); emit EmModeIgnMiTimChg(i_ign); }}
+void Midi::setInputPort(int index) {
     assert((index >= -1) && (index < inputPortNames.count()));
     if(inputPort != index) {
 
@@ -260,7 +216,7 @@ Midi::setInputPort(int index)
         if(inputPort != -1) {
                 input->closePort();
             inputPort = -1;
-            emit inputPortChanged(-1);
+            emit EmPortInpChg(-1);
         }
 
         // Open the new input port.
@@ -273,7 +229,7 @@ Midi::setInputPort(int index)
                 }
             inputPort = index;
             updateEventFilter();
-            emit inputPortChanged(index);
+            emit EmPortInpChg(index);
         }
     }
 }
@@ -305,7 +261,7 @@ void Midi::setOutputPort(int index) {
 
 void Midi::updateEventFilter() {
     if(inputPort != -1) {
-        input->ignoreTypes(ignoreSystemExclusiveEvents, ignoreTimeEvents,
-                           ignoreActiveSensingEvents);
+        input->ignoreTypes(modeIgnSysEx, modeIgnMiTim,
+                           modeIgnActSn);
     }
 }

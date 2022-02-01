@@ -71,7 +71,7 @@ char   *MsgAppGet (eAppType  i_theType)  { return msgApp[i_theType]; }
   tStrAry = msgAppPile[DEL_ENGLISH];
   tStrAry[DAT_APP_NAME]     = (char *)"dmmsnoop";
   tStrAry[DAT_APP_DOM]      = (char *)"catraeus.com";
-  tStrAry[DAT_APP_URL_CODE] = (char *)"&lt;a href=&quot;https://github.com/catraeus/dmmsnoop&quot;&gt;https://github.com/catraeus/dmmsnoop&lt;/a&gt;";
+  tStrAry[DAT_APP_URL_CODE] = (char *)"https://github.com/catraeus/dmmsnoop";
   tStrAry[DAT_APP_LANG]     = (char *)"English";
 
 //==================================================================================================

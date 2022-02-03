@@ -13,7 +13,7 @@
   <property name="windowTitle">
    <string>dmmsnoop</string>
   </property>
-  <widget class="QTableView" name="QTV_MidiMsg">
+  <widget class="QTableView" name="QTb_MiMsgGrid">
    <property name="horizontalScrollBarPolicy">
     <enum>Qt::ScrollBarAsNeeded</enum>
    </property>
@@ -55,22 +55,22 @@
     <property name="title">
      <string>&amp;File</string>
     </property>
-    <addaction name="quitAction"/>
+    <addaction name="QAc_AppQuit"/>
    </widget>
    <widget class="QMenu" name="menuEdit">
     <property name="title">
      <string>&amp;Edit</string>
     </property>
-    <addaction name="addAction"/>
-    <addaction name="QA_ClearMsgMon"/>
+    <addaction name="QAc_MiMsgOutAdd"/>
+    <addaction name="QAc_MiMsgListClear"/>
     <addaction name="separator"/>
-    <addaction name="configureAction"/>
+    <addaction name="QAc_AppConfig"/>
    </widget>
    <widget class="QMenu" name="menuHelp">
     <property name="title">
      <string>&amp;Help</string>
     </property>
-    <addaction name="aboutAction"/>
+    <addaction name="QAc_About"/>
    </widget>
    <addaction name="menuFile"/>
    <addaction name="menuEdit"/>
@@ -96,16 +96,16 @@
    <attribute name="toolBarBreak">
     <bool>false</bool>
    </attribute>
-   <addaction name="quitAction"/>
+   <addaction name="QAc_AppQuit"/>
    <addaction name="separator"/>
-   <addaction name="addAction"/>
-   <addaction name="QA_ClearMsgMon"/>
+   <addaction name="QAc_MiMsgOutAdd"/>
+   <addaction name="QAc_MiMsgListClear"/>
    <addaction name="separator"/>
-   <addaction name="configureAction"/>
+   <addaction name="QAc_AppConfig"/>
    <addaction name="separator"/>
-   <addaction name="aboutAction"/>
+   <addaction name="QAc_About"/>
   </widget>
-  <action name="addAction">
+  <action name="QAc_MiMsgOutAdd">
    <property name="icon">
     <iconset resource="resources.qrc">
      <normaloff>:/dmmsnoop/images/16x16/add.png</normaloff>:/dmmsnoop/images/16x16/add.png</iconset>
@@ -120,7 +120,7 @@
     <string>Ctrl+D</string>
    </property>
   </action>
-  <action name="QA_ClearMsgMon">
+  <action name="QAc_MiMsgListClear">
    <property name="icon">
     <iconset resource="resources.qrc">
      <normaloff>:/dmmsnoop/images/16x16/clear.png</normaloff>:/dmmsnoop/images/16x16/clear.png</iconset>
@@ -135,7 +135,7 @@
     <string>Ctrl+L</string>
    </property>
   </action>
-  <action name="quitAction">
+  <action name="QAc_AppQuit">
    <property name="icon">
     <iconset resource="resources.qrc">
      <normaloff>:/dmmsnoop/images/16x16/quit.png</normaloff>:/dmmsnoop/images/16x16/quit.png</iconset>
@@ -150,7 +150,7 @@
     <string>Ctrl+Q</string>
    </property>
   </action>
-  <action name="configureAction">
+  <action name="QAc_AppConfig">
    <property name="icon">
     <iconset resource="resources.qrc">
      <normaloff>:/dmmsnoop/images/16x16/configure.png</normaloff>:/dmmsnoop/images/16x16/configure.png</iconset>
@@ -165,7 +165,7 @@
     <string>Ctrl+O</string>
    </property>
   </action>
-  <action name="aboutAction">
+  <action name="QAc_About">
    <property name="icon">
     <iconset resource="resources.qrc">
      <normaloff>:/dmmsnoop/images/16x16/information.png</normaloff>:/dmmsnoop/images/16x16/information.png</iconset>

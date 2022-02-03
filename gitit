@@ -1,18 +1,12 @@
 #!/bin/sh
 git add   gitit
 git add   dmmsnoop.geany
-git add   install/util.py
 git add   src/Ctrl.cpp
-git add   src/Ctrl.hpp
+git add   src/DelgMsgTbl.cpp
+git add   src/DelgMsgTbl.hpp
 git add   src/Midi.cpp
 git add   src/Midi.hpp
-git add   src/QVwAbout.cpp
-git add   src/QVwAbout.hpp
-git add   src/QVwAbout.ui
-git add   src/QVwConfig.cpp
-git add   src/QVwConfig.hpp
-git add   src/QVwConfig.ui
-git add   src/util/TrMsg.cpp
-git add   src/util/TrMsgApp.hpp
-git add   src/util/TrMsgMiMeta.hpp
+git add   src/QVwMain.cpp
+git add   src/QVwMain.hpp
+git add   src/QVwMain.ui
 

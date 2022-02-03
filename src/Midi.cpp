@@ -51,48 +51,48 @@
   for(int i=0; i<numAPIs; i++) {
     theMidiAPI = midiAPIlist[i];
     switch (theMidiAPI) {
-      case RtMidi::LINUX_ALSA : driverNames.append(tr("ALSA Seq"     )); break;
-      case RtMidi::MACOSX_CORE: driverNames.append(tr("CoreMidi"     )); break;
-      case RtMidi::UNIX_JACK  : driverNames.append(tr("JACK"         )); break;
-      case RtMidi::WINDOWS_MM : driverNames.append(tr("Win MM MIDI"  )); break;
+      case RtMidi::LINUX_ALSA : miDrvNames.append(tr("ALSA Seq"     )); break;
+      case RtMidi::MACOSX_CORE: miDrvNames.append(tr("CoreMidi"     )); break;
+      case RtMidi::UNIX_JACK  : miDrvNames.append(tr("JACK"         )); break;
+      case RtMidi::WINDOWS_MM : miDrvNames.append(tr("Win MM MIDI"  )); break;
       default                 : sprintf(tStr, "Bad MIDI API enum: %d",static_cast<int>(theMidiAPI)) ;
           // Fallthrough on purpose, unknown, RTMIDI_DUMMY and UNSPECIFIED all get out of the for loop
       case RtMidi::RTMIDI_DUMMY:
       case RtMidi::UNSPECIFIED:
         continue;
     }
-    driverAPIs.append(theMidiAPI);
+    miDrvApis.append(theMidiAPI);
   }
 
-  driver = -1;
+  miDrvNo = -1;
   modeIgnActSn = true;
   modeIgnSysEx = true;
   modeIgnMiTim = true;
-  inputPort = -1;
-  outputPort = -1;
+  miPortInpNum = -1;
+  miPortOutNum = -1;
 }
-        Midi::~Midi                (         )       {        setDriver(-1)                ; }
+        Midi::~Midi                (         )       {        OnDrvChg(-1)                ; }
 
-int     Midi::getDriver            (         ) const { return driver                       ; }
-int     Midi::getDriverCount       (         ) const { return driverAPIs.count()           ; }
-QString Midi::getDriverName        (int i_dex) const { return driverNames[i_dex]           ; }
+int     Midi::MiDrvNumGet          (         ) const { return miDrvNo                       ; }
+int     Midi::getDriverCount       (         ) const { return miDrvApis.count()           ; }
+QString Midi::getDriverName        (int i_dex) const { return miDrvNames[i_dex]           ; }
 bool    Midi::ModeIgnActSnGet      (         ) const { return modeIgnActSn ; }
 bool    Midi::ModeIgnSysExGet      (         ) const { return modeIgnSysEx ; }
 bool    Midi::ModeIgnMiTimGet      (         ) const { return modeIgnMiTim ; }
-int     Midi::getInputPort         (         ) const { return inputPort                    ; }
+int     Midi::getInputPort         (         ) const { return miPortInpNum                    ; }
 int     Midi::getInputPortCount    (         ) const { return inputPortNames.count()       ; }
 QString Midi::getInputPortName     (int i_dex) const { return inputPortNames[i_dex]        ; }
-int     Midi::getOutputPort        (         ) const { return outputPort                   ; }
-int     Midi::getOutputPortCount   (         ) const { return outputPortNames.count()      ; }
-QString Midi::getOutputPortName    (int i_dex) const { return outputPortNames[i_dex]       ; }
+int     Midi::getOutputPort        (         ) const { return miPortOutNum                   ; }
+int     Midi::getOutputPortCount   (         ) const { return miPortOutNames.count()      ; }
+QString Midi::getOutputPortName    (int i_dex) const { return miPortOutNames[i_dex]       ; }
 
-void Midi::handleMidiInput(double timeStamp, std::vector<uint8_t> *message, void *engine) {
-    static_cast<Midi *>(engine)->handleMidiInput(timeStamp, *message);
+void Midi::DoMiMsgInpHandle(double timeStamp, std::vector<uint8_t> *message, void *engine) {
+    static_cast<Midi *>(engine)->DoMiMsgInpHandle(timeStamp, *message);
 }
 quint64 Midi::TimeGet() const {
   return QDateTime::currentDateTime().toMSecsSinceEpoch();
 }
-void Midi::handleMidiInput(double i_TS, const std::vector<uint8_t> &message) {
+void Midi::DoMiMsgInpHandle(double i_TS, const std::vector<uint8_t> &message) {
   QByteArray msg;
   quint64    TS;
   int        msgSize;
@@ -121,64 +121,64 @@ void Midi::handleMidiInput(double i_TS, const std::vector<uint8_t> &message) {
   for(int i=0; i<msgSize; i++) msg.append(message[i]);
   emit EmMiMsgRx(TS, msg);
 }
-void Midi::removePorts() {
-    setInputPort(-1);
-    setOutputPort(-1);
+void Midi::DoPortAllDel() {
+    OnPortInpChg(-1);
+    OnPortOutChg(-1);
     for(int i = inputPortNames.count() - 1; i >= 0; i--) {
         inputPortNames.removeAt(i);
         emit EmPortInpDel(i);
     }
-    for(int i = outputPortNames.count() - 1; i >= 0; i--) {
-        outputPortNames.removeAt(i);
-        emit outputPortRemoved(i);
+    for(int i = miPortOutNames.count() - 1; i >= 0; i--) {
+        miPortOutNames.removeAt(i);
+        emit EmPortOutDel(i);
     }
 }
 
 quint64 Midi::OnMiMsgTx(const QByteArray &message) {
-    assert(outputPort != -1);
+    assert(miPortOutNum != -1);
     std::vector<uint8_t> msg;
     for(int i = 0; i < message.count(); i++) {
         msg.push_back(static_cast<uint8_t>(message[i]));
     }
-        theRtMidiOut->sendMessage(&msg);
+        miPortOutInst->sendMessage(&msg);
     return TimeGet();
 }
 
-void Midi::setDriver(int i_dex) {
-    assert((i_dex >= -1) && (i_dex < driverAPIs.count()));
-    if(driver != i_dex) {
+void Midi::OnDrvChg(int i_dex) {
+    assert((i_dex >= -1) && (i_dex < miDrvApis.count()));
+    if(miDrvNo != i_dex) {
 
         // Close the currently open MIDI driver.
-        if(driver != -1) {
-            removePorts();
-            delete input;
-            delete theRtMidiOut;
-            driver = -1;
+        if(miDrvNo != -1) {
+            DoPortAllDel();
+            delete miPortInpInst;
+            delete miPortOutInst;
+            miDrvNo = -1;
             emit EmDrvChange(-1);
         }
 
         // Open the new driver.
         if(i_dex != -1) {
-            RtMidi::Api api = driverAPIs[i_dex];
-                input = new RtMidiIn(api, "dmmsnoop");
-                QScopedPointer<RtMidiIn> inputPtr(input);
-                theRtMidiOut = new RtMidiOut(api, "dmmsnoop");
-                QScopedPointer<RtMidiOut> outputPtr(theRtMidiOut);
-                input->setCallback(handleMidiInput, this);
+            RtMidi::Api api = miDrvApis[i_dex];
+                miPortInpInst = new RtMidiIn(api, "dmmsnoop");
+                QScopedPointer<RtMidiIn> inputPtr(miPortInpInst);
+                miPortOutInst = new RtMidiOut(api, "dmmsnoop");
+                QScopedPointer<RtMidiOut> outputPtr(miPortOutInst);
+                miPortInpInst->setCallback(DoMiMsgInpHandle, this);
 
                 // Add ports.
-                    unsigned int count = input->getPortCount();
+                    unsigned int count = miPortInpInst->getPortCount();
                     QString name;
                     for(unsigned int i = 0; i < count; i++) {
-                        name = QString::fromStdString(input->getPortName(i));
+                        name = QString::fromStdString(miPortInpInst->getPortName(i));
                         inputPortNames.append(name);
                         emit EmPortInpAdd(i, name);
                     }
-                    count = theRtMidiOut->getPortCount();
+                    count = miPortOutInst->getPortCount();
                     for(unsigned int i = 0; i < count; i++) {
-                        name = QString::fromStdString(theRtMidiOut->getPortName(i));
-                        outputPortNames.append(name);
-                        emit outputPortAdded(i, name);
+                        name = QString::fromStdString(miPortOutInst->getPortName(i));
+                        miPortOutNames.append(name);
+                        emit EmPortOutAdd(i, name);
                     }
 
                     // Add a virtual port to drivers that support virtual ports.
@@ -190,78 +190,78 @@ void Midi::setDriver(int i_dex) {
                         inputPortNames.append(name);
                         emit EmPortInpAdd(inputPortNames.count() - 1, name);
                         name = tr("[virtual output]");
-                        outputPortNames.append(name);
-                        emit outputPortAdded(outputPortNames.count() - 1, name);
-                        virtualPortsAdded = true;
+                        miPortOutNames.append(name);
+                        emit EmPortOutAdd(miPortOutNames.count() - 1, name);
+                        hasPortsVirtual = true;
                         break;
                     default:
-                        virtualPortsAdded = false;
+                        hasPortsVirtual = false;
                     }
                 inputPtr.take();
                 outputPtr.take();
-            driver = i_dex;
+            miDrvNo = i_dex;
             emit EmDrvChange(i_dex);
         }
     }
 }
 
-void Midi::OnModeIgnActSnChg(bool i_ign) { if(modeIgnActSn != i_ign) { modeIgnActSn = i_ign; updateEventFilter(); emit EmModeIgnActSnChg(i_ign); }}
-void Midi::OnModeIgnSysExChg(bool i_ign) { if(modeIgnSysEx != i_ign) { modeIgnSysEx = i_ign; updateEventFilter(); emit EmModeIgnSysExChg(i_ign); }}
-void Midi::OnModeIgnMiTimChg(bool i_ign) { if(modeIgnMiTim != i_ign) { modeIgnMiTim = i_ign; updateEventFilter(); emit EmModeIgnMiTimChg(i_ign); }}
-void Midi::setInputPort(int index) {
+void Midi::OnModeIgnActSnChg(bool i_ign) { if(modeIgnActSn != i_ign) { modeIgnActSn = i_ign; DoModeIgnChg(); emit EmModeIgnActSnChg(i_ign); }}
+void Midi::OnModeIgnSysExChg(bool i_ign) { if(modeIgnSysEx != i_ign) { modeIgnSysEx = i_ign; DoModeIgnChg(); emit EmModeIgnSysExChg(i_ign); }}
+void Midi::OnModeIgnMiTimChg(bool i_ign) { if(modeIgnMiTim != i_ign) { modeIgnMiTim = i_ign; DoModeIgnChg(); emit EmModeIgnMiTimChg(i_ign); }}
+void Midi::OnPortInpChg(int index) {
     assert((index >= -1) && (index < inputPortNames.count()));
-    if(inputPort != index) {
+    if(miPortInpNum != index) {
 
         // Close the currently open input port.
-        if(inputPort != -1) {
-                input->closePort();
-            inputPort = -1;
+        if(miPortInpNum != -1) {
+                miPortInpInst->closePort();
+            miPortInpNum = -1;
             emit EmPortInpChg(-1);
         }
 
         // Open the new input port.
         if(index != -1) {
-                if(virtualPortsAdded &&
+                if(hasPortsVirtual &&
                     (index == (inputPortNames.count() - 1))) {
-                    input->openVirtualPort("MIDI Input");
+                    miPortInpInst->openVirtualPort("MIDI Input");
                 } else {
-                    input->openPort(index, "MIDI Input");
+                    miPortInpInst->openPort(index, "MIDI Input");
                 }
-            inputPort = index;
-            updateEventFilter();
+            miPortInpNum = index;
+            DoModeIgnChg();
             emit EmPortInpChg(index);
         }
     }
 }
 
-void Midi::setOutputPort(int index) {
-    assert((index >= -1) && (index < outputPortNames.count()));
-    if(outputPort != index) {
+void Midi::OnPortOutChg(int index) {
+    assert((index >= -1) && (index < miPortOutNames.count()));
+    if(miPortOutNum != index) {
 
         // Close the currently open output port.
-        if(outputPort != -1) {
-                theRtMidiOut->closePort();
-            outputPort = -1;
-            emit outputPortChanged(-1);
+        if(miPortOutNum != -1) {
+                miPortOutInst->closePort();
+            miPortOutNum = -1;
+            emit EmPortOutChg(-1);
         }
 
         // Open the new output port.
         if(index != -1) {
-                if(virtualPortsAdded &&
-                    (index == (outputPortNames.count() - 1))) {
-                    theRtMidiOut->openVirtualPort("MIDI Output");
+                if(hasPortsVirtual &&
+                    (index == (miPortOutNames.count() - 1))) {
+                    miPortOutInst->openVirtualPort("MIDI Output");
                 } else {
-                    theRtMidiOut->openPort(index, "MIDI Output");
+                    miPortOutInst->openPort(index, "MIDI Output");
                 }
-            outputPort = index;
-            emit outputPortChanged(index);
+            miPortOutNum = index;
+            emit EmPortOutChg(index);
         }
     }
 }
 
-void Midi::updateEventFilter() {
-    if(inputPort != -1) {
-        input->ignoreTypes(modeIgnSysEx, modeIgnMiTim,
+void Midi::DoModeIgnChg() {
+    if(miPortInpNum != -1) {
+        miPortInpInst->ignoreTypes(modeIgnSysEx, modeIgnMiTim,
                            modeIgnActSn);
     }
 }

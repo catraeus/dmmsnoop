@@ -24,66 +24,66 @@
 #include "QVwMain.hpp"
 #include "util/util.hpp"
 
-     QVwMain::QVwMain(QObject *parent) : QVwDesgn(":/dmmsnoop/QVwMain.ui", parent) {
-    QWidget *widget = getRootWidget();
+     QVwMain::QVwMain(QObject *i_parent) : QVwDesgn(":/dmmsnoop/QVwMain.ui", i_parent) {
+    QWidget *QWd_root  = getRootWidget();
 
-    aboutAction     = getChild<QAction>(widget, "aboutAction"    );    connect(aboutAction,     SIGNAL(triggered()), SIGNAL(aboutRequest         ()));
-    addAction       = getChild<QAction>(widget, "addAction"      );    connect(addAction,       SIGNAL(triggered()), SIGNAL(addMessageRequest    ()));
-    QA_ClearMsgMon  = getChild<QAction>(widget, "QA_ClearMsgMon" );    connect(QA_ClearMsgMon,  SIGNAL(triggered()), SIGNAL(clearMessagesRequest ()));
-    configureAction = getChild<QAction>(widget, "configureAction");    connect(configureAction, SIGNAL(triggered()), SIGNAL(configureRequest     ()));
-    quitAction      = getChild<QAction>(widget, "quitAction"     );    connect(quitAction,      SIGNAL(triggered()), SIGNAL(closeRequest         ()));
+    QAc_About          = getChild<QAction>(QWd_root, "QAc_About"          );  connect(QAc_About,          SIGNAL(triggered()), SIGNAL(aboutRequest         ()));
+    QAc_MiMsgOutAdd    = getChild<QAction>(QWd_root, "QAc_MiMsgOutAdd"    );  connect(QAc_MiMsgOutAdd,    SIGNAL(triggered()), SIGNAL(addMessageRequest    ()));
+    QAc_MiMsgListClear = getChild<QAction>(QWd_root, "QAc_MiMsgListClear" );  connect(QAc_MiMsgListClear, SIGNAL(triggered()), SIGNAL(EmMiMsgTabClr        ()));
+    QAc_AppConfig      = getChild<QAction>(QWd_root, "QAc_AppConfig"      );  connect(QAc_AppConfig,      SIGNAL(triggered()), SIGNAL(configureRequest     ()));
+    QAc_AppQuit        = getChild<QAction>(QWd_root, "QAc_AppQuit"        );  connect(QAc_AppQuit,        SIGNAL(triggered()), SIGNAL(closeRequest         ()));
 
-    tableModel.setColumnCount(MESSAGETABLECOLUMN_TOTAL);
-    tableModel.setRowCount(0);
-    tableModel.setHeaderData(MESSAGETABLECOLUMN_DATA,      Qt::Horizontal,  tr("Data"     ), Qt::DisplayRole);
-    tableModel.setHeaderData(MESSAGETABLECOLUMN_STATUS,    Qt::Horizontal,  tr("Status"   ), Qt::DisplayRole);
-    tableModel.setHeaderData(MESSAGETABLECOLUMN_TIMESTAMP, Qt::Horizontal,  tr("Timestamp"), Qt::DisplayRole);
-    tableView = getChild<QTableView>(widget, "QTV_MidiMsg");
-    tableView->setItemDelegate(&tableDelegate);
-    tableView->setModel(&tableModel);
+    QMd_MiMsgGrid.setColumnCount(MTC_TOTAL);
+    QMd_MiMsgGrid.setRowCount(0);
+    QMd_MiMsgGrid.setHeaderData(MTC_DATA,      Qt::Horizontal,  tr("Data"     ), Qt::DisplayRole);
+    QMd_MiMsgGrid.setHeaderData(MTC_STATUS,    Qt::Horizontal,  tr("Status"   ), Qt::DisplayRole);
+    QMd_MiMsgGrid.setHeaderData(MTC_TIMESTAMP, Qt::Horizontal,  tr("Timestamp"), Qt::DisplayRole);
+    QTb_MiMsgGrid = getChild<QTableView>(QWd_root, "QTb_MiMsgGrid");
+    QTb_MiMsgGrid->setItemDelegate(&tableDelegate);
+    QTb_MiMsgGrid->setModel(&QMd_MiMsgGrid);
     timeZero = 0;
 }
      QVwMain::~QVwMain() {}
 
 void QVwMain::SetTimeZero(qint64 i_timeZero) {  timeZero = i_timeZero;  return;}
 int  QVwMain::MsgAdd(quint64 timeStamp, const QString &statusDescription, const QString &dataDescription, bool valid) {
-  int   count    = tableModel.rowCount();
+  int   count    = QMd_MiMsgGrid.rowCount();
 
-  tableModel.insertRow(count); // WARNING There is no check for insertion, insertRow returns a bool
+  QMd_MiMsgGrid.insertRow(count); // WARNING There is no check for insertion, insertRow returns a bool
 
   Qt::AlignmentFlag alignment = Qt::AlignTop;
-  setModelData(count, MESSAGETABLECOLUMN_DATA,      dataDescription);
-  setModelData(count, MESSAGETABLECOLUMN_DATA,      alignment,   Qt::TextAlignmentRole);
-  setModelData(count, MESSAGETABLECOLUMN_STATUS,    statusDescription);
-  setModelData(count, MESSAGETABLECOLUMN_STATUS,    alignment,   Qt::TextAlignmentRole);
-  setModelData(count, MESSAGETABLECOLUMN_TIMESTAMP, timeStamp - timeZero);
-  setModelData(count, MESSAGETABLECOLUMN_TIMESTAMP, alignment,   Qt::TextAlignmentRole);
+  setModelData(count, MTC_DATA,      dataDescription);
+  setModelData(count, MTC_DATA,      alignment,   Qt::TextAlignmentRole);
+  setModelData(count, MTC_STATUS,    statusDescription);
+  setModelData(count, MTC_STATUS,    alignment,   Qt::TextAlignmentRole);
+  setModelData(count, MTC_TIMESTAMP, timeStamp - timeZero);
+  setModelData(count, MTC_TIMESTAMP, alignment,   Qt::TextAlignmentRole);
   if(!valid)
-    setModelData(count, MESSAGETABLECOLUMN_STATUS,  QIcon(":/dmmsnoop/images/16x16/error.png"), Qt::DecorationRole);
-  tableView->resizeRowToContents(count);
-  tableView->scrollToBottom();
+    setModelData(count, MTC_STATUS,  QIcon(":/dmmsnoop/images/16x16/error.png"), Qt::DecorationRole);
+  QTb_MiMsgGrid->resizeRowToContents(count);
+  QTb_MiMsgGrid->scrollToBottom();
   return count;
 }
-void QVwMain::addReceivedMessage(quint64 timeStamp,  const QString &statusDescription,  const QString &dataDescription, bool valid) {
+void QVwMain::OnMiMsgRX(quint64 timeStamp,  const QString &statusDescription,  const QString &dataDescription, bool valid) {
   MsgAdd(timeStamp, statusDescription, dataDescription, valid);
 }
-void QVwMain::MsgAddTX(quint64 timeStamp, const QString &statusDescription, const QString &dataDescription, bool valid) {
+void QVwMain::OnMiMsgTX(quint64 timeStamp, const QString &statusDescription, const QString &dataDescription, bool valid) {
     int   index = MsgAdd(timeStamp, statusDescription, dataDescription, valid);
     const QBrush &brush = qApp->palette().alternateBase();
-    setModelData(index, MESSAGETABLECOLUMN_DATA,      brush, Qt::BackgroundRole);
-    setModelData(index, MESSAGETABLECOLUMN_STATUS,    brush, Qt::BackgroundRole);
-    setModelData(index, MESSAGETABLECOLUMN_TIMESTAMP, brush, Qt::BackgroundRole);
+    setModelData(index, MTC_DATA,      brush, Qt::BackgroundRole);
+    setModelData(index, MTC_STATUS,    brush, Qt::BackgroundRole);
+    setModelData(index, MTC_TIMESTAMP, brush, Qt::BackgroundRole);
 }
-void QVwMain::clearMessages() {
-  int count = tableModel.rowCount();
+void QVwMain::OnMiMsgTabClr() {
+  int count = QMd_MiMsgGrid.rowCount();
   if(count > 0) {
-    tableModel.removeRows(0, tableModel.rowCount()); // WARNING there is no check here for removal, removeRows returns a bool.
+    QMd_MiMsgGrid.removeRows(0, QMd_MiMsgGrid.rowCount()); // WARNING there is no check here for removal, removeRows returns a bool.
   }
 }
 void QVwMain::setMessageSendEnabled(bool enabled) {
-  addAction->setEnabled(enabled);
+  QAc_MiMsgOutAdd->setEnabled(enabled);
 }
 void QVwMain::setModelData(int row, int column, const QVariant &value, int role) {
-  bool result = tableModel.setData(tableModel.index(row, column), value, role);
+  bool result = QMd_MiMsgGrid.setData(QMd_MiMsgGrid.index(row, column), value, role);
   assert(result);
 }

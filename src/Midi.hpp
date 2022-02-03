@@ -37,7 +37,7 @@ class Midi: public QObject {
 public:
   explicit  Midi(QObject *parent=0);
            ~Midi();
-  int       getDriver() const;
+  int       MiDrvNumGet() const;
   int       getDriverCount() const;
   QString   getDriverName(int index) const;
   bool      ModeIgnActSnGet() const;
@@ -51,12 +51,12 @@ public:
   QString   getOutputPortName(int index) const;
 
 public slots:
-  void      setDriver(int index);
+  void      OnDrvChg(int index);
   void      OnModeIgnActSnChg(bool ignore);
   void      OnModeIgnSysExChg(bool ignore);
   void      OnModeIgnMiTimChg(bool ignore);
-  void      setInputPort(int index);
-  void      setOutputPort(int index);
+  void      OnPortInpChg(int index);
+  void      OnPortOutChg(int index);
   quint64   OnMiMsgTx(const QByteArray &message);
 
 signals:
@@ -67,33 +67,33 @@ signals:
   void      EmPortInpAdd(int index, const QString &name);
   void      EmPortInpChg(int index);
   void      EmPortInpDel(int index);
-  void      outputPortAdded(int index, const QString &name);
-  void      outputPortChanged(int index);
-  void      outputPortRemoved(int index);
+  void      EmPortOutAdd(int index, const QString &name);
+  void      EmPortOutChg(int index);
+  void      EmPortOutDel(int index);
   void      EmMiMsgRx(quint64 timeStamp, const QByteArray &message);
 
 public:
          quint64 TimeGet() const;
 private:
-  static void    handleMidiInput(double timeStamp,       std::vector<uint8_t> *message, void *engine);
-         void    handleMidiInput(double timeStamp, const std::vector<uint8_t> &message);
-         void    removePorts();
-         void    updateEventFilter();
+  static void    DoMiMsgInpHandle(double timeStamp,       std::vector<uint8_t> *message, void *engine);
+         void    DoMiMsgInpHandle(double timeStamp, const std::vector<uint8_t> &message);
+         void    DoPortAllDel();
+         void    DoModeIgnChg();
 
     TrMsg               *theTrMsg;
-    int                  driver;
-    QList<RtMidi::Api>   driverAPIs;
-    QStringList          driverNames;
+    int                  miDrvNo;
+    QList<RtMidi::Api>   miDrvApis;
+    QStringList          miDrvNames;
     bool                 modeIgnActSn;
     bool                 modeIgnSysEx;
     bool                 modeIgnMiTim;
-    RtMidiIn            *input;
-    int                  inputPort;
+    RtMidiIn            *miPortInpInst;
+    int                  miPortInpNum;
     QStringList          inputPortNames;
-    RtMidiOut           *theRtMidiOut;
-    int                  outputPort;
-    QStringList          outputPortNames;
-    bool                 virtualPortsAdded;
+    RtMidiOut           *miPortOutInst;
+    int                  miPortOutNum;
+    QStringList          miPortOutNames;
+    bool                 hasPortsVirtual;
 };
 
 #endif

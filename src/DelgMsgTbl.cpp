@@ -25,7 +25,7 @@
 
          DelgMsgTbl::DelgMsgTbl    (QObject *parent) : QStyledItemDelegate(parent) {}
          DelgMsgTbl::~DelgMsgTbl   (               )                               {}
-QWidget *DelgMsgTbl::createEditor            (QWidget *parent, const QStyleOptionViewItem &/*option*/, const QModelIndex &/*index*/) const {
+QWidget *DelgMsgTbl::createEditor  (QWidget *parent, const QStyleOptionViewItem &/*option*/, const QModelIndex &/*index*/) const {
   QTextEdit *editor = new QTextEdit(parent);
 
   editor->setFrameShadow(QTextEdit::Plain);
@@ -52,7 +52,12 @@ void     DelgMsgTbl::setEditorData           (QWidget *editor,                  
   frameFormat.setTopMargin(0);
   rootFrame->setFrameFormat(frameFormat);
 }
-void     DelgMsgTbl::setModelData            (QWidget */*editor*/,   QAbstractItemModel */*model*/,    const QModelIndex &/*index*/) const {}
+void     DelgMsgTbl::setModelData            (QWidget *i_editor,     QAbstractItemModel *i_model,    const QModelIndex &i_dex) const {
+  (void)i_editor;
+  (void)i_model;
+  (void)i_dex;
+  return;
+}
 void     DelgMsgTbl::updateEditorGeometry    (QWidget *editor, const QStyleOptionViewItem &option,     const QModelIndex &/*index*/) const {
   editor->setGeometry(option.rect);
 }

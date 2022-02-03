@@ -38,16 +38,16 @@ public:
 
 public slots:
 
-  void addReceivedMessage(quint64 timeStamp, const QString &statusDescription, const QString &dataDescription, bool valid);
-  void MsgAddTX(quint64 timeStamp, const QString &statusDescription, const QString &dataDescription, bool valid);
-  void clearMessages();
+  void OnMiMsgRX(quint64 timeStamp, const QString &statusDescription, const QString &dataDescription, bool valid);
+  void OnMiMsgTX(quint64 timeStamp, const QString &statusDescription, const QString &dataDescription, bool valid);
+  void OnMiMsgTabClr();
   void setMessageSendEnabled(bool enabled);
 
        signals:
 
   void aboutRequest();
   void addMessageRequest();
-  void clearMessagesRequest();
+  void EmMiMsgTabClr();
   void configureRequest();
 
 public:
@@ -55,24 +55,25 @@ public:
 
 private:
   enum MessageTableColumn {
-    MESSAGETABLECOLUMN_TIMESTAMP = 0,
-    MESSAGETABLECOLUMN_STATUS    = 1,
-    MESSAGETABLECOLUMN_DATA      = 2,
-    MESSAGETABLECOLUMN_TOTAL     = 3
+    MTC_TIMESTAMP = 0,
+    MTC_STATUS    = 1,
+    MTC_DATA      = 2,
+    MTC_TOTAL     = 3
   };
   qint64 timeZero;
 
   int  MsgAdd(quint64 timeStamp, const QString &statusDescription, const QString &dataDescription, bool valid);
   void setModelData(int row, int column, const QVariant &value, int role=Qt::DisplayRole);
 
-  QAction              *aboutAction;
-  QAction              *addAction;
-  QAction              *QA_ClearMsgMon;
-  QAction              *configureAction;
+  QAction              *QAc_About;
+  QAction              *QAc_MiMsgOutAdd;
+  QAction              *QAc_MiMsgListClear;
+  QAction              *QAc_AppConfig;
+  QAction              *QAc_AppQuit;
+
   DelgMsgTbl            tableDelegate;
-  QAction              *quitAction;
-  QStandardItemModel    tableModel;
-  QTableView           *tableView;
+  QStandardItemModel    QMd_MiMsgGrid;
+  QTableView           *QTb_MiMsgGrid;
 
 };
 

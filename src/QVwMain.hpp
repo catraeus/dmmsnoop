@@ -41,14 +41,14 @@ public slots:
   void OnMiMsgRX(quint64 timeStamp, const QString &statusDescription, const QString &dataDescription, bool valid);
   void OnMiMsgTX(quint64 timeStamp, const QString &statusDescription, const QString &dataDescription, bool valid);
   void OnMiMsgTabClr();
-  void setMessageSendEnabled(bool enabled);
+  void OnMiMsgTxEn(bool enabled);
 
        signals:
 
-  void aboutRequest();
-  void addMessageRequest();
+  void EmAppAbout();
+  void EmMiMsgTXAdd();
   void EmMiMsgTabClr();
-  void configureRequest();
+  void EmAppConfig();
 
 public:
   void SetTimeZero(qint64 i_timeZero);
@@ -62,16 +62,16 @@ private:
   };
   qint64 timeZero;
 
-  int  MsgAdd(quint64 timeStamp, const QString &statusDescription, const QString &dataDescription, bool valid);
+  int  MsgAdd(quint64 i_TS, const QString &i_miStatStr, const QString &i_miDataStr, bool i_val);
   void setModelData(int row, int column, const QVariant &value, int role=Qt::DisplayRole);
 
-  QAction              *QAc_About;
+  QAction              *QAc_AppAbout;
   QAction              *QAc_MiMsgOutAdd;
   QAction              *QAc_MiMsgListClear;
   QAction              *QAc_AppConfig;
   QAction              *QAc_AppQuit;
 
-  DelgMsgTbl            tableDelegate;
+  DelgMsgTbl            QDg_MiMsgGrid;
   QStandardItemModel    QMd_MiMsgGrid;
   QTableView           *QTb_MiMsgGrid;
 

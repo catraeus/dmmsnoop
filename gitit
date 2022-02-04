@@ -2,11 +2,12 @@
 git add   gitit
 git add   dmmsnoop.geany
 git add   src/Ctrl.cpp
+git add   src/Ctrl.hpp
 git add   src/DelgMsgTbl.cpp
-git add   src/DelgMsgTbl.hpp
 git add   src/Midi.cpp
 git add   src/Midi.hpp
 git add   src/QVwMain.cpp
 git add   src/QVwMain.hpp
 git add   src/QVwMain.ui
+git add   src/libs/
 

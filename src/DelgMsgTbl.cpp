@@ -25,7 +25,7 @@
 
          DelgMsgTbl::DelgMsgTbl    (QObject *parent) : QStyledItemDelegate(parent) {}
          DelgMsgTbl::~DelgMsgTbl   (               )                               {}
-QWidget *DelgMsgTbl::createEditor  (QWidget *parent, const QStyleOptionViewItem &/*option*/, const QModelIndex &/*index*/) const {
+QWidget *DelgMsgTbl::createEditor            (QWidget *parent, const QStyleOptionViewItem &/*option*/, const QModelIndex &/*index*/) const {
   QTextEdit *editor = new QTextEdit(parent);
 
   editor->setFrameShadow(QTextEdit::Plain);
@@ -35,24 +35,28 @@ QWidget *DelgMsgTbl::createEditor  (QWidget *parent, const QStyleOptionViewItem 
 
   editor->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
   editor->setReadOnly(true);
-  editor->setTextInteractionFlags(Qt::TextSelectableByKeyboard |
-                                  Qt::TextSelectableByMouse);
+  editor->setTextInteractionFlags(Qt::TextSelectableByKeyboard | Qt::TextSelectableByMouse);
   return editor;
 }
 void     DelgMsgTbl::setEditorData           (QWidget *editor,                                         const QModelIndex &index    ) const {
-  QTextEdit *textEditor = qobject_cast<QTextEdit *>(editor);
+  QTextEdit        *textEditor;
+  QTextDocument    *document;
+  QTextFrame       *rootFrame;
+  QTextFrameFormat  frameFormat;
+
+  textEditor = qobject_cast<QTextEdit *>(editor);
   textEditor->setPlainText(index.data(Qt::EditRole).toString());
-  QTextDocument *document = textEditor->document();
+  document = textEditor->document();
   document->setDocumentMargin(0);
-  QTextFrame *rootFrame = document->rootFrame();
-  QTextFrameFormat frameFormat = rootFrame->frameFormat();
+  rootFrame = document->rootFrame();
+  frameFormat = rootFrame->frameFormat();
   frameFormat.setBottomMargin(0);
   frameFormat.setLeftMargin(3);
   frameFormat.setRightMargin(3);
   frameFormat.setTopMargin(0);
   rootFrame->setFrameFormat(frameFormat);
 }
-void     DelgMsgTbl::setModelData            (QWidget *i_editor,     QAbstractItemModel *i_model,    const QModelIndex &i_dex) const {
+void     DelgMsgTbl::setModelData            (QWidget *i_editor,     QAbstractItemModel *i_model,      const QModelIndex &i_dex    ) const {
   (void)i_editor;
   (void)i_model;
   (void)i_dex;

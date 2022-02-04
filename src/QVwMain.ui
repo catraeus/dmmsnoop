@@ -70,7 +70,7 @@
     <property name="title">
      <string>&amp;Help</string>
     </property>
-    <addaction name="QAc_About"/>
+    <addaction name="QAc_AppAbout"/>
    </widget>
    <addaction name="menuFile"/>
    <addaction name="menuEdit"/>
@@ -103,7 +103,7 @@
    <addaction name="separator"/>
    <addaction name="QAc_AppConfig"/>
    <addaction name="separator"/>
-   <addaction name="QAc_About"/>
+   <addaction name="QAc_AppAbout"/>
   </widget>
   <action name="QAc_MiMsgOutAdd">
    <property name="icon">
@@ -165,7 +165,7 @@
     <string>Ctrl+O</string>
    </property>
   </action>
-  <action name="QAc_About">
+  <action name="QAc_AppAbout">
    <property name="icon">
     <iconset resource="resources.qrc">
      <normaloff>:/dmmsnoop/images/16x16/information.png</normaloff>:/dmmsnoop/images/16x16/information.png</iconset>

@@ -46,9 +46,9 @@
 /*0xF0*/ 0,  2,  3,  2, -1, -1,  1, -1,  1,  1,  1,  1,  1, -1,  1,  1  // Aren't we Speecial?  The SysEx and beyond controls
 };
 
-// Class definition
 
-        Ctrl::Ctrl(App &i_theApp, QObject *i_parent) : QObject(i_parent), theApp(i_theApp) {
+
+Ctrl:: Ctrl(App &i_theApp, QObject *i_parent) : QObject(i_parent), theApp(i_theApp) {
 int driverCount;
 int driver;
 int outputPort;
@@ -65,74 +65,74 @@ int outputPort;
 
 //==================================================================================================
 //==== Setup Config
-    driverCount = theMidi.getDriverCount();
-    if(! driverCount)        throw Error(tr("no MIDI drivers found"));
-    for(int i = 0; i < driverCount; i++)        theQVwConfig.OnMidiDrvAdd(i, theMidi.getDriverName(i));
-    driver = theMidi.MiDrvNumGet();
-    outputPort = theMidi.getOutputPort();
-    theQVwConfig.OnMidiDrvChg                        (driver);
-    theQVwConfig.OnPortInpChg(theMidi.getInputPort ());
-    theQVwConfig.OnModeIgnActSnChg   (theMidi.ModeIgnActSnGet());
-    theQVwConfig.OnModeIgnSysExChg   (theMidi.ModeIgnSysExGet());
-    theQVwConfig.OnModeIgnMiTimChg   (theMidi.ModeIgnMiTimGet());
-    theQVwConfig.OnPortOutChg       (outputPort);
-    connect(&theQVwConfig, SIGNAL(closeRequest()),               &theQVwConfig, SLOT(hide()));
-    connect(&theQVwConfig, SIGNAL(EmMidiDrvChg(int)),            &theMidi, SLOT(OnDrvChg(int)));
-    connect(&theQVwConfig, SIGNAL(EmModeIgnActSnChg(bool)),      &theMidi, SLOT(OnModeIgnActSnChg(bool)));
-    connect(&theQVwConfig, SIGNAL(EmModeIgnSysExChg(bool)),      &theMidi, SLOT(OnModeIgnSysExChg(bool)));
-    connect(&theQVwConfig, SIGNAL(EmModeIgnMiTimChg(bool)),      &theMidi, SLOT(OnModeIgnMiTimChg(bool)));
-    connect(&theQVwConfig, SIGNAL(EmPortInpChg(int)),            &theMidi, SLOT(OnPortInpChg(int)));
-    connect(&theQVwConfig, SIGNAL(EmPortOutChg(int)),            &theMidi, SLOT(OnPortOutChg(int)));
+  driverCount = theMidi.getDriverCount();
+  if(! driverCount)        throw Error(tr("no MIDI drivers found"));
+  for(int i = 0; i < driverCount; i++)        theQVwConfig.OnMidiDrvAdd(i, theMidi.getDriverName(i));
+  driver = theMidi.MiDrvNumGet();
+  outputPort = theMidi.getOutputPort();
+  theQVwConfig.OnMidiDrvChg                        (driver);
+  theQVwConfig.OnPortInpChg(theMidi.getInputPort ());
+  theQVwConfig.OnModeIgnActSnChg   (theMidi.ModeIgnActSnGet());
+  theQVwConfig.OnModeIgnSysExChg   (theMidi.ModeIgnSysExGet());
+  theQVwConfig.OnModeIgnMiTimChg   (theMidi.ModeIgnMiTimGet());
+  theQVwConfig.OnPortOutChg        (outputPort);
+  connect(&theQVwConfig, SIGNAL(closeRequest      (                           )),  &theQVwConfig, SLOT(hide()));
+  connect(&theQVwConfig, SIGNAL(EmMidiDrvChg      (int                        )),  &theMidi,      SLOT(OnDrvChg(int)));
+  connect(&theQVwConfig, SIGNAL(EmModeIgnActSnChg (bool                       )),  &theMidi,      SLOT(OnModeIgnActSnChg(bool)));
+  connect(&theQVwConfig, SIGNAL(EmModeIgnSysExChg (bool                       )),  &theMidi,      SLOT(OnModeIgnSysExChg(bool)));
+  connect(&theQVwConfig, SIGNAL(EmModeIgnMiTimChg (bool                       )),  &theMidi,      SLOT(OnModeIgnMiTimChg(bool)));
+  connect(&theQVwConfig, SIGNAL(EmPortInpChg      (int                        )),  &theMidi,      SLOT(OnPortInpChg(int)));
+  connect(&theQVwConfig, SIGNAL(EmPortOutChg      (int                        )),  &theMidi,      SLOT(OnPortOutChg(int)));
 
 //==================================================================================================
 //==== Setup Error
-    connect(&theQVwErr, SIGNAL(closeRequest()),                              &theQVwErr,     SLOT(hide()));
+  connect(&theQVwErr,  SIGNAL(closeRequest        (                           )),  &theQVwErr,    SLOT(hide()));
 
 //==================================================================================================
 //==== Setup Main
-    theQVwMain.setMessageSendEnabled((driver != -1) && (outputPort != -1));
-    theQVwMain.SetTimeZero(theMidi.TimeGet());
-    connect(&theQVwMain, SIGNAL(aboutRequest()),                               &theQVwAbout,     SLOT(show()));
-    connect(&theQVwMain, SIGNAL(addMessageRequest()),                          &theQVwMsg,   SLOT(show()));
-    connect(&theQVwMain, SIGNAL(EmMiMsgTabClr()),                       &theQVwMain,      SLOT(OnMiMsgTabClr()));
-    connect(&theQVwMain, SIGNAL(configureRequest()),                           &theQVwConfig, SLOT(show()));
-    connect(&theQVwMain, SIGNAL(closeRequest()),                               &theApp,   SLOT(quit()));
+  theQVwMain.OnMiMsgTxEn((driver != -1) && (outputPort != -1));
+  theQVwMain.SetTimeZero(theMidi.TimeGet());
+  connect(&theQVwMain, SIGNAL(EmAppAbout          (                           )),  &theQVwAbout,  SLOT(show()));
+  connect(&theQVwMain, SIGNAL(EmMiMsgTXAdd        (                           )),  &theQVwMsg,    SLOT(show()));
+  connect(&theQVwMain, SIGNAL(EmMiMsgTabClr       (                           )),  &theQVwMain,   SLOT(OnMiMsgTabClr()));
+  connect(&theQVwMain, SIGNAL(EmAppConfig         (                           )),  &theQVwConfig, SLOT(show()));
+  connect(&theQVwMain, SIGNAL(closeRequest        (                           )),  &theApp,       SLOT(quit()));
 
 //==================================================================================================
 //==== Setup Message Send
-    connect(&theQVwMsg, SIGNAL(closeRequest()),                            &theQVwMsg,   SLOT(hide()));
-    connect(&theQVwMsg, SIGNAL(sendRequest(const QString &)),              &theQVwMsg,   SLOT(hide()));
-    connect(&theQVwMsg, SIGNAL(sendRequest(const QString &)),                              SLOT(OnMiMsgTx(const QString &)));
+  connect(&theQVwMsg, SIGNAL(closeRequest         (                           )),  &theQVwMsg,    SLOT(hide()));
+  connect(&theQVwMsg, SIGNAL(sendRequest          (const QString &            )),  &theQVwMsg,    SLOT(hide()));
+  connect(&theQVwMsg, SIGNAL(sendRequest          (const QString &            )),  this,          SLOT(OnMiMsgTx(const QString &)));
 
 //==================================================================================================
 //==== Setup Midi worker  FIXME, there are multiple "overloads and multiple inheritances" of these.  Does order matter ! ? ! ?
-    connect(&theMidi, SIGNAL(EmMiMsgRx(quint64, const QByteArray &)),          this,         SLOT(OnMiMsgRx(quint64, const QByteArray &)));
-    connect(&theMidi, SIGNAL(EmDrvChange(int)),                               &theQVwConfig, SLOT(OnMidiDrvChg(int)));
-    connect(&theMidi, SIGNAL(EmDrvChange(int)),                                this,         SLOT(OnMidiDrvChg()));
-    connect(&theMidi, SIGNAL(EmModeIgnActSnChg(bool)),       &theQVwConfig, SLOT(OnModeIgnActSnChg(bool)));
-    connect(&theMidi, SIGNAL(EmModeIgnSysExChg(bool)),       &theQVwConfig, SLOT(OnModeIgnSysExChg(bool)));
-    connect(&theMidi, SIGNAL(EmModeIgnMiTimChg(bool)),       &theQVwConfig, SLOT(OnModeIgnMiTimChg(bool)));
-    connect(&theMidi, SIGNAL(EmPortInpAdd(int, QString)),    &theQVwConfig, SLOT(OnPortInpAdd(int, QString)));
-    connect(&theMidi, SIGNAL(EmPortInpChg(int)),             &theQVwConfig, SLOT(OnPortInpChg(int)));
-    connect(&theMidi, SIGNAL(EmPortInpChg(int)),             this,          SLOT(OnMidiDrvChg()));
-    connect(&theMidi, SIGNAL(EmPortInpDel(int)),             &theQVwConfig, SLOT(OnPortInpDel(int)));
-    connect(&theMidi, SIGNAL(EmPortOutAdd(int, QString)), &theQVwConfig, SLOT(OnPortOutAdd(int, QString)));
-    connect(&theMidi, SIGNAL(EmPortOutChg(int)),        &theQVwConfig, SLOT(OnPortOutChg(int)));
-    connect(&theMidi, SIGNAL(EmPortOutChg(int)),        this,          SLOT(OnMidiDrvChg()));
-    connect(&theMidi, SIGNAL(EmPortOutDel(int)),        &theQVwConfig, SLOT(OnPortOutDel(int)));
+  connect(&theMidi, SIGNAL(EmMiMsgRx              (quint64, const QByteArray &)),  this,          SLOT(OnMiMsgRx(quint64, const QByteArray &)));
+  connect(&theMidi, SIGNAL(EmDrvChange            (int                        )),  &theQVwConfig, SLOT(OnMidiDrvChg(int)));
+  connect(&theMidi, SIGNAL(EmDrvChange            (int                        )),  this,          SLOT(OnMidiDrvChg()));
+  connect(&theMidi, SIGNAL(EmModeIgnActSnChg      (bool                       )),  &theQVwConfig, SLOT(OnModeIgnActSnChg(bool)));
+  connect(&theMidi, SIGNAL(EmModeIgnSysExChg      (bool                       )),  &theQVwConfig, SLOT(OnModeIgnSysExChg(bool)));
+  connect(&theMidi, SIGNAL(EmModeIgnMiTimChg      (bool                       )),  &theQVwConfig, SLOT(OnModeIgnMiTimChg(bool)));
+  connect(&theMidi, SIGNAL(EmPortInpAdd           (int, QString               )),  &theQVwConfig, SLOT(OnPortInpAdd(int, QString)));
+  connect(&theMidi, SIGNAL(EmPortInpChg           (int                        )),  &theQVwConfig, SLOT(OnPortInpChg(int)));
+  connect(&theMidi, SIGNAL(EmPortInpChg           (int                        )),  this,          SLOT(OnMidiDrvChg()));
+  connect(&theMidi, SIGNAL(EmPortInpDel           (int                        )),  &theQVwConfig, SLOT(OnPortInpDel(int)));
+  connect(&theMidi, SIGNAL(EmPortOutAdd           (int, QString               )),  &theQVwConfig, SLOT(OnPortOutAdd(int, QString)));
+  connect(&theMidi, SIGNAL(EmPortOutChg           (int                        )),  &theQVwConfig, SLOT(OnPortOutChg(int)));
+  connect(&theMidi, SIGNAL(EmPortOutChg           (int                        )),  this,          SLOT(OnMidiDrvChg()));
+  connect(&theMidi, SIGNAL(EmPortOutDel           (int                        )),  &theQVwConfig, SLOT(OnPortOutDel(int)));
 
 //==================================================================================================
 //==== Setup theApp
-    connect(&theApp, SIGNAL(eventError(QString)),                &theQVwErr, SLOT(setMessage(QString)));
-    connect(&theApp, SIGNAL(eventError(QString)),                &theQVwErr, SLOT(show()));
+  connect(&theApp,  SIGNAL(eventError             (QString                    )),  &theQVwErr,    SLOT(setMessage(QString)));
+  connect(&theApp,  SIGNAL(eventError             (QString                    )),  &theQVwErr,    SLOT(show()));
 }
-        Ctrl::~Ctrl() {
+Ctrl::~Ctrl() {
 // Disconnect theMidi signals handled by the controller before the theMidi is deleted.
   delete  theTrMsg;
-  disconnect(&theMidi, SIGNAL(EmMiMsgRx(quint64, const QByteArray &)),                   this, SLOT(OnMiMsgRx(quint64, const QByteArray &)));
-  disconnect(&theMidi, SIGNAL(EmDrvChange(int)),                   this, SLOT(OnMidiDrvChg()));
-  disconnect(&theMidi, SIGNAL(EmPortInpChg(int)),                   this, SLOT(OnMidiDrvChg()));
-  disconnect(&theMidi, SIGNAL(EmPortOutChg(int)),                   this, SLOT(OnMidiDrvChg()));
+  disconnect(&theMidi, SIGNAL(EmMiMsgRx    (quint64, const QByteArray &)), this, SLOT(OnMiMsgRx(quint64, const QByteArray &)));
+  disconnect(&theMidi, SIGNAL(EmDrvChange  (int                        )), this, SLOT(OnMidiDrvChg()));
+  disconnect(&theMidi, SIGNAL(EmPortInpChg (int                        )), this, SLOT(OnMidiDrvChg()));
+  disconnect(&theMidi, SIGNAL(EmPortOutChg (int                        )), this, SLOT(OnMidiDrvChg()));
 }
 
 void    Ctrl::run() { // Overridden from QApplicatoin
@@ -143,25 +143,30 @@ void    Ctrl::QVwErrShow(const QString &message) {
   theQVwErr.setMessage(message);
   theQVwErr.show();
 }
-QString Ctrl::MiMsgDatBytesStr(const QByteArray &message, int lastIndex) {
-  QStringList dataParts;
-  uint tInt;
-  char tStr[256];
+char   *Ctrl::MiMsgDatBytesStr(const QByteArray &i_msgbb, int i_dexLast) {
+  //QStringList dataParts;
+  char        dStr[32];
+  uint        tInt;
+  char        tStr[32];
 
-  if(lastIndex == -1) {
-    lastIndex = message.count() - 1;
-  }
-  for(int i = 1; i <= lastIndex; i++) {
-    tInt = (uint)(message[i]);
+  if(i_dexLast == -1)
+    i_dexLast = i_msgbb.count() - 1;
+  dStr[0] =  '\0';
+  for(int i = 1; i <= i_dexLast; i++) {
+    tInt = (uint)(i_msgbb[i]);
     theTrMsg->ByteToString(tInt, tStr);
-    dataParts += tStr;
-  //dataParts += QString("%1").arg(tInt, 2, 16, QChar('0'));
-    }
-    dataParts += tr("(%1 bytes)").arg(lastIndex);
-    return dataParts.join(" ");
+    if(i > 1) strcat(dStr, " ");
+    strcat(dStr, tStr);
+    //dataParts += tStr;
+  }
+  sprintf(tStr, " (%d bytes)", i_dexLast);
+  strcat(dStr, tStr);
+  //dataParts += tr("(%1 bytes)").arg(i_dexLast);
+  return &(dStr[0]);
+  //return dataParts.join(" ");
 }
 void    Ctrl::OnMidiDrvChg() {
-  theQVwMain.setMessageSendEnabled((theMidi.MiDrvNumGet() != -1) && (theMidi.getOutputPort() != -1));
+  theQVwMain.OnMiMsgTxEn((theMidi.MiDrvNumGet() != -1) && (theMidi.getOutputPort() != -1));
 }
 void    Ctrl::OnMiMsgTx(const QString &message) {
   QStringList bytes;
@@ -185,10 +190,10 @@ void    Ctrl::OnMiMsgTx(const QString &message) {
   }
 
   MiMsgParse(msg);  // Make sure the bytes represent a valid MIDI message.
-  if(! valid) {
-    QVwErrShow(tr("The given message is not a valid MIDI message."));
-    return;
-  }
+ // if(! valid) {
+ //   QVwErrShow(tr("The given message is not a valid MIDI message."));
+//    return;
+ // }
 
     // Send the message.
   timeStamp = theMidi.OnMiMsgTx(msg);

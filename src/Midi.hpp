@@ -75,8 +75,8 @@ signals:
 public:
          quint64 TimeGet() const;
 private:
-  static void    DoMiMsgInpHandle(double timeStamp,       std::vector<uint8_t> *message, void *engine);
-         void    DoMiMsgInpHandle(double timeStamp, const std::vector<uint8_t> &message);
+  static void    DoMiMsgRx(double timeStamp,       std::vector<uint8_t> *message, void *engine);
+         void    DoMiMsgRx(double timeStamp, const std::vector<uint8_t> &message);
          void    DoPortAllDel();
          void    DoModeIgnChg();
 

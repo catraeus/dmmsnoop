@@ -135,15 +135,15 @@ Ctrl::~Ctrl() {
   disconnect(&theMidi, SIGNAL(EmPortOutChg (int                        )), this, SLOT(OnMidiDrvChg()));
 }
 
-void    Ctrl::run() { // Overridden from QApplicatoin
+void    Ctrl::run              (                      ) { // Overridden from QApplicatoin
   theQVwMain.show();
   theApp.exec();
 }
-void    Ctrl::QVwErrShow(const QString &message) {
+void    Ctrl::QVwErrShow       (const QString &message) {
   theQVwErr.setMessage(message);
   theQVwErr.show();
 }
-char   *Ctrl::MiMsgDatBytesStr(const QByteArray &i_msgbb, int i_dexLast) {
+char   *Ctrl::MiMsgDatBytesStr (              const QByteArray &i_msgbb, int i_dexLast) {
   //QStringList dataParts;
   char        dStr[32];
   uint        tInt;
@@ -165,17 +165,17 @@ char   *Ctrl::MiMsgDatBytesStr(const QByteArray &i_msgbb, int i_dexLast) {
   return &(dStr[0]);
   //return dataParts.join(" ");
 }
-void    Ctrl::OnMidiDrvChg() {
+void    Ctrl::OnMidiDrvChg     (                      ) {
   theQVwMain.OnMiMsgTxEn((theMidi.MiDrvNumGet() != -1) && (theMidi.getOutputPort() != -1));
 }
-void    Ctrl::OnMiMsgTx(const QString &message) {
+void    Ctrl::OnMiMsgTx        (const QString &message) {
   QStringList bytes;
   int         count;
   bool        success;
   QByteArray  msg;
   QString     byteStr;
   uint        value;
-  quint64     timeStamp;
+  quint64     TS;
 
   bytes = message.split(' ', QString::SkipEmptyParts);// MAGICK The GUI gives us the message as text ...Convert the message to bytes.
   count = bytes.count();
@@ -196,14 +196,14 @@ void    Ctrl::OnMiMsgTx(const QString &message) {
  // }
 
     // Send the message.
-  timeStamp = theMidi.OnMiMsgTx(msg);
-  theQVwMain.OnMiMsgTX(timeStamp, strMiStat, strMiData, valid);
+  TS = theMidi.OnMiMsgTx(msg);
+  theQVwMain.OnMiMsgTX(TS, strMiStat, strMiData, valid);
 }
-void    Ctrl::OnMiMsgRx(quint64 timeStamp, const QByteArray &i_msg) {
+void    Ctrl::OnMiMsgRx        (quint64 i_TS, const QByteArray &i_msg) {
     MiMsgParse(i_msg);
-    theQVwMain.OnMiMsgRX(timeStamp, strMiStat, strMiData, valid);
+    theQVwMain.OnMiMsgRX(i_TS, strMiStat, strMiData, valid);
 }
-void    Ctrl::MiMsgParse(const QByteArray &i_msg) {
+void    Ctrl::MiMsgParse       (              const QByteArray &i_msg) {
   int      miMsgLen;
   uint8_t  miStat;
   uint     miStatBase;

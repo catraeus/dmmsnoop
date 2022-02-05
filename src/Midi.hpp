@@ -81,15 +81,32 @@ private:
          void    DoModeIgnChg();
 
     TrMsg               *theTrMsg;
+
+    uint8_t              miBuffer[256];
+    uint                 miBuffSize;
+    uint                 miBuf[256];
+
+    int                  miMsgStatMajNo;  // Basic Commands  IMPORTANT This is LSB removed and right-shifted by 8
+    char                *miMsgStatMajStr; // Basic Commands  IMPORTANT This is back up to 80, 90 etc.
+    int                  miMsgStatMinNo;  // Channel for lower numbers, System Command above 0xF0
+    char                *miMsgStatMinStr; // Channel for lower numbers, System Command above 0xF0
+    int                  miMsgNoteNo;     // iff is 0x8x 0x9x 0xA0
+    char                *miMsgNoteStr;    // iff is 0x8x 0x9x 0xA0
+    int                  miMsgVeloNo;     // iff is 0x8x 0x9x 0xA0 0xB0 0xD0
+    char                *miMsgVeloStr;    // iff is 0x8x 0x9x 0xA0 0xB0 0xD0
+    int                  miMsgChChNo;     // iff is 0xA0
+    char                *miMsgChChStr;    // iff is 0xA0
+
     int                  miDrvNo;
     QList<RtMidi::Api>   miDrvApis;
     QStringList          miDrvNames;
+
     bool                 modeIgnActSn;
     bool                 modeIgnSysEx;
     bool                 modeIgnMiTim;
     RtMidiIn            *miPortInpInst;
     int                  miPortInpNum;
-    QStringList          inputPortNames;
+    QStringList          miPortInpNames;
     RtMidiOut           *miPortOutInst;
     int                  miPortOutNum;
     QStringList          miPortOutNames;

@@ -14,6 +14,16 @@
    <string>dmmsnoop</string>
   </property>
   <widget class="QTableView" name="QTb_MiMsgGrid">
+   <property name="font">
+    <font>
+     <family>Liberation Mono</family>
+     <pointsize>9</pointsize>
+     <italic>true</italic>
+    </font>
+   </property>
+   <property name="midLineWidth">
+    <number>1</number>
+   </property>
    <property name="horizontalScrollBarPolicy">
     <enum>Qt::ScrollBarAsNeeded</enum>
    </property>

@@ -62,6 +62,8 @@ Midi:: Midi(QObject *parent) : QObject(parent) {
     miDrvApis.append(theMidiAPI);
   }
 
+  miBuffSize = 0;
+
   miDrvNo = -1;
   modeIgnActSn = true;
   modeIgnSysEx = true;
@@ -80,28 +82,36 @@ bool    Midi::ModeIgnActSnGet      (         ) const { return modeIgnActSn      
 bool    Midi::ModeIgnSysExGet      (         ) const { return modeIgnSysEx             ; }
 bool    Midi::ModeIgnMiTimGet      (         ) const { return modeIgnMiTim             ; }
 int     Midi::getInputPort         (         ) const { return miPortInpNum             ; }
-int     Midi::getInputPortCount    (         ) const { return inputPortNames.count()   ; }
-QString Midi::getInputPortName     (int i_dex) const { return inputPortNames[i_dex]    ; }
+int     Midi::getInputPortCount    (         ) const { return miPortInpNames.count()   ; }
+QString Midi::getInputPortName     (int i_dex) const { return miPortInpNames[i_dex]    ; }
 int     Midi::getOutputPort        (         ) const { return miPortOutNum             ; }
 int     Midi::getOutputPortCount   (         ) const { return miPortOutNames.count()   ; }
 QString Midi::getOutputPortName    (int i_dex) const { return miPortOutNames[i_dex]    ; }
 
-void Midi::DoMiMsgRx(double i_TS, std::vector<uint8_t> *i_msg, void *i_aMidi) {
+void    Midi::DoMiMsgRx       (double i_TS,       std::vector<uint8_t> *i_bMsg, void *i_aMidi) {
   Midi *aMidi;
 
   aMidi = (Midi *)i_aMidi;
-  aMidi->DoMiMsgRx(i_TS, *i_msg);
+  aMidi->DoMiMsgRx(i_TS, *i_bMsg);
 }
-quint64 Midi::TimeGet         () const {
-  return QDateTime::currentDateTime().toMSecsSinceEpoch();
-}
-void    Midi::DoMiMsgRx       (double i_TS, const std::vector<uint8_t> &message) {
+void    Midi::DoMiMsgRx       (double i_TS, const std::vector<uint8_t> &i_bMsg) {
   QByteArray msg;
   quint64    TS;
   int        msgSize;
   (void)i_TS;
 
-  switch (message[0]) {
+  miBuffSize = (uint)(i_bMsg.size());
+  for(uint i=0; i<miBuffSize; i++)
+    miBuffer[i] = i_bMsg[i];
+  if(miBuffSize == 0)
+    fprintf(stdout, "OOPS - Message was zero length\n");
+  miMsgStatMajNo  = miBuffer[0];
+  miMsgStatMajNo >>= 4;
+  miMsgStatMajNo  &= 0x00000007U;
+  miMsgStatMajStr = theTrMsg->MsgMiStatGet((TrMsg::eStatType)miMsgStatMajNo);
+  fprintf(stdout, "Stat: 0x%02X  %s\n", miMsgStatMajNo, miMsgStatMajStr);
+
+  switch (i_bMsg[0]) {
     case 0xF0: if(modeIgnSysEx) { qWarning() << theTrMsg->MsgMiMetaGet(TrMsg::DEM_RTM_FLT_FAIL); return; } break;  // SysEx
     case 0xF1: if(modeIgnMiTim) { qWarning() << theTrMsg->MsgMiMetaGet(TrMsg::DEM_RTM_FLT_FAIL); return; } break;  // TimeCode Qtr Frm
     case 0xF2: if(modeIgnMiTim) { qWarning() << theTrMsg->MsgMiMetaGet(TrMsg::DEM_RTM_FLT_FAIL); return; } break;  // Song Position Pointer
@@ -120,15 +130,18 @@ void    Midi::DoMiMsgRx       (double i_TS, const std::vector<uint8_t> &message)
     case 0xFF:                                                                                             break;  // Reset
   }
   TS      = TimeGet();
-  msgSize = static_cast<int>(message.size());
-  for(int i=0; i<msgSize; i++) msg.append(message[i]);
+  msgSize = static_cast<int>(i_bMsg.size());
+  for(int i=0; i<msgSize; i++) msg.append(i_bMsg[i]);
   emit EmMiMsgRx(TS, msg);
+}
+quint64 Midi::TimeGet         () const {
+  return QDateTime::currentDateTime().toMSecsSinceEpoch();
 }
 void    Midi::DoPortAllDel    () {
   OnPortInpChg(-1);
   OnPortOutChg(-1);
-  for(int i = inputPortNames.count() - 1; i >= 0; i--) {
-    inputPortNames.removeAt(i);
+  for(int i = miPortInpNames.count() - 1; i >= 0; i--) {
+    miPortInpNames.removeAt(i);
     emit EmPortInpDel(i);
   }
   for(int i = miPortOutNames.count() - 1; i >= 0; i--) {
@@ -167,7 +180,7 @@ void Midi::OnDrvChg    (int i_dex) {
       count = miPortInpInst->getPortCount();
       for(uint i = 0; i < count; i++) {
         name = QString::fromStdString(miPortInpInst->getPortName(i));
-        inputPortNames.append(name);
+        miPortInpNames.append(name);
         emit EmPortInpAdd(i, name);
       }
       count = miPortOutInst->getPortCount();
@@ -182,8 +195,8 @@ void Midi::OnDrvChg    (int i_dex) {
         case RtMidi::MACOSX_CORE:
         case RtMidi::UNIX_JACK:
           name = tr("[virtual input]");
-          inputPortNames.append(name);
-          emit EmPortInpAdd(inputPortNames.count() - 1, name);
+          miPortInpNames.append(name);
+          emit EmPortInpAdd(miPortInpNames.count() - 1, name);
           name = tr("[virtual output]");
           miPortOutNames.append(name);
           emit EmPortOutAdd(miPortOutNames.count() - 1, name);
@@ -208,7 +221,7 @@ void Midi::OnPortInpChg(int i_dex) {
       emit EmPortInpChg(-1);
     }
     if(i_dex != -1) {   // Open the new input port.
-      if(hasPortsVirtual && (i_dex == (inputPortNames.count() - 1)))     miPortInpInst->openVirtualPort("MIDI Input");
+      if(hasPortsVirtual && (i_dex == (miPortInpNames.count() - 1)))     miPortInpInst->openVirtualPort("MIDI Input");
       else                                                               miPortInpInst->openPort(i_dex, "MIDI Input");
       miPortInpNum = i_dex;
       DoModeIgnChg();

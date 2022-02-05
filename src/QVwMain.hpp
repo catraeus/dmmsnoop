@@ -20,6 +20,8 @@
 #ifndef __QVW_MAIN_HPP__
 #define __QVW_MAIN_HPP__
 
+#include <util/TrMsg.hpp>
+
 #include <QtGui/QStandardItemModel>
 #include <QtWidgets/QAction>
 #include <QtWidgets/QMainWindow>
@@ -29,52 +31,56 @@
 #include "DelgMsgTbl.hpp"
 
 class QVwMain: public QVwDesgn {
-    Q_OBJECT
+  Q_OBJECT
+  private:
+    enum eMsgTabCols {
+      MTC_TS    = 0x00000000U,
+      MTC_STAT  = 0x00000001U,
+      MTC_DATA  = 0x00000002U,
+      MTC_CHAN  = 0x00000003U,
+      MTC_NOTE  = 0x00000004U,
+      MTC_VELO  = 0x00000005U,
+      MTC_SYS   = 0x00000006U,
+      MTC_NUM   = 0x00000007U,
+      MTC_BIG   = 0xFFFFFFFFU
+    };
+  public:
+          QVwMain        (QObject *parent=0);
+         ~QVwMain        (                 );
 
-public:
+  public slots:
 
-  explicit  QVwMain(QObject *parent=0);
-           ~QVwMain();
+    void  OnMiMsgRX      (quint64 i_TS, const QString &i_miMsgStatStr, const QString &i_miMsgDataStr, bool i_val);
+    void  OnMiMsgTX      (quint64 i_TS, const QString &i_miMsgStatStr, const QString &i_miMsgDataStr, bool i_val);
+    void  OnMiMsgTabClr  (void      );
+    void  OnMiMsgTxEn    (bool i_en );
 
-public slots:
+         signals:
+    void  EmAppAbout     (void      );
+    void  EmMiMsgTXAdd   (void      );
+    void  EmMiMsgTabClr  (void      );
+    void  EmAppConfig    (void      );
 
-  void OnMiMsgRX(quint64 timeStamp, const QString &statusDescription, const QString &dataDescription, bool valid);
-  void OnMiMsgTX(quint64 timeStamp, const QString &statusDescription, const QString &dataDescription, bool valid);
-  void OnMiMsgTabClr();
-  void OnMiMsgTxEn(bool enabled);
+  public:
+    void  SetTimeZero    (qint64 i_timeZero);
 
-       signals:
+  private:
+    int   MsgAdd         (quint64 i_TS, const QString &i_miMsgStatStr, const QString &i_miMsgDataStr, bool i_val);
+    void  setModelData   (int     i_R,  int   i_C, const QVariant &value, int role=Qt::DisplayRole);
 
-  void EmAppAbout();
-  void EmMiMsgTXAdd();
-  void EmMiMsgTabClr();
-  void EmAppConfig();
+  public:
+  private:
+    qint64                timeZero;
 
-public:
-  void SetTimeZero(qint64 i_timeZero);
+    QAction              *QAc_AppAbout;
+    QAction              *QAc_MiMsgOutAdd;
+    QAction              *QAc_MiMsgListClear;
+    QAction              *QAc_AppConfig;
+    QAction              *QAc_AppQuit;
 
-private:
-  enum MessageTableColumn {
-    MTC_TIMESTAMP = 0,
-    MTC_STATUS    = 1,
-    MTC_DATA      = 2,
-    MTC_TOTAL     = 3
-  };
-  qint64 timeZero;
-
-  int  MsgAdd(quint64 i_TS, const QString &i_miStatStr, const QString &i_miDataStr, bool i_val);
-  void setModelData(int row, int column, const QVariant &value, int role=Qt::DisplayRole);
-
-  QAction              *QAc_AppAbout;
-  QAction              *QAc_MiMsgOutAdd;
-  QAction              *QAc_MiMsgListClear;
-  QAction              *QAc_AppConfig;
-  QAction              *QAc_AppQuit;
-
-  DelgMsgTbl            QDg_MiMsgGrid;
-  QStandardItemModel    QMd_MiMsgGrid;
-  QTableView           *QTb_MiMsgGrid;
-
+    DelgMsgTbl            QDg_MiMsgGrid;
+    QStandardItemModel    QMd_MiMsgGrid;
+    QTableView           *QTb_MiMsgGrid;
 };
 
 #endif

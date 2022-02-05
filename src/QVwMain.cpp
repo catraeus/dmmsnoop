@@ -42,9 +42,20 @@
     QMd_MiMsgGrid.setHeaderData (MTC_NOTE, Qt::Horizontal,  tr("Note"     ), Qt::DisplayRole);
     QMd_MiMsgGrid.setHeaderData (MTC_VELO, Qt::Horizontal,  tr("Vel"      ), Qt::DisplayRole);
     QMd_MiMsgGrid.setHeaderData (MTC_SYS,  Qt::Horizontal,  tr("Sys"      ), Qt::DisplayRole);
+    QMd_MiMsgGrid.setHeaderData (MTC_PAD,  Qt::Horizontal,  tr(""         ), Qt::DisplayRole);
     QTb_MiMsgGrid = getChild<QTableView>(QWd_root, "QTb_MiMsgGrid");
     QTb_MiMsgGrid->setItemDelegate(&QDg_MiMsgGrid); // The delegate to pick up after the visitors
     QTb_MiMsgGrid->setModel(&QMd_MiMsgGrid);        // The model that actually knows what's what.
+
+  // OK, so the TableView has to actually exist first
+    QTb_MiMsgGrid->setColumnWidth(MTC_TS,    96);
+    QTb_MiMsgGrid->setColumnWidth(MTC_STAT, 120);
+    QTb_MiMsgGrid->setColumnWidth(MTC_DATA, 180);
+    QTb_MiMsgGrid->setColumnWidth(MTC_CHAN,  64);
+    QTb_MiMsgGrid->setColumnWidth(MTC_NOTE,  64);
+    QTb_MiMsgGrid->setColumnWidth(MTC_VELO,  64);
+    QTb_MiMsgGrid->setColumnWidth(MTC_SYS,   64);
+    QTb_MiMsgGrid->setColumnWidth(MTC_PAD,   64);
     timeZero = 0;
 }
      QVwMain::~QVwMain() {}
@@ -53,15 +64,10 @@ void QVwMain::SetTimeZero(qint64 i_timeZero) {  timeZero = i_timeZero;  return;}
 int  QVwMain::MsgAdd(quint64 i_TS, const QString &i_miStatDesc, const QString &i_miDataDesc, bool i_val) {
   int               count;
   Qt::AlignmentFlag alignment;
-  QString  i_miChanDesc;
-  QString  i_miNoteDesc;
-  QString  i_miNoteVel;
-  QString  i_miSysCmd;
-
-  i_miChanDesc = "CHAN";
-  i_miNoteDesc = "NOTE";
-  i_miNoteVel  = "VEL";
-  i_miSysCmd   = "SYS";
+  char  i_miChanDesc[] = "Ch";
+  char  i_miNoteDesc[] = "N";
+  char  i_miNoteVel[] = "V";
+  char  i_miSysCmd[] = "Sys";
 
   count = QMd_MiMsgGrid.rowCount();
   QMd_MiMsgGrid.insertRow(count); // WARNING There is no check for insertion, insertRow returns a bool

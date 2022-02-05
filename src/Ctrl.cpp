@@ -143,26 +143,25 @@ void    Ctrl::QVwErrShow       (const QString &message) {
   theQVwErr.setMessage(message);
   theQVwErr.show();
 }
-char   *Ctrl::MiMsgDatBytesStr (              const QByteArray &i_msgbb, int i_dexLast) {
+void    Ctrl::MiMsgDatBytesStr (const QByteArray &i_msgbb, char *o_dStr, int i_dexLast) {
   //QStringList dataParts;
-  char        dStr[32];
   uint        tInt;
   char        tStr[32];
 
   if(i_dexLast == -1)
     i_dexLast = i_msgbb.count() - 1;
-  dStr[0] =  '\0';
+  o_dStr[0] =  '\0';
   for(int i = 1; i <= i_dexLast; i++) {
     tInt = (uint)(i_msgbb[i]);
     theTrMsg->ByteToString(tInt, tStr);
-    if(i > 1) strcat(dStr, " ");
-    strcat(dStr, tStr);
+    if(i > 1) strcat(o_dStr, " ");
+    strcat(o_dStr, tStr);
     //dataParts += tStr;
   }
   sprintf(tStr, " (%d bytes)", i_dexLast);
-  strcat(dStr, tStr);
+  strcat(o_dStr, tStr);
   //dataParts += tr("(%1 bytes)").arg(i_dexLast);
-  return &(dStr[0]);
+  return;
   //return dataParts.join(" ");
 }
 void    Ctrl::OnMidiDrvChg     (                      ) {
@@ -204,9 +203,6 @@ void    Ctrl::OnMiMsgRx        (quint64 i_TS, const QByteArray &i_msg) {
     theQVwMain.OnMiMsgRX(i_TS, strMiStat, strMiData, valid);
 }
 void    Ctrl::MiMsgParse       (              const QByteArray &i_msg) {
-  int      miMsgLen;
-  uint8_t  miStat;
-  uint     miStatBase;
   int      lenMidiSpec;
   char     miStatByteStr[3]; // two nibbles and a trailing zero
   char     tStr[256];
@@ -231,7 +227,8 @@ void    Ctrl::MiMsgParse       (              const QByteArray &i_msg) {
 
 //========
   if(miStat < 0x80U) {// WEIRD Validate status byte.
-    strMiData = MiMsgDatBytesStr(i_msg);
+    MiMsgDatBytesStr(i_msg, tStr);
+    strMiData = tStr;
     strcpy(tStr, theTrMsg->MsgMiMetaGet(TrMsg::DEM_STAT_LOW));
     strcat(tStr, " ");
     strcat(tStr, miStatByteStr);
@@ -247,7 +244,8 @@ void    Ctrl::MiMsgParse       (              const QByteArray &i_msg) {
   lenMidiSpec = lenMidiSpecAry[miStat - 0x80];
   switch (lenMidiSpec) {
     case -1:  // FIXME  4, 5 and D are reserved, but 7 is SysEx End, we have to build a stateful machine to detect this being OK or Bad.
-      strMiData = MiMsgDatBytesStr(i_msg);
+      MiMsgDatBytesStr(i_msg, tStr);
+      strMiData = tStr;
       strMiStat = tr("%1 (undefined status)").arg(static_cast<uint>(miStat), 2, 16, QChar('0'));
       valid = false;
       return;
@@ -260,7 +258,8 @@ void    Ctrl::MiMsgParse       (              const QByteArray &i_msg) {
         return;
       }
       if(static_cast<quint8>(i_msg[miMsgLen - 1]) != 0xf7) {
-        strMiData = MiMsgDatBytesStr(i_msg);
+        MiMsgDatBytesStr(i_msg, tStr);
+        strMiData = tStr;
         strMiStat = tr("System Exclusive (end not found)"); // So I guess that the RtMidi
         valid = false;
         return;
@@ -269,7 +268,8 @@ void    Ctrl::MiMsgParse       (              const QByteArray &i_msg) {
       break;
     default:
       if(miMsgLen != lenMidiSpec) {
-        strMiData = MiMsgDatBytesStr(i_msg);
+        MiMsgDatBytesStr(i_msg, tStr);
+        strMiData = tStr;
         strMiStat = tr("%1 (incorrect length)").arg(static_cast<uint>(miStat), 2, 16, QChar('0'));
         valid = false;
         return;
@@ -282,7 +282,8 @@ void    Ctrl::MiMsgParse       (              const QByteArray &i_msg) {
 // Validate data bytes.
   for(int i = 1; i <= lastDataIndex; i++) {
     if(static_cast<quint8>(i_msg[i]) >= 0x80) {
-      strMiData = MiMsgDatBytesStr(i_msg);
+      MiMsgDatBytesStr(i_msg, tStr);
+      strMiData = tStr;
       strMiStat = tr("%1 (invalid data)").arg(static_cast<uint>(miStat), 2, 16, QChar('0'));
       valid = false;
       return;
@@ -295,7 +296,6 @@ void    Ctrl::MiMsgParse       (              const QByteArray &i_msg) {
   miStatBase   = (uint)miStat;
   miStatBase  &= 0x70U;
   miStatBase >>= 4;
-  fprintf(stdout, "Stat: %X\n", miStatBase);
   switch (miStatBase) {
     case 0x0:
       strMiData = tr("N  %1, V   %2"   ). arg(getMIDINoteString   (static_cast<quint8>(i_msg[1]))).  arg(static_cast<quint8>(i_msg[2]));
@@ -328,7 +328,8 @@ void    Ctrl::MiMsgParse       (              const QByteArray &i_msg) {
     case 0x7: // FIXME, unload this to a whole new function.
       switch (miStat & (uint8_t)0x0F) {
         case 0x0:
-          strMiData = MiMsgDatBytesStr(i_msg, lastDataIndex);
+          MiMsgDatBytesStr(i_msg, tStr, lastDataIndex);
+          strMiData = tStr;
           strMiStat = tr("System Exclusive");
           break;
         case 0x1:

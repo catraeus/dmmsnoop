@@ -45,7 +45,7 @@ private slots:
   void      OnMiMsgRx(quint64 timeStamp, const QByteArray &message);
 
 private:
-  char     *MiMsgDatBytesStr(const QByteArray &message, int lastIndex=-1);
+  void      MiMsgDatBytesStr(const QByteArray &message, char *o_dStr, int lastIndex=-1);
   void      MiMsgParse(const QByteArray &i_msg);
   void      QVwErrShow(const QString &message);
 
@@ -59,6 +59,9 @@ private:
   QVwMsg         theQVwMsg;
   QVwErr         theQVwErr;
 
+  int            miMsgLen;
+  uint8_t        miStat;
+  uint           miStatBase;
   QString        strMiData;
   QString        strMiStat;
 

@@ -109,7 +109,7 @@ void    Midi::DoMiMsgRx       (double i_TS, const std::vector<uint8_t> &i_bMsg) 
   miMsgStatMajNo >>= 4;
   miMsgStatMajNo  &= 0x00000007U;
   miMsgStatMajStr = theTrMsg->MsgMiStatGet((TrMsg::eStatType)miMsgStatMajNo);
-  fprintf(stdout, "Stat: 0x%02X  %s\n", miMsgStatMajNo, miMsgStatMajStr);
+  fprintf(stdout, "0x%02X  %s\n", (miMsgStatMajNo + 8) * 16, miMsgStatMajStr);
 
   switch (i_bMsg[0]) {
     case 0xF0: if(modeIgnSysEx) { qWarning() << theTrMsg->MsgMiMetaGet(TrMsg::DEM_RTM_FLT_FAIL); return; } break;  // SysEx

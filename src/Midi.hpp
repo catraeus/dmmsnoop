@@ -73,7 +73,7 @@ signals:
   void      EmMiMsgRx(quint64 timeStamp, const QByteArray &message);
 
 public:
-         quint64 TimeGet() const;
+         quint64 TimeGet     () const;
 private:
   static void    DoMiMsgRx(double timeStamp,       std::vector<uint8_t> *message, void *engine);
          void    DoMiMsgRx(double timeStamp, const std::vector<uint8_t> &message);

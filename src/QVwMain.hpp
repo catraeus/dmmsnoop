@@ -41,7 +41,8 @@ class QVwMain: public QVwDesgn {
       MTC_NOTE  = 0x00000004U,
       MTC_VELO  = 0x00000005U,
       MTC_SYS   = 0x00000006U,
-      MTC_NUM   = 0x00000007U,
+      MTC_PAD   = 0x00000007U,
+      MTC_NUM   = 0x00000008U,
       MTC_BIG   = 0xFFFFFFFFU
     };
   public:

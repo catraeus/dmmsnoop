@@ -208,9 +208,9 @@ void    ByteToString(uint i_byte, char *o_str) {
   o_str[2] = '\0';
   return;
 }
-quint64  GetTS() {
+ullong  GetTS() {
   struct timeval tv;
-  quint64  TS;
+  ullong  TS;
 
   gettimeofday(&tv, NULL);
   TS = tv.tv_sec * 1000000 + tv.tv_usec;

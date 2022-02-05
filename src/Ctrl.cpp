@@ -205,12 +205,11 @@ void    Ctrl::OnMiMsgTx        (const QString &message) {
 
     // Send the message.
   TS = theMidi.OnMiMsgTx(msg);
-  theQVwMain.OnMiMsgTX(TS, strMiStat, strMiData, valid);
+  theQVwMain.OnMiMsgTX(TS, strMiStat, strMiData, &theBigMsg, valid);
 }
 void    Ctrl::OnMiMsgRx        (quint64 i_TS, const QByteArray &i_msg) {
-  fprintf(stdout, "boink\n");fflush(stdout);
     MiMsgParse(i_msg);
-    theQVwMain.OnMiMsgRX(i_TS, strMiStat, strMiData, valid);
+    theQVwMain.OnMiMsgRX(i_TS, strMiStat, strMiData, &theBigMsg, valid);
 }
 void    Ctrl::MiMsgParse       (              const QByteArray &i_msg) {
   int      lenMidiSpec;

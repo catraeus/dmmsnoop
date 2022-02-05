@@ -66,6 +66,7 @@ private:
   QString        strMiStat;
 
   TrMsg         *theTrMsg;
+  Midi::sMsgSpec theBigMsg;
 
   bool           valid;
 

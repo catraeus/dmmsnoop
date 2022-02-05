@@ -35,5 +35,5 @@
 
         void    TimeUsToStrSec (quint64 i_llTim, char *o_tStr);
         void    ByteToString   (uint   i_byte,  char *o_str); // Yes, IMPORTANT, the input is an int with an LSB Byte in it.
-        quint64  GetTS();
+        ullong  GetTS();
 #endif

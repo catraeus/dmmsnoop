@@ -50,7 +50,7 @@
     QTb_MiMsgGrid->setModel(&QMd_MiMsgGrid);        // The model that actually knows what's what.
 
   // OK, so the TableView has to actually exist first
-    QTb_MiMsgGrid->setColumnWidth(MTC_TS,    96);
+    QTb_MiMsgGrid->setColumnWidth(MTC_TS,   108);
     QTb_MiMsgGrid->setColumnWidth(MTC_STAT, 120);
     QTb_MiMsgGrid->setColumnWidth(MTC_DATA, 180);
     QTb_MiMsgGrid->setColumnWidth(MTC_CHAN,  64);
@@ -63,7 +63,7 @@
      QVwMain::~QVwMain() {}
 
 void QVwMain::SetTimeZero(quint64 i_TZ) {  TZ = i_TZ;  return;}
-int  QVwMain::MsgAdd(quint64 i_TS, const QString &i_miStatDesc, const QString &i_miDataDesc, bool i_val) {
+int  QVwMain::MsgAdd(quint64 i_TS, const QString &i_miStatDesc, const QString &i_miDataDesc, Midi::sMsgSpec *i_tMS, bool i_val) {
   int               count;
   quint64           bla;
 
@@ -78,7 +78,9 @@ int  QVwMain::MsgAdd(quint64 i_TS, const QString &i_miStatDesc, const QString &i
 
   alignment = Qt::AlignTop;
   bla = i_TS - TZ;
-  setModelData(count, MTC_TS,    bla            );  setModelData(count, MTC_TS,   alignment,   Qt::TextAlignmentRole);
+  TimeUsToStrSec(bla, i_tMS->TS);
+
+  setModelData(count, MTC_TS,    i_tMS->TS      );  setModelData(count, MTC_TS,   alignment,   Qt::TextAlignmentRole);
   setModelData(count, MTC_STAT,  i_miStatDesc   );  setModelData(count, MTC_STAT, alignment,   Qt::TextAlignmentRole);
   setModelData(count, MTC_DATA,  i_miDataDesc   );  setModelData(count, MTC_DATA, alignment,   Qt::TextAlignmentRole);
   setModelData(count, MTC_CHAN,  i_miChanDesc   );  setModelData(count, MTC_CHAN, alignment,   Qt::TextAlignmentRole);
@@ -91,13 +93,13 @@ int  QVwMain::MsgAdd(quint64 i_TS, const QString &i_miStatDesc, const QString &i
   QTb_MiMsgGrid->scrollToBottom();
   return count;
 }
-void QVwMain::OnMiMsgRX(quint64 i_TS, const QString &i_miMsgStatStr,  const QString &i_miMsgDataStr, bool valid) {
-  MsgAdd(i_TS, i_miMsgStatStr, i_miMsgDataStr, valid);
+void QVwMain::OnMiMsgRX(quint64 i_TS, const QString &i_miMsgStatStr,  const QString &i_miMsgDataStr, Midi::sMsgSpec *i_tMS, bool valid) {
+  MsgAdd(i_TS, i_miMsgStatStr, i_miMsgDataStr, i_tMS, valid);
 }
-void QVwMain::OnMiMsgTX(quint64 i_TS, const QString &i_miMsgStatStr, const QString &i_miMsgDataStr, bool valid) {
+void QVwMain::OnMiMsgTX(quint64 i_TS, const QString &i_miMsgStatStr, const QString &i_miMsgDataStr, Midi::sMsgSpec *i_tMS, bool valid) {
   int   index;
   const QBrush &brush = qApp->palette().alternateBase();
-  index = MsgAdd(i_TS, i_miMsgStatStr, i_miMsgDataStr, valid);
+  index = MsgAdd(i_TS, i_miMsgStatStr, i_miMsgDataStr, i_tMS, valid);
   setModelData(index, MTC_DATA,  brush, Qt::BackgroundRole);
   setModelData(index, MTC_STAT,  brush, Qt::BackgroundRole);
   setModelData(index, MTC_TS,    brush, Qt::BackgroundRole);

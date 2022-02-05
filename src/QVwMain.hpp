@@ -31,6 +31,8 @@
 #include "QVwDesgn.hpp"
 #include "DelgMsgTbl.hpp"
 
+#include "Midi.hpp"
+
 class QVwMain: public QVwDesgn {
   Q_OBJECT
   private:
@@ -52,8 +54,8 @@ class QVwMain: public QVwDesgn {
 
   public slots:
 
-    void  OnMiMsgRX      (quint64 i_TS, const QString &i_miMsgStatStr, const QString &i_miMsgDataStr, bool i_val);
-    void  OnMiMsgTX      (quint64 i_TS, const QString &i_miMsgStatStr, const QString &i_miMsgDataStr, bool i_val);
+    void  OnMiMsgRX      (quint64 i_TS, const QString &i_miMsgStatStr, const QString &i_miMsgDataStr, Midi::sMsgSpec *i_tMS, bool i_val);
+    void  OnMiMsgTX      (quint64 i_TS, const QString &i_miMsgStatStr, const QString &i_miMsgDataStr, Midi::sMsgSpec *i_tMS, bool i_val);
     void  OnMiMsgTabClr  (void      );
     void  OnMiMsgTxEn    (bool i_en );
 
@@ -67,7 +69,7 @@ class QVwMain: public QVwDesgn {
     void  SetTimeZero    (quint64 i_TZ);
 
   private:
-    int   MsgAdd         (quint64 i_TS, const QString &i_miMsgStatStr, const QString &i_miMsgDataStr, bool i_val);
+    int   MsgAdd         (quint64 i_TS, const QString &i_miMsgStatStr, const QString &i_miMsgDataStr, Midi::sMsgSpec *i_tMS, bool i_val);
     void  setModelData   (int     i_R,  int   i_C, const QVariant &value, int role=Qt::DisplayRole);
 
   public:

@@ -89,7 +89,7 @@ HEADERS +=          \
     util/TrMsgMiMeta.hpp  \
     util/TrMsgMiStat.hpp  \
     util/TrMsgMiSys.hpp  \
-    util/util.hpp
+    util/DmmStr.hpp
 LIBS += -lrtmidi
 MOC_DIR = $${MAKEDIR}
 OBJECTS_DIR = $${MAKEDIR}
@@ -113,7 +113,7 @@ SOURCES +=          \
     QVwBase.cpp     \
     util/Error.cpp  \
     util/TrMsg.cpp  \
-    util/util.cpp
+    util/DmmStr.cpp
 TARGET = dmmsnoop
 TEMPLATE = app
 VERSION = $${DMMSNOOP_VERSION}

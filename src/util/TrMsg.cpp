@@ -38,7 +38,6 @@
 #include <stdio.h>
 
         TrMsg *TrMsg::theTrMsgInstance = (TrMsg *)0;
-  const char   TrMsg::hexAscii[] = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F'};
 
          TrMsg::TrMsg(eLang i_lang) {
   char **tStrAry; // Only really for use in the following language files
@@ -71,10 +70,5 @@ void    TrMsg::SetLang(eLang i_lang) {
 //msgMiCcMode = msgMiCcModePile[i_lang];
   return;
 }
-void    TrMsg::ByteToString(uint i_byte, char *o_str) {
-  o_str[0] = hexAscii[((i_byte & 0x000000F0U) >> 8)];
-  o_str[1] = hexAscii[((i_byte & 0x0000000FU) >> 0)];
-  o_str[2] = '\0';
-  return;
-}
+
 

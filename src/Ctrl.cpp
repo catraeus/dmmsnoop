@@ -18,13 +18,16 @@
  */
 
 #include <stdio.h>
+#include <sys/time.h>
 
 #include <QtCore/QDebug>
+#include <QtCore/QMetaType>
 
 #include "Ctrl.hpp"
 
+#include "util/DmmTypes.hpp"
 #include "util/Error.hpp"
-#include "util/util.hpp"
+#include "util/DmmStr.hpp"
 
 // MAGICK  0xF0   0 -  SysEx with infinite length terminated by 0xF7
 // MAGICK  0xF4  -1 -  Undefined
@@ -49,12 +52,21 @@
 
 
 Ctrl:: Ctrl(App &i_theApp, QObject *i_parent) : QObject(i_parent), theApp(i_theApp) {
-int driverCount;
-int driver;
-int outputPort;
+  int      driverCount;
+  int      driver;
+  int      outputPort;
+  quint64   TS;
+  char     tStr[256];
+
 //==================================================================================================
 //==== Gain access to a message string machine
   theTrMsg = TrMsg::GetInstance(TrMsg::DEL_ENGLISH);
+  qRegisterMetaType<quint64>();
+//==================================================================================================
+//==== Do time things.
+  TS = GetTS();
+  TimeUsToStrSec(TS, tStr);
+  fprintf(stdout, "MICROSECONDS:  %s\n", tStr);
 
 //==================================================================================================
 //==== Setup About
@@ -91,7 +103,8 @@ int outputPort;
 //==================================================================================================
 //==== Setup Main
   theQVwMain.OnMiMsgTxEn((driver != -1) && (outputPort != -1));
-  theQVwMain.SetTimeZero(theMidi.TimeGet());
+  TS = GetTS();
+  theQVwMain.SetTimeZero(TS);
   connect(&theQVwMain, SIGNAL(EmAppAbout          (                           )),  &theQVwAbout,  SLOT(show()));
   connect(&theQVwMain, SIGNAL(EmMiMsgTXAdd        (                           )),  &theQVwMsg,    SLOT(show()));
   connect(&theQVwMain, SIGNAL(EmMiMsgTabClr       (                           )),  &theQVwMain,   SLOT(OnMiMsgTabClr()));
@@ -144,7 +157,6 @@ void    Ctrl::QVwErrShow       (const QString &message) {
   theQVwErr.show();
 }
 void    Ctrl::MiMsgDatBytesStr (const QByteArray &i_msgbb, char *o_dStr, int i_dexLast) {
-  //QStringList dataParts;
   uint        tInt;
   char        tStr[32];
 
@@ -153,16 +165,13 @@ void    Ctrl::MiMsgDatBytesStr (const QByteArray &i_msgbb, char *o_dStr, int i_d
   o_dStr[0] =  '\0';
   for(int i = 1; i <= i_dexLast; i++) {
     tInt = (uint)(i_msgbb[i]);
-    theTrMsg->ByteToString(tInt, tStr);
+    ByteToString(tInt, tStr);
     if(i > 1) strcat(o_dStr, " ");
     strcat(o_dStr, tStr);
-    //dataParts += tStr;
   }
   sprintf(tStr, " (%d bytes)", i_dexLast);
   strcat(o_dStr, tStr);
-  //dataParts += tr("(%1 bytes)").arg(i_dexLast);
   return;
-  //return dataParts.join(" ");
 }
 void    Ctrl::OnMidiDrvChg     (                      ) {
   theQVwMain.OnMiMsgTxEn((theMidi.MiDrvNumGet() != -1) && (theMidi.getOutputPort() != -1));
@@ -174,7 +183,7 @@ void    Ctrl::OnMiMsgTx        (const QString &message) {
   QByteArray  msg;
   QString     byteStr;
   uint        value;
-  quint64     TS;
+  quint64      TS;
 
   bytes = message.split(' ', QString::SkipEmptyParts);// MAGICK The GUI gives us the message as text ...Convert the message to bytes.
   count = bytes.count();
@@ -199,6 +208,7 @@ void    Ctrl::OnMiMsgTx        (const QString &message) {
   theQVwMain.OnMiMsgTX(TS, strMiStat, strMiData, valid);
 }
 void    Ctrl::OnMiMsgRx        (quint64 i_TS, const QByteArray &i_msg) {
+  fprintf(stdout, "boink\n");fflush(stdout);
     MiMsgParse(i_msg);
     theQVwMain.OnMiMsgRX(i_TS, strMiStat, strMiData, valid);
 }
@@ -223,7 +233,7 @@ void    Ctrl::MiMsgParse       (              const QByteArray &i_msg) {
 
 //========
   miStat = (uint8_t)(i_msg[0]);
-  theTrMsg->ByteToString(miStat, miStatByteStr);
+  ByteToString(miStat, miStatByteStr);
 
 //========
   if(miStat < 0x80U) {// WEIRD Validate status byte.

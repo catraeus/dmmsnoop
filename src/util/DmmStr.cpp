@@ -17,16 +17,21 @@
  * Ave, Cambridge, MA 02139, USA.
  */
 
+#include <sys/time.h>
+#include <cassert>
+
 #include <QtCore/QCoreApplication>
 #include <QtCore/QFile>
 #include <QtCore/QLocale>
 #include <QtUiTools/QUiLoader>
 
-#include "util.hpp"
+#include "DmmStr.hpp"
+
+const char   hexAscii[] = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F'};
 
 QString getMIDIControlString(quint8 i_CC) {
     QString name;
-    
+
   if((quint8)i_CC >= (quint8)0x80) {
     name = qApp->tr("ERROR: DATA is actually a STATUS");
   }
@@ -167,4 +172,47 @@ QWidget *loadForm(const QString &path, QWidget *parent) {
 
   file.close();
   return widget;
+}
+
+
+void    TimeUsToStrSec (quint64 i_llTim, char *o_tStr) {
+  llong llSec;
+  llong llUSec;
+  llong llTmp;
+  llong pStr;
+
+  strcpy(o_tStr, "000000.000000");
+  pStr = strlen(o_tStr) - 1;
+
+  llUSec = i_llTim % 1000000;
+  llSec  = i_llTim - llUSec;
+  llSec  = i_llTim / 1000000;
+  for(uint i=0; i<6; i++) {
+    llTmp = llUSec % 10;
+    o_tStr[pStr--] = (char)('0' + llTmp);
+    llUSec -= llTmp;
+    llUSec /= 10;
+  }
+  pStr --; // get past the period
+  for(uint i=0; i<6; i++) {
+    llTmp = llSec % 10;
+    o_tStr[pStr--] = (char)('0' + llTmp);
+    llSec -= llTmp;
+    llSec /= 10;
+  }
+  return;
+}
+void    ByteToString(uint i_byte, char *o_str) {
+  o_str[0] = hexAscii[((i_byte & 0x000000F0U) >> 8)];
+  o_str[1] = hexAscii[((i_byte & 0x0000000FU) >> 0)];
+  o_str[2] = '\0';
+  return;
+}
+quint64  GetTS() {
+  struct timeval tv;
+  quint64  TS;
+
+  gettimeofday(&tv, NULL);
+  TS = tv.tv_sec * 1000000 + tv.tv_usec;
+  return TS;
 }

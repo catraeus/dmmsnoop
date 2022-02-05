@@ -18,7 +18,7 @@
  */
 
 #include "QVwDesgn.hpp"
-#include "util/util.hpp"
+#include "util/DmmStr.hpp"
 
 QVwDesgn::QVwDesgn(const QString &path, QObject *parent) : QVwBase(loadForm(path), parent) {}
 QVwDesgn::~QVwDesgn() {}

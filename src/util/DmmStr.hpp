@@ -17,15 +17,23 @@
  * Ave, Cambridge, MA 02139, USA.
  */
 
-#include "QVwErr.hpp"
-#include "util/DmmStr.hpp"
+#ifndef __DMM_STR_HPP_
+#define __DMM_STR_HPP_
 
-        QVwErr::QVwErr(QObject *parent) : QVwDlg(":/dmmsnoop/QVwErr.ui", parent) {
-  closeButton = getChild<QPushButton>(dialog, "closeButton");
-  connect(closeButton, SIGNAL(clicked()), SIGNAL(closeRequest()));
+#include "DmmTypes.hpp"
+#include <QtWidgets/QWidget>
 
-  message = getChild<QLabel>(dialog, "message");
-}
 
-        QVwErr::~QVwErr() {}
-void    QVwErr::setMessage(const QString &message) {    this->message->setText(message);  }
+  template<typename T> inline T *getChild(const QObject *object, const QString &name=QString()) {
+    T *child = object->findChild<T *>(name);
+    return child;
+  }
+
+  QString  getMIDIControlString(quint8 control);
+  QString  getMIDINoteString   (quint8 note);
+  QWidget *loadForm            (const QString &path, QWidget *parent=0);
+
+        void    TimeUsToStrSec (quint64 i_llTim, char *o_tStr);
+        void    ByteToString   (uint   i_byte,  char *o_str); // Yes, IMPORTANT, the input is an int with an LSB Byte in it.
+        quint64  GetTS();
+#endif

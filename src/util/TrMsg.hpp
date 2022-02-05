@@ -58,11 +58,9 @@ class TrMsg {
     static  TrMsg  *GetInstance(eLang i_lang); // For singleton pattern
            ~TrMsg();
     void    SetLang(eLang i_lang);
-    void    ByteToString(uint i_byte, char *o_str);
   private:
     eLang   lang;
 
-    static const char hexAscii[16];
 
     char  **msgMiCc;
     char ***msgMiCcPile;

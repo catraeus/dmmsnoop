@@ -22,7 +22,7 @@
 #include <QtCore/QLocale>
 
 #include "QVwAbout.hpp"
-#include "util/util.hpp"
+#include "util/DmmStr.hpp"
 
 QVwAbout::QVwAbout(QObject *parent) : QVwDlg(":/dmmsnoop/QVwAbout.ui", parent) {
     closeButton = getChild<QPushButton>(dialog, "closeButton");

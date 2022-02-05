@@ -17,23 +17,10 @@
  * Ave, Cambridge, MA 02139, USA.
  */
 
-#ifndef __UTIL_H__
-#define __UTIL_H__
+#ifndef __DMM_TYPES_HPP_
+#define __DMM_TYPES_HPP_
 
-#include <cassert>
-
-#include <QtWidgets/QWidget>
-
-template<typename T> inline T *getChild(const QObject *object, const QString &name=QString()) {
-  T *child = object->findChild<T *>(name);
-  assert(child);
-  return child;
-}
-
-QString getMIDIControlString(quint8 control);
-
-QString getMIDINoteString(quint8 note);
-
-QWidget *loadForm(const QString &path, QWidget *parent=0);
+  typedef          long long  llong;
+  typedef unsigned long long ullong;
 
 #endif

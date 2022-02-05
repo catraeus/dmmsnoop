@@ -20,17 +20,16 @@
 #include <cassert>
 #include <string.h>
 #include <QtCore/QDebug>
+#include <QtCore/QMetaType>
 
-#include "Midi.hpp"
-#include "error.h"
-
-#if QT_VERSION >= 0x040700
-#include <QtCore/QDateTime>
-#else
 #include <cerrno>
 #include <cstring>
 #include <sys/time.h>
-#endif
+
+#include "Midi.hpp"
+#include "util/DmmStr.hpp"
+#include "util/Error.hpp"
+
 
 Midi:: Midi(QObject *parent) : QObject(parent) {
               RtMidi::Api    theMidiAPI;
@@ -38,6 +37,7 @@ Midi:: Midi(QObject *parent) : QObject(parent) {
   std::vector<RtMidi::Api>   midiAPIlist;
               int            numAPIs;
 
+  qRegisterMetaType<quint64>();
   theTrMsg = TrMsg::GetInstance(TrMsg::DEL_ENGLISH);
 //Get available MIDI drivers.
   RtMidi::getCompiledApi(midiAPIlist);
@@ -88,21 +88,21 @@ int     Midi::getOutputPort        (         ) const { return miPortOutNum      
 int     Midi::getOutputPortCount   (         ) const { return miPortOutNames.count()   ; }
 QString Midi::getOutputPortName    (int i_dex) const { return miPortOutNames[i_dex]    ; }
 
-void    Midi::DoMiMsgRx       (double i_TS,       std::vector<uint8_t> *i_bMsg, void *i_aMidi) {
+void    Midi::DoMiMsgRx       (double i_TS,       std::vector<uint8_t> *i_vbMsg, void *i_aMidi) {
   Midi *aMidi;
 
   aMidi = (Midi *)i_aMidi;
-  aMidi->DoMiMsgRx(i_TS, *i_bMsg);
+  aMidi->DoMiMsgRx(i_TS, *i_vbMsg);
 }
-void    Midi::DoMiMsgRx       (double i_TS, const std::vector<uint8_t> &i_bMsg) {
+void    Midi::DoMiMsgRx       (double i_TS, const std::vector<uint8_t> &i_vbMsg) {
   QByteArray msg;
-  quint64    TS;
+  quint64     TS;
   int        msgSize;
   (void)i_TS;
 
-  miBuffSize = (uint)(i_bMsg.size());
+  miBuffSize = (uint)(i_vbMsg.size());
   for(uint i=0; i<miBuffSize; i++)
-    miBuffer[i] = i_bMsg[i];
+    miBuffer[i] = i_vbMsg[i];
   if(miBuffSize == 0)
     fprintf(stdout, "OOPS - Message was zero length\n");
   miMsgStatMajNo  = miBuffer[0];
@@ -111,7 +111,7 @@ void    Midi::DoMiMsgRx       (double i_TS, const std::vector<uint8_t> &i_bMsg) 
   miMsgStatMajStr = theTrMsg->MsgMiStatGet((TrMsg::eStatType)miMsgStatMajNo);
   fprintf(stdout, "0x%02X  %s\n", (miMsgStatMajNo + 8) * 16, miMsgStatMajStr);
 
-  switch (i_bMsg[0]) {
+  switch (i_vbMsg[0]) {
     case 0xF0: if(modeIgnSysEx) { qWarning() << theTrMsg->MsgMiMetaGet(TrMsg::DEM_RTM_FLT_FAIL); return; } break;  // SysEx
     case 0xF1: if(modeIgnMiTim) { qWarning() << theTrMsg->MsgMiMetaGet(TrMsg::DEM_RTM_FLT_FAIL); return; } break;  // TimeCode Qtr Frm
     case 0xF2: if(modeIgnMiTim) { qWarning() << theTrMsg->MsgMiMetaGet(TrMsg::DEM_RTM_FLT_FAIL); return; } break;  // Song Position Pointer
@@ -129,13 +129,10 @@ void    Midi::DoMiMsgRx       (double i_TS, const std::vector<uint8_t> &i_bMsg) 
     case 0xFE: if(modeIgnActSn) { qWarning() << theTrMsg->MsgMiMetaGet(TrMsg::DEM_RTM_FLT_FAIL); return; } break;  // Active Sense
     case 0xFF:                                                                                             break;  // Reset
   }
-  TS      = TimeGet();
-  msgSize = static_cast<int>(i_bMsg.size());
-  for(int i=0; i<msgSize; i++) msg.append(i_bMsg[i]);
+  TS      = GetTS();
+  msgSize = static_cast<int>(i_vbMsg.size());
+  for(int i=0; i<msgSize; i++) msg.append(i_vbMsg[i]);
   emit EmMiMsgRx(TS, msg);
-}
-quint64 Midi::TimeGet         () const {
-  return QDateTime::currentDateTime().toMSecsSinceEpoch();
 }
 void    Midi::DoPortAllDel    () {
   OnPortInpChg(-1);
@@ -149,13 +146,13 @@ void    Midi::DoPortAllDel    () {
     emit EmPortOutDel(i);
   }
 }
-quint64 Midi::OnMiMsgTx       (const QByteArray &message) {
+quint64 Midi::OnMiMsgTx       (const QByteArray &i_qbMsg) {
   assert(miPortOutNum != -1);
   std::vector<uint8_t> msg;
-  for(int i = 0; i < message.count(); i++)
-    msg.push_back(static_cast<uint8_t>(message[i]));
+  for(int i = 0; i < i_qbMsg.count(); i++)
+    msg.push_back(static_cast<uint8_t>(i_qbMsg[i]));
   miPortOutInst->sendMessage(&msg);
-  return TimeGet();
+  return GetTS();
 }
 
 void Midi::OnDrvChg    (int i_dex) {

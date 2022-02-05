@@ -20,7 +20,8 @@
 #ifndef __QVW_MAIN_HPP__
 #define __QVW_MAIN_HPP__
 
-#include <util/TrMsg.hpp>
+#include "util/DmmTypes.hpp"
+#include "util/TrMsg.hpp"
 
 #include <QtGui/QStandardItemModel>
 #include <QtWidgets/QAction>
@@ -63,7 +64,7 @@ class QVwMain: public QVwDesgn {
     void  EmAppConfig    (void      );
 
   public:
-    void  SetTimeZero    (qint64 i_timeZero);
+    void  SetTimeZero    (quint64 i_TZ);
 
   private:
     int   MsgAdd         (quint64 i_TS, const QString &i_miMsgStatStr, const QString &i_miMsgDataStr, bool i_val);
@@ -71,7 +72,7 @@ class QVwMain: public QVwDesgn {
 
   public:
   private:
-    qint64                timeZero;
+    qint64                TZ;
 
     QAction              *QAc_AppAbout;
     QAction              *QAc_MiMsgOutAdd;

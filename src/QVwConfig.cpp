@@ -18,7 +18,7 @@
  */
 
 #include "QVwConfig.hpp"
-#include "util/util.hpp"
+#include "util/DmmStr.hpp"
 
   QVwConfig::QVwConfig(QObject *parent) : QVwDesgn(":/dmmsnoop/QVwConfig.ui", parent) {
   QWidget *rootWidget = getRootWidget();

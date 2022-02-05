@@ -27,56 +27,68 @@
 #include <QtCore/QVector>
 #include <QtCore/QObject>
 
+#include "util/DmmTypes.hpp"
 #include "util/TrMsg.hpp"
 
 #include <rtmidi/RtMidi.h>
 
 class Midi: public QObject {
     Q_OBJECT
-
+public:
+  struct sMsgSpec { // all are null-terminated ASCII c strings.  Whatever the calc is, I'll take it to a next 2^k
+    char TS   [16] ; // hh:mm:ss.sss or ssssss.sss (one day is 86400 sec so I figure 999999.999 sec should cover most sessions.)
+    char len  [ 4] ; // If we get a SysEx infinitely long blob, I'll just truncate and fake it.
+    char raw  [16] ; // ALL normal MIDI messages are 1, 2 or 3 bytes.  This will put out nn nnn nnn as hex dec dec
+    char stat [32] ; // If I can't make a reasonable human message in 32 characters, then something is wrong.
+    char ch   [ 4] ; // There are at most 16 channels possible printed as decimal
+    char vel  [ 4] ; // for notes, controls and pressures.  These are 0 to 127 and will be printed decimal.
+    char cc   [ 4] ; // There are only 128 channels possible.  Print decimal.  FIXME But, there are LSB/MSB channel pairs to figure.
+    char prog [ 4] ; // 128 programs possible.
+    char bend [ 4] ; // Is a Speshul uint16_t
+    char sys  [32] ; // Same sentiment as stat above
+  };
 public:
   explicit  Midi(QObject *parent=0);
            ~Midi();
-  int       MiDrvNumGet() const;
-  int       getDriverCount() const;
-  QString   getDriverName(int index) const;
-  bool      ModeIgnActSnGet() const;
-  bool      ModeIgnSysExGet() const;
-  bool      ModeIgnMiTimGet() const;
-  int       getInputPort() const;
-  int       getInputPortCount() const;
-  QString   getInputPortName(int index) const;
-  int       getOutputPort() const;
+  int       MiDrvNumGet       () const;
+  int       getDriverCount    () const;
+  QString   getDriverName     (int i_dex) const;
+  bool      ModeIgnActSnGet   () const;
+  bool      ModeIgnSysExGet   () const;
+  bool      ModeIgnMiTimGet   () const;
+  int       getInputPort      () const;
+  int       getInputPortCount () const;
+  QString   getInputPortName  (int i_dex) const;
+  int       getOutputPort     (           ) const;
   int       getOutputPortCount() const;
-  QString   getOutputPortName(int index) const;
+  QString   getOutputPortName (int i_dex) const;
 
 public slots:
-  void      OnDrvChg(int index);
-  void      OnModeIgnActSnChg(bool ignore);
-  void      OnModeIgnSysExChg(bool ignore);
-  void      OnModeIgnMiTimChg(bool ignore);
-  void      OnPortInpChg(int index);
-  void      OnPortOutChg(int index);
-  quint64   OnMiMsgTx(const QByteArray &message);
+  void      OnDrvChg          (int i_dex);
+  void      OnModeIgnActSnChg (bool i_ign);
+  void      OnModeIgnSysExChg (bool i_ign);
+  void      OnModeIgnMiTimChg (bool i_ign);
+  void      OnPortInpChg      (int i_dex);
+  void      OnPortOutChg      (int i_dex);
+  quint64   OnMiMsgTx         (const QByteArray &i_qbMsg);
 
 signals:
-  void      EmDrvChange(int index);
-  void      EmModeIgnActSnChg(bool ignore);
-  void      EmModeIgnSysExChg(bool ignore);
-  void      EmModeIgnMiTimChg(bool ignore);
-  void      EmPortInpAdd(int index, const QString &name);
-  void      EmPortInpChg(int index);
-  void      EmPortInpDel(int index);
-  void      EmPortOutAdd(int index, const QString &name);
-  void      EmPortOutChg(int index);
-  void      EmPortOutDel(int index);
-  void      EmMiMsgRx(quint64 timeStamp, const QByteArray &message);
+  void      EmDrvChange(int i_dex);
+  void      EmModeIgnActSnChg(bool i_ign);
+  void      EmModeIgnSysExChg(bool i_ign);
+  void      EmModeIgnMiTimChg(bool i_ign);
+  void      EmPortInpAdd(int i_dex, const QString &name);
+  void      EmPortInpChg(int i_dex);
+  void      EmPortInpDel(int i_dex);
+  void      EmPortOutAdd(int i_dex, const QString &name);
+  void      EmPortOutChg(int i_dex);
+  void      EmPortOutDel(int i_dex);
+  void      EmMiMsgRx(quint64 i_TS, const QByteArray &i_qbMsg);
 
 public:
-         quint64 TimeGet     () const;
 private:
-  static void    DoMiMsgRx(double timeStamp,       std::vector<uint8_t> *message, void *engine);
-         void    DoMiMsgRx(double timeStamp, const std::vector<uint8_t> &message);
+  static void    DoMiMsgRx(double i_TS,       std::vector<uint8_t> *i_vbMsg, void *engine);
+         void    DoMiMsgRx(double i_TS, const std::vector<uint8_t> &i_vbMsg);
          void    DoPortAllDel();
          void    DoModeIgnChg();
 

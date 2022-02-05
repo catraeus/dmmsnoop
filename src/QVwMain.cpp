@@ -20,12 +20,14 @@
 #include <cassert>
 
 #include <QtWidgets/QApplication>
+#include <QtCore/QMetaType>
 
 #include "QVwMain.hpp"
-#include "util/util.hpp"
+#include "util/DmmStr.hpp"
 
      QVwMain::QVwMain(QObject *i_parent) : QVwDesgn(":/dmmsnoop/QVwMain.ui", i_parent) {
     QWidget *QWd_root  = getRootWidget();
+    qRegisterMetaType<quint64>();
 
     QAc_AppAbout       = getChild<QAction>(QWd_root, "QAc_AppAbout"       );  connect(QAc_AppAbout,       SIGNAL(triggered()), SIGNAL(EmAppAbout           ()));
     QAc_MiMsgOutAdd    = getChild<QAction>(QWd_root, "QAc_MiMsgOutAdd"    );  connect(QAc_MiMsgOutAdd,    SIGNAL(triggered()), SIGNAL(EmMiMsgTXAdd         ()));
@@ -56,24 +58,27 @@
     QTb_MiMsgGrid->setColumnWidth(MTC_VELO,  64);
     QTb_MiMsgGrid->setColumnWidth(MTC_SYS,   64);
     QTb_MiMsgGrid->setColumnWidth(MTC_PAD,   64);
-    timeZero = 0;
+    TZ = 0;
 }
      QVwMain::~QVwMain() {}
 
-void QVwMain::SetTimeZero(qint64 i_timeZero) {  timeZero = i_timeZero;  return;}
+void QVwMain::SetTimeZero(quint64 i_TZ) {  TZ = i_TZ;  return;}
 int  QVwMain::MsgAdd(quint64 i_TS, const QString &i_miStatDesc, const QString &i_miDataDesc, bool i_val) {
   int               count;
+  quint64           bla;
+
   Qt::AlignmentFlag alignment;
   char  i_miChanDesc[] = "Ch";
   char  i_miNoteDesc[] = "N";
-  char  i_miNoteVel[] = "V";
-  char  i_miSysCmd[] = "Sys";
+  char  i_miNoteVel[]  = "V";
+  char  i_miSysCmd[]   = "Sys";
 
   count = QMd_MiMsgGrid.rowCount();
   QMd_MiMsgGrid.insertRow(count); // WARNING There is no check for insertion, insertRow returns a bool
 
   alignment = Qt::AlignTop;
-  setModelData(count, MTC_TS,    i_TS - timeZero);  setModelData(count, MTC_TS,   alignment,   Qt::TextAlignmentRole);
+  bla = i_TS - TZ;
+  setModelData(count, MTC_TS,    bla            );  setModelData(count, MTC_TS,   alignment,   Qt::TextAlignmentRole);
   setModelData(count, MTC_STAT,  i_miStatDesc   );  setModelData(count, MTC_STAT, alignment,   Qt::TextAlignmentRole);
   setModelData(count, MTC_DATA,  i_miDataDesc   );  setModelData(count, MTC_DATA, alignment,   Qt::TextAlignmentRole);
   setModelData(count, MTC_CHAN,  i_miChanDesc   );  setModelData(count, MTC_CHAN, alignment,   Qt::TextAlignmentRole);

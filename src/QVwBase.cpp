@@ -17,7 +17,7 @@
  * Ave, Cambridge, MA 02139, USA.
  */
 
-#include "util/util.hpp"
+#include "util/DmmStr.hpp"
 #include "QVwBase.hpp"
 
                QVwBase::QVwBase                (QWidget *rootWidget, QObject *parent) : QObject(parent) {

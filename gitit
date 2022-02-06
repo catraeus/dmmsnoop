@@ -1,9 +1,14 @@
 #!/bin/sh
 git add   gitit
+git add   dmmsnoop.geany
+git add   gitit
 git add   src/Ctrl.cpp
 git add   src/Ctrl.hpp
+git add   src/DrvIf.cpp
+git add   src/DrvIf.hpp
+git add   src/Midi.cpp
+git add   src/Midi.hpp
 git add   src/QVwMain.cpp
 git add   src/QVwMain.hpp
-git add   src/util/DmmStr.cpp
-git add   src/util/DmmStr.hpp
+git add   src/src.pro
 

@@ -27,7 +27,7 @@
 
      QVwMain::QVwMain(QObject *i_parent) : QVwDesgn(":/dmmsnoop/QVwMain.ui", i_parent) {
     QWidget *QWd_root  = getRootWidget();
-    qRegisterMetaType<quint64>();
+
 
     QAc_AppAbout       = getChild<QAction>(QWd_root, "QAc_AppAbout"       );  connect(QAc_AppAbout,       SIGNAL(triggered()), SIGNAL(EmAppAbout           ()));
     QAc_MiMsgOutAdd    = getChild<QAction>(QWd_root, "QAc_MiMsgOutAdd"    );  connect(QAc_MiMsgOutAdd,    SIGNAL(triggered()), SIGNAL(EmMiMsgTXAdd         ()));
@@ -63,7 +63,7 @@
      QVwMain::~QVwMain() {}
 
 void QVwMain::SetTimeZero(quint64 i_TZ) {  TZ = i_TZ;  return;}
-int  QVwMain::MsgAdd(quint64 i_TS, const QString &i_miStatDesc, const QString &i_miDataDesc, Midi::sMsgSpec *i_tMS, bool i_val) {
+int  QVwMain::MsgAdd(quint64 i_TS, const QString &i_miStatDesc, const QString &i_miDataDesc, Midi *i_tMidi, bool i_val) {
   int               count;
   quint64           bla;
 
@@ -78,9 +78,9 @@ int  QVwMain::MsgAdd(quint64 i_TS, const QString &i_miStatDesc, const QString &i
 
   alignment = Qt::AlignTop;
   bla = i_TS - TZ;
-  TimeUsToStrSec(bla, i_tMS->TS);
+  TimeUsToStrSec(bla, i_tMidi->theMS->TS);
 
-  setModelData(count, MTC_TS,    i_tMS->TS      );  setModelData(count, MTC_TS,   alignment,   Qt::TextAlignmentRole);
+  setModelData(count, MTC_TS,    i_tMidi->theMS->TS    );  setModelData(count, MTC_TS,   alignment,   Qt::TextAlignmentRole);
   setModelData(count, MTC_STAT,  i_miStatDesc   );  setModelData(count, MTC_STAT, alignment,   Qt::TextAlignmentRole);
   setModelData(count, MTC_DATA,  i_miDataDesc   );  setModelData(count, MTC_DATA, alignment,   Qt::TextAlignmentRole);
   setModelData(count, MTC_CHAN,  i_miChanDesc   );  setModelData(count, MTC_CHAN, alignment,   Qt::TextAlignmentRole);
@@ -93,13 +93,13 @@ int  QVwMain::MsgAdd(quint64 i_TS, const QString &i_miStatDesc, const QString &i
   QTb_MiMsgGrid->scrollToBottom();
   return count;
 }
-void QVwMain::OnMiMsgRX(quint64 i_TS, const QString &i_miMsgStatStr,  const QString &i_miMsgDataStr, Midi::sMsgSpec *i_tMS, bool valid) {
-  MsgAdd(i_TS, i_miMsgStatStr, i_miMsgDataStr, i_tMS, valid);
+void QVwMain::OnMiMsgRX(quint64 i_TS, const QString &i_miMsgStatStr,  const QString &i_miMsgDataStr, Midi *i_tMidi, bool valid) {
+  MsgAdd(i_TS, i_miMsgStatStr, i_miMsgDataStr, i_tMidi, valid);
 }
-void QVwMain::OnMiMsgTX(quint64 i_TS, const QString &i_miMsgStatStr, const QString &i_miMsgDataStr, Midi::sMsgSpec *i_tMS, bool valid) {
+void QVwMain::OnMiMsgTX(quint64 i_TS, const QString &i_miMsgStatStr, const QString &i_miMsgDataStr, Midi *i_tMidi, bool valid) {
   int   index;
   const QBrush &brush = qApp->palette().alternateBase();
-  index = MsgAdd(i_TS, i_miMsgStatStr, i_miMsgDataStr, i_tMS, valid);
+  index = MsgAdd(i_TS, i_miMsgStatStr, i_miMsgDataStr, i_tMidi, valid);
   setModelData(index, MTC_DATA,  brush, Qt::BackgroundRole);
   setModelData(index, MTC_STAT,  brush, Qt::BackgroundRole);
   setModelData(index, MTC_TS,    brush, Qt::BackgroundRole);

@@ -22,6 +22,7 @@
 
 #include "App.hpp"
 #include "Midi.hpp"
+#include "DrvIf.hpp"
 
 #include "QVwMain.hpp"
 #include "QVwConfig.hpp"
@@ -49,28 +50,28 @@ private:
   void      MiMsgParse(const QByteArray &i_msg);
   void      QVwErrShow(const QString &message);
 
-  App           &theApp;
+       App           &theApp;
 
-  Midi           theMidi;
+       DrvIf          *theDrvIf;
 
-  QVwMain        theQVwMain;
-  QVwConfig      theQVwConfig;
-  QVwAbout       theQVwAbout;
-  QVwMsg         theQVwMsg;
-  QVwErr         theQVwErr;
+       QVwMain        theQVwMain;
+       QVwConfig      theQVwConfig;
+       QVwAbout       theQVwAbout;
+       QVwMsg         theQVwMsg;
+       QVwErr         theQVwErr;
 
-  int            miMsgLen;
-  uint8_t        miStat;
-  uint           miStatBase;
-  QString        strMiData;
-  QString        strMiStat;
+       int            miMsgLen;
+       uint8_t        miStat;
+       uint           miStatBase;
+       QString        strMiData;
+       QString        strMiStat;
 
-  TrMsg         *theTrMsg;
-  Midi::sMsgSpec theBigMsg;
+       TrMsg          *theTrMsg;
+       Midi           *theMidi;
 
-  bool           valid;
+       bool            valid;
 
-static       int lenMidiSpecAry[];
+static int             lenMidiSpecAry[];
 
 };
 

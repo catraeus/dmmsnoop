@@ -17,7 +17,6 @@
  * Ave, Cambridge, MA 02139, USA.
  */
 
-#include <cassert>
 #include <string.h>
 #include <QtCore/QDebug>
 #include <QtCore/QMetaType>

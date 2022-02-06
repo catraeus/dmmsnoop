@@ -34,6 +34,7 @@
   QWidget *loadForm            (const QString &path, QWidget *parent=0);
 
         void    TimeUsToStrSec (quint64 i_llTim, char *o_tStr);
-        void    ByteToString   (uint   i_byte,  char *o_str); // Yes, IMPORTANT, the input is an int with an LSB Byte in it.
+        void    ByteToString   (uint   i_byte,  char *o_str); // Yes, IMPORTANT, the input is an uint with an LSB Byte in it.
+        void    BytesToString  (uint   i_N, uint *i_bytes, char *o_str);
         ullong  GetTS();
 #endif

@@ -28,6 +28,7 @@
 #include <QtCore/QObject>
 
 #include "util/DmmTypes.hpp"
+#include "util/DmmStr.hpp"
 #include "util/TrMsg.hpp"
 
 
@@ -44,14 +45,19 @@ class Midi: public QObject {
       char prog [ 4] ; // 128 programs possible.
       char bend [ 4] ; // Is a Speshul uint16_t
       char sys  [32] ; // Same sentiment as stat above
+      char err  [32] ; // Likewise
     };
               Midi();
              ~Midi();
-
-    sMsgSpec           *theMS;
+    void      Parse(uint i_N, uint *i_bytes);
+    sMsgSpec            *theMS;
   private:
-    TrMsg              *theTrMsg;
-
+    TrMsg               *theTrMsg;
+    static const ullong  lenForStat[];
+    static const ullong  lenForSys[];
+    uint                 bStat;
+    uint                 bStatBase;
+    uint                 bStatSub;
 };
 
 #endif

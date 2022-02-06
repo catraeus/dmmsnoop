@@ -96,7 +96,7 @@ private:
     int                  miMsgNoteNo;     // iff is 0x8x 0x9x 0xA0
     char                *miMsgNoteStr;    // iff is 0x8x 0x9x 0xA0
     int                  miMsgVeloNo;     // iff is 0x8x 0x9x 0xA0 0xB0 0xD0
-    char                *miMsgVeloStr;    // iff is 0x8x 0x9x 0xA0 0xB0 0xD0
+    char                *miMsgVelo_str;    // iff is 0x8x 0x9x 0xA0 0xB0 0xD0
     int                  miMsgChChNo;     // iff is 0xA0
     char                *miMsgChChStr;    // iff is 0xA0
 

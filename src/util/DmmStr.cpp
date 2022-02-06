@@ -203,9 +203,21 @@ void    TimeUsToStrSec (quint64 i_llTim, char *o_tStr) {
   return;
 }
 void    ByteToString(uint i_byte, char *o_str) {
-  o_str[0] = hexAscii[((i_byte & 0x000000F0U) >> 8)];
+  o_str[0] = hexAscii[((i_byte & 0x000000F0U) >> 4)];
   o_str[1] = hexAscii[((i_byte & 0x0000000FU) >> 0)];
   o_str[2] = '\0';
+  return;
+}
+void    BytesToString(uint i_N, uint *i_bytes, char *o_str) {
+  char tStr[4]; // How's this for super tweaky fast without strings.
+  o_str[0] = '\0';
+  for(uint i=0; i<i_N; i++) {
+    ByteToString(i_bytes[i], tStr);
+    o_str[3*i + 0] = tStr[0];
+    o_str[3*i + 1] = tStr[1];
+    o_str[3*i + 2] = ' ';
+  }
+  o_str[3*i_N] = '\0';
   return;
 }
 ullong  GetTS() {

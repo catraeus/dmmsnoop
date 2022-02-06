@@ -70,8 +70,8 @@ char   *MsgMiMetaGet(eMetaType i_theType)  { return msgMiMeta[i_theType]; }
 //==================================================================================================
 //==== The English stuff
   tStrAry = msgMiMetaPile[DEL_ENGLISH];
-  tStrAry[DEM_ZRO_LEN]         = (char *)"Zero-Length MIDI Message";
-  tStrAry[DEM_LEN_STAT]        = (char *)"Byte Count is wrong for the Status";
+  tStrAry[DEM_ZRO_LEN]         = (char *)"Zero-Length";
+  tStrAry[DEM_LEN_STAT]        = (char *)"Byte Count";
   tStrAry[DEM_SYSEX_TRUNC]     = (char *)"SysEx stream didn't have SysEx End next";
   tStrAry[DEM_STAT_UNDEF]      = (char *)"Undefined Status Byte";
   tStrAry[DEM_STAT_LOW]        = (char *)"Status Byte < 0x80";
@@ -80,7 +80,7 @@ char   *MsgMiMetaGet(eMetaType i_theType)  { return msgMiMeta[i_theType]; }
 //==================================================================================================
 //==== Les trucs francais
   tStrAry = msgMiMetaPile[DEL_FRANCAIS];
-  tStrAry[DEM_ZRO_LEN]         = (char *)"Message MIDI de longueur nulle";
+  tStrAry[DEM_ZRO_LEN]         = (char *)"Message nulle";
   tStrAry[DEM_LEN_STAT]        = (char *)"Le nombre d'octets est incorrect pour le Status";
   tStrAry[DEM_SYSEX_TRUNC]     = (char *)"Le flux SysEx n'avait pas de SysEx End ensuite";
   tStrAry[DEM_STAT_UNDEF]      = (char *)"Octet Status non défini ";

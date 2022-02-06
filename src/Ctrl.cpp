@@ -211,8 +211,9 @@ void    Ctrl::OnMiMsgRx        (quint64 i_TS, const QByteArray &i_msg) {
     theQVwMain.OnMiMsgRX(i_TS, strMiStat, strMiData, theMidi, valid);
 }
 void    Ctrl::MiMsgParse       (              const QByteArray &i_msg) {
-  int      lenMidiSpec;
+  uint     lenMidiSpec;
   char     miStatByteStr[3]; // two nibbles and a trailing zero
+  uint     miBytes[1024];
   char     tStr[256];
   int      lastDataIndex;
   QString  s;
@@ -220,6 +221,9 @@ void    Ctrl::MiMsgParse       (              const QByteArray &i_msg) {
 
 //========
   miMsgLen = i_msg.count();
+  for(uint i=0; i<miMsgLen; i++)
+    miBytes[i] = (uint)i_msg[i];
+  theMidi->Parse(miMsgLen, miBytes);
   if(miMsgLen == 0) {  // WEIRD Make sure we have something ... anything.
     strMiData = "";
     strcpy(tStr, theTrMsg->MsgMiMetaGet(TrMsg::DEM_ZRO_LEN));

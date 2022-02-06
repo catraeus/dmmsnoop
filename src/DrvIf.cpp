@@ -108,7 +108,6 @@ void    DrvIf::DoMiMsgRxPrep       (double i_TS, const std::vector<uint8_t> &i_v
   miMsgStatMajNo >>= 4;
   miMsgStatMajNo  &= 0x00000007U;
   miMsgStatMajStr = theTrMsg->MsgMiStatGet((TrMsg::eStatType)miMsgStatMajNo);
-  fprintf(stdout, "0x%02X  %s\n", (miMsgStatMajNo + 8) * 16, miMsgStatMajStr);
 
   switch (i_vbMsg[0]) {
     case 0xF0: if(modeIgnSysEx) { qWarning() << theTrMsg->MsgMiMetaGet(TrMsg::DEM_RTM_FLT_FAIL); return; } break;  // SysEx

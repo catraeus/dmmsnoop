@@ -60,7 +60,7 @@ private:
        QVwMsg         theQVwMsg;
        QVwErr         theQVwErr;
 
-       int            miMsgLen;
+       uint           miMsgLen;
        uint8_t        miStat;
        uint           miStatBase;
        QString        strMiData;

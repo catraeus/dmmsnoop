@@ -74,46 +74,46 @@ char   *MsgMiStatGet(eStatType i_theType)  { return msgMiStat[i_theType]; }
 //==================================================================================================
 //==== The English stuff
   tStrAry = msgMiStatPile[DEL_ENGLISH];
-  tStrAry[DES_NOTE_OFF]    = (char *)"Note Off";
-  tStrAry[DES_NOTE_ON]     = (char *)"Note On";
-  tStrAry[DES_POLY_PRES]   = (char *)"Poly Pressure";
-  tStrAry[DES_CC]          = (char *)"Channel Control";
-  tStrAry[DES_PROG_CHNG]   = (char *)"Program Change";
-  tStrAry[DES_CHAN_PRES]   = (char *)"Channel Pressure";
+  tStrAry[DES_NOTE_OFF]    = (char *)"Nt Off";
+  tStrAry[DES_NOTE_ON]     = (char *)"Nt On";
+  tStrAry[DES_POLY_PRES]   = (char *)"Poly Pres";
+  tStrAry[DES_CC]          = (char *)"CC";
+  tStrAry[DES_PROG_CHNG]   = (char *)"Prog";
+  tStrAry[DES_CHAN_PRES]   = (char *)"Chan Pres";
   tStrAry[DES_PITCH_BEND]  = (char *)"Pitch Bend";
   tStrAry[DES_SYSTEM]      = (char *)"System";
 
 //==================================================================================================
 //==== Les trucs francais
   tStrAry = msgMiStatPile[DEL_FRANCAIS];
-  tStrAry[DES_NOTE_OFF]    = (char *)"Note Off";
-  tStrAry[DES_NOTE_ON]     = (char *)"Note On";
-  tStrAry[DES_POLY_PRES]   = (char *)"Poly Pressure";
-  tStrAry[DES_CC]          = (char *)"Channel Control";
-  tStrAry[DES_PROG_CHNG]   = (char *)"Program Change";
-  tStrAry[DES_CHAN_PRES]   = (char *)"Channel Pressure";
+  tStrAry[DES_NOTE_OFF]    = (char *)"Nt Off";
+  tStrAry[DES_NOTE_ON]     = (char *)"Nt On";
+  tStrAry[DES_POLY_PRES]   = (char *)"Poly Pres";
+  tStrAry[DES_CC]          = (char *)"CC";
+  tStrAry[DES_PROG_CHNG]   = (char *)"Prog";
+  tStrAry[DES_CHAN_PRES]   = (char *)"Chan Pres";
   tStrAry[DES_PITCH_BEND]  = (char *)"Pitch Bend";
   tStrAry[DES_SYSTEM]      = (char *)"System";
 //==================================================================================================
 //==== Das deutsche zeug
   tStrAry = msgMiStatPile[DEL_DEUTSCH];
-  tStrAry[DES_NOTE_OFF]    = (char *)"Note Off";
-  tStrAry[DES_NOTE_ON]     = (char *)"Note On";
-  tStrAry[DES_POLY_PRES]   = (char *)"Poly Pressure";
-  tStrAry[DES_CC]          = (char *)"Channel Control";
-  tStrAry[DES_PROG_CHNG]   = (char *)"Program Change";
-  tStrAry[DES_CHAN_PRES]   = (char *)"Channel Pressure";
+  tStrAry[DES_NOTE_OFF]    = (char *)"Nt Off";
+  tStrAry[DES_NOTE_ON]     = (char *)"Nt On";
+  tStrAry[DES_POLY_PRES]   = (char *)"Poly Pres";
+  tStrAry[DES_CC]          = (char *)"CC";
+  tStrAry[DES_PROG_CHNG]   = (char *)"Prog";
+  tStrAry[DES_CHAN_PRES]   = (char *)"Chan Pres";
   tStrAry[DES_PITCH_BEND]  = (char *)"Pitch Bend";
   tStrAry[DES_SYSTEM]      = (char *)"System";
 //==================================================================================================
 //==== Las cosas españolas
   tStrAry = msgMiStatPile[DEL_ESPANOL];
-  tStrAry[DES_NOTE_OFF]    = (char *)"Note Off";
-  tStrAry[DES_NOTE_ON]     = (char *)"Note On";
-  tStrAry[DES_POLY_PRES]   = (char *)"Poly Pressure";
-  tStrAry[DES_CC]          = (char *)"Channel Control";
-  tStrAry[DES_PROG_CHNG]   = (char *)"Program Change";
-  tStrAry[DES_CHAN_PRES]   = (char *)"Channel Pressure";
+  tStrAry[DES_NOTE_OFF]    = (char *)"Nt Off";
+  tStrAry[DES_NOTE_ON]     = (char *)"Nt On";
+  tStrAry[DES_POLY_PRES]   = (char *)"Poly Pres";
+  tStrAry[DES_CC]          = (char *)"CC";
+  tStrAry[DES_PROG_CHNG]   = (char *)"Prog";
+  tStrAry[DES_CHAN_PRES]   = (char *)"Chan Pres";
   tStrAry[DES_PITCH_BEND]  = (char *)"Pitch Bend";
   tStrAry[DES_SYSTEM]      = (char *)"System";
 

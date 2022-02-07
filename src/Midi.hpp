@@ -40,10 +40,11 @@ class Midi: public QObject {
       char raw  [64] ; // ALL normal MIDI messages are 1, 2 or 3 bytes.  This will put out nn nnn nnn as hex dec dec
       char stat [32] ; // If I can't make a reasonable human message in 32 characters, then something is wrong.
       char ch   [ 4] ; // There are at most 16 channels possible printed as decimal
+      char note [ 8] ; // two decimal key num, space, 8va, Note, mod
       char vel  [ 4] ; // for notes, controls and pressures.  These are 0 to 127 and will be printed decimal.
       char cc   [ 4] ; // There are only 128 channels possible.  Print decimal.  FIXME But, there are LSB/MSB channel pairs to figure.
       char prog [ 4] ; // 128 programs possible.
-      char bend [ 4] ; // Is a Speshul uint16_t
+      char bend [16] ; // Is a Speshul uint16_t
       char sys  [32] ; // Same sentiment as stat above
       char err  [32] ; // Likewise
     };
@@ -61,7 +62,9 @@ class Midi: public QObject {
     void      Parse(uint i_len, uint *i_bytes);
     sMsgSpec            *theMS;
   private:
-      void CheckErrors(uint *i_bytes); // Also distributes Status, Sys but not Channel, Velocity etc.
+      void CheckErrors    (uint *i_bytes); // Also distributes Status, Sys but not Channel, Velocity etc.
+      void ParseController(uint *i_bytes);
+      void ParseSystem    (uint *i_bytes);
   public:
   private:
     TrMsg               *theTrMsg;

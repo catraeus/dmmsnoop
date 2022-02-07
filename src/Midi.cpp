@@ -22,13 +22,6 @@
 
 #include "Midi.hpp"
 
-#if 0
-#define F_PRINTF fprintf
-#define F_FLUSH  fflush
-#else
-#define F_PRINTF (void)
-#define F_FLUSH  (void)
-#endif
 
 const ullong Midi::lenForStat[] = {3,    3, 3, 3, 2, 2, 3, 0};
 const ullong Midi::lenForSys [] = {1024, 2, 3, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1};
@@ -42,6 +35,7 @@ Midi::~Midi(){}
 
 void Midi::Parse(uint i_len, uint *i_bytes) {
 
+
   valid = false;
   len = i_len;
   theMS->TS[0]   = '\0';
@@ -49,18 +43,30 @@ void Midi::Parse(uint i_len, uint *i_bytes) {
   theMS->raw[0]  = '\0';
   theMS->stat[0] = '\0';
   theMS->ch[0]   = '\0';
+  theMS->note[0] = '\0';
   theMS->vel[0]  = '\0';
   theMS->cc[0]   = '\0';
   theMS->prog[0] = '\0';
   theMS->bend[0] = '\0';
   theMS->sys[0]  = '\0';
+  theMS->err[0]  = '\0';
   strcpy(theMS->err, theTrMsg->MsgMiMetaGet(TrMsg::DEM_NONE));
 
   CheckErrors(i_bytes);
+  //So it is either:
+  //    invalid, go home and print as best as possible.
+  //    A SysEx that is well formed, likewise go home.
+  //    Needs the rest of the standard stuff filled in.
+  //But we know the following is already valid
+  //    raw
+  //    stat
+  //    sys
+  //    len
   if(!valid) return;
   if(!((bStatBase == TrMsg::DES_SYSTEM) && (bStatSub == TrMsg::DEY_SYSEX))) { // We can get on with it
+    if(bStatBase < TrMsg::DES_SYSTEM)    ParseController(i_bytes);
+    else                                 ParseSystem    (i_bytes);
   }
-  F_PRINTF(stdout, "good so far.\n"); F_FLUSH(stdout);
   return;
 }
 void Midi::CheckErrors(uint *i_bytes) {
@@ -70,7 +76,7 @@ void Midi::CheckErrors(uint *i_bytes) {
 //---- Zero Length
   if(len == 0) {
     strcpy(theMS->err, theTrMsg->MsgMiMetaGet(TrMsg::DEM_ZRO_LEN));
-    F_PRINTF(stdout, "ErrChk --   %s\n", theMS->err); F_FLUSH(stdout);
+  //fprintf(stdout, "ErrChk --   %s\n", theMS->err); fflush(stdout);
     valid = false;
     return;
   }
@@ -80,7 +86,7 @@ void Midi::CheckErrors(uint *i_bytes) {
 //---- Status has MSB marker
   if(bStat < 0x80U) { // FIXME no protection against blobs (giant messages.)
     strcpy(theMS->err, theTrMsg->MsgMiMetaGet(TrMsg::DEM_STAT_LOW));
-    F_PRINTF(stdout, "ErrChk --   %s  --  %s\n", theMS->err, theMS->raw); F_FLUSH(stdout);
+  //fprintf(stdout, "ErrChk --   %s  --  %s\n", theMS->err, theMS->raw); fflush(stdout);
     valid = false;
     return;
   }
@@ -90,7 +96,7 @@ void Midi::CheckErrors(uint *i_bytes) {
 //---- Oops, Status IS SysEx End
   if(bStat == MCC_SYSEX_END) {
     strcpy(theMS->err, theTrMsg->MsgMiMetaGet(TrMsg::DEM_SYSEND_START));
-    F_PRINTF(stdout, "ErrChk --   %s  --  %s::%s  --  %s\n", theMS->err, theMS->stat, theMS->sys, theMS->raw); F_FLUSH(stdout);
+  //fprintf(stdout, "ErrChk --   %s  --  %s::%s  --  %s\n", theMS->err, theMS->stat, theMS->sys, theMS->raw); fflush(stdout);
     valid = false;
     return;
   }
@@ -105,19 +111,19 @@ void Midi::CheckErrors(uint *i_bytes) {
     lenSpec = lenForStat[bStatBase];
   }
 //---- Dispatch with SysEx, good or bad.
-  //F_PRINTF(stdout, "DEBUG: bStat-%02X-\n", bStat); F_FLUSH(stdout);
+  //fprintf(stdout, "DEBUG: bStat-%02X-\n", bStat); fflush(stdout);
   if(bStat == MCC_SYSEX) {
     //---- Too short
     if((len < MCC_SYSEX_MIN) || (len > lenForSys[bStatSub])) {
       strcpy(theMS->err, theTrMsg->MsgMiMetaGet(TrMsg::DEM_LEN_SYS));
-      F_PRINTF(stdout, "ErrChk --   %s  --  %s::%s  --  %s\n", theMS->err, theMS->stat, theMS->sys, theMS->raw); F_FLUSH(stdout);
+    //fprintf(stdout, "ErrChk --   %s  --  %s::%s  --  %s\n", theMS->err, theMS->stat, theMS->sys, theMS->raw); fflush(stdout);
       valid = false;
       return;
     }
     //---- doesn't have an END byte at the, well ... the end
     if(i_bytes[len - 1] != MCC_SYSEX_END) {
       strcpy(theMS->err, theTrMsg->MsgMiMetaGet(TrMsg::DEM_SYSEX_TRUNC));
-      F_PRINTF(stdout, "ErrChk --   %s  --  %s  --  %s\n", theMS->err, theMS->stat, theMS->raw); F_FLUSH(stdout);
+    //fprintf(stdout, "ErrChk --   %s  --  %s  --  %s\n", theMS->err, theMS->stat, theMS->raw); fflush(stdout);
       valid = false;
       return;
     }
@@ -125,24 +131,24 @@ void Midi::CheckErrors(uint *i_bytes) {
     for(uint i=1; i<len - 1; i++) { // skip the Status byte and stop before the END byte.
       if(i_bytes[i] >= 0x80U) {
         strcpy(theMS->err, theTrMsg->MsgMiMetaGet(TrMsg::DEM_DATA_HIGH));
-        F_PRINTF(stdout, "ErrChk --   %s  --  %s::%s  --  %s\n", theMS->err, theMS->stat, theMS->sys, theMS->raw); F_FLUSH(stdout);
+      //fprintf(stdout, "ErrChk --   %s  --  %s::%s  --  %s\n", theMS->err, theMS->stat, theMS->sys, theMS->raw); fflush(stdout);
         valid = false;
         return;
       } // Good Low Byte
     }
     strcpy(theMS->err, theTrMsg->MsgMiMetaGet(TrMsg::DEM_NONE));
-    F_PRINTF(stdout, "ErrChk --   %s  --  %s::%s  --  %s\n", theMS->err, theMS->stat, theMS->sys, theMS->raw); F_FLUSH(stdout);
+  //fprintf(stdout, "ErrChk --   %s  --  %s::%s  --  %s\n", theMS->err, theMS->stat, theMS->sys, theMS->raw); fflush(stdout);
     valid = true;
     return;
   } // End of SysEx
 //---- Check for length
   if(len != lenSpec) {
-    //F_PRINTF(stdout, "DEBUG: len-%d-\n", len); F_FLUSH(stdout);
+    //fprintf(stdout, "DEBUG: len-%d-\n", len); fflush(stdout);
     if(bStatBase != TrMsg::DES_SYSTEM)
       strcpy(theMS->err, theTrMsg->MsgMiMetaGet(TrMsg::DEM_LEN_STAT));
     else
       strcpy(theMS->err, theTrMsg->MsgMiMetaGet(TrMsg::DEM_LEN_SYS));
-    F_PRINTF(stdout, "ErrChk --   %s  --  %s::%s  --  %s\n", theMS->err, theMS->stat, theMS->sys, theMS->raw); F_FLUSH(stdout);
+  //fprintf(stdout, "ErrChk --   %s  --  %s::%s  --  %s\n", theMS->err, theMS->stat, theMS->sys, theMS->raw); fflush(stdout);
     valid = false;
     return;
   } // Good Low Byte
@@ -150,7 +156,7 @@ void Midi::CheckErrors(uint *i_bytes) {
   for(uint i=1; i<len; i++) { // Don't forget to skip the Status byte.  It accidenally doesn't check if there aren't any :-)
     if(i_bytes[i] >= 0x80U) {
       strcpy(theMS->err, theTrMsg->MsgMiMetaGet(TrMsg::DEM_DATA_HIGH));
-      F_PRINTF(stdout, "ErrChk --   %s  --  %s :: %s  --  %s\n", theMS->err, theMS->stat, theMS->sys, theMS->raw); F_FLUSH(stdout);
+    //fprintf(stdout, "ErrChk --   %s  --  %s :: %s  --  %s\n", theMS->err, theMS->stat, theMS->sys, theMS->raw); fflush(stdout);
       valid = false;
       return;
     } // Good Low Byte
@@ -158,5 +164,40 @@ void Midi::CheckErrors(uint *i_bytes) {
 //---- WHOAH!  We're done.
   strcpy(theMS->err, theTrMsg->MsgMiMetaGet(TrMsg::DEM_NONE));
   valid = true;
+  return;
+}
+void Midi::ParseController(uint *i_bytes) {
+  uint bendM;
+  uint bendL;
+  int  bend;
+  bChNo = bStatSub;
+  sprintf(theMS->ch, "%d", bChNo + 1); // Everyone below System Fx has a channel
+       if((bStatBase == TrMsg::DES_NOTE_OFF) || (bStatBase == TrMsg::DES_NOTE_ON) || (bStatBase == TrMsg::DES_POLY_PRES)) {
+    sprintf(theMS->note, "%3d", i_bytes[1]);
+    sprintf(theMS->vel,  "%3d", i_bytes[2]);
+  }
+  else if( bStatBase == TrMsg::DES_CC) {
+    sprintf(theMS->cc,   "%3d", i_bytes[1] + 1);
+    sprintf(theMS->vel,  "%3d", i_bytes[2]);
+  }
+  else if( bStatBase == TrMsg::DES_PROG_CHNG) {
+    sprintf(theMS->prog, "%3d", i_bytes[1]    ); // It is so weird where MIDI does 0 based and 1 based
+  }
+  else if( bStatBase == TrMsg::DES_CHAN_PRES) {
+    sprintf(theMS->vel,  "%3d", i_bytes[1]    );
+  }
+  else if( bStatBase == TrMsg::DES_PITCH_BEND) {
+    bendM = i_bytes[2];
+    bendL = i_bytes[1];
+    bendM <<= 7;
+    bendM += bendL;
+    bend = (int)bendM;
+    bend -= 8192;
+    sprintf(theMS->bend,  "%5d", bend    );
+  }
+  return;
+}
+void Midi::ParseSystem(uint *i_bytes) {
+  (void)i_bytes;
   return;
 }

@@ -39,14 +39,20 @@ class QVwMain: public QVwDesgn {
   private:
     enum eMsgTabCols {
       MTC_TS    = 0x00000000U,
-      MTC_STAT  = 0x00000001U,
-      MTC_DATA  = 0x00000002U,
-      MTC_CHAN  = 0x00000003U,
-      MTC_NOTE  = 0x00000004U,
-      MTC_VELO  = 0x00000005U,
-      MTC_SYS   = 0x00000006U,
-      MTC_PAD   = 0x00000007U,
-      MTC_NUM   = 0x00000008U,
+      MTC_RAW   = 0x00000001U,
+      MTC_STA   = 0x00000002U,
+      MTC_STAT  = 0x00000003U,
+      MTC_DATA  = 0x00000004U,
+      MTC_CHAN  = 0x00000005U,
+      MTC_NOTE  = 0x00000006U,
+      MTC_CC    = 0x00000007U,
+      MTC_VELO  = 0x00000008U,
+      MTC_BEND  = 0x00000009U,
+      MTC_PROG  = 0x0000000AU,
+      MTC_SYS   = 0x0000000BU,
+      MTC_ERR   = 0x0000000CU,
+      MTC_PAD   = 0x0000000DU,
+      MTC_NUM   = 0x0000000EU,
       MTC_BIG   = 0xFFFFFFFFU
     };
   public:

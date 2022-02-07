@@ -310,43 +310,24 @@ void    Ctrl::MiMsgParse       (              const QByteArray &i_msg) {
   miStatBase >>= 4;
   switch (miStatBase) {
     case 0x0:
-      strMiData = tr("N  %1, V   %2"   ). arg(getMIDINoteString   (static_cast<quint8>(i_msg[1]))).  arg(static_cast<quint8>(i_msg[2]));
-      strMiStat = tr("NOff,  Ch  %1"   ). arg((miStat & (uint8_t)0x0F) + 1);
-      break;
     case 0x1:
-      strMiData = tr("N  %1, V   %2"   ). arg(getMIDINoteString   (static_cast<quint8>(i_msg[1]))).  arg(static_cast<quint8>(i_msg[2]));
-      strMiStat = tr("NOn,   Ch  %1"   ). arg((miStat & (uint8_t)0x0F) + 1);
-      break;
     case 0x2:
-      strMiData = tr("N  %1, V   %2"   ). arg(getMIDINoteString   (static_cast<quint8>(i_msg[1]))).  arg(static_cast<quint8>(i_msg[2]));
-      strMiStat = tr("PPr    Ch  %1"   ). arg((miStat & (uint8_t)0x0F) + 1);
-      break;
     case 0x3:
-      strMiData = tr("CC %1, V   %2"   ). arg(getMIDIControlString(static_cast<quint8>(i_msg[1]))).  arg(static_cast<quint8>(i_msg[2]));
-      strMiStat = tr("CC,    Ch  %1"   ). arg((miStat & (uint8_t)0x0F) + 1);
-      break;
     case 0x4:
-      strMiData = tr("Prog   No  %1"   ). arg(static_cast<quint8>(i_msg[1]));
-      strMiStat = tr("Prog,  Ch  %1"   ). arg((miStat & (uint8_t)0x0F) + 1);
-      break;
     case 0x5:
-      strMiData = tr("ChPres V   %1"   ). arg(static_cast<quint8>(i_msg[1]));
-      strMiStat = tr("ChPres Ch  %1"   ). arg((miStat & (uint8_t)0x0F) + 1);
-      break;
     case 0x6:
-      strMiData = tr("PtchWh V   %1"   ). arg((((static_cast<qint16>(i_msg[2])) << 7) | (static_cast<qint16>(i_msg[1]))) - 0x2000);
-      strMiStat = tr("PtchWh V   %1"   ). arg((miStat & (uint8_t)0x0F) + 1);
+      strMiData = tr(""   );
+      strMiStat = tr(""   );
       break;
     case 0x7: // FIXME, unload this to a whole new function.
       switch (miStat & (uint8_t)0x0F) {
         case 0x0:
-          MiMsgDatBytesStr(i_msg, tStr, lastDataIndex);
-          strMiData = tStr;
-          strMiStat = tr("System Exclusive");
+          strMiData = tr("");
+          strMiStat = tr("");
           break;
         case 0x1:
-          value = i_msg[0] & 0xf;
-          switch (i_msg[0] & 0x70) {
+          value = i_msg[1] & 0x0fU;
+          switch (i_msg[1] & 0x70U) {
             case 0x00:  strMiData = tr("Frames Low Nibble: %1"   ).arg(value);  break;
             case 0x10:  strMiData = tr("Frames High Nibble: %1"  ).arg(value);  break;
             case 0x20:  strMiData = tr("Seconds Low Nibble: %1"  ).arg(value);  break;
@@ -358,7 +339,7 @@ void    Ctrl::MiMsgParse       (              const QByteArray &i_msg) {
               switch ((value & 0x6) >> 1) {
                 case 0:                    s = tr("24 fps");                    break;
                 case 1:                    s = tr("25 fps");                    break;
-                case 2:                    s = tr("30 fps (drop-frame)");                    break;
+                case 2:                    s = tr("30 fps (drop-frame)");       break;
                 case 3:                    s = tr("30 fps");                    break;
                 default:   ;               // We shouldn't get here.
               }

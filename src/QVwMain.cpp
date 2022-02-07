@@ -38,12 +38,18 @@
     QMd_MiMsgGrid.setColumnCount(MTC_NUM);
     QMd_MiMsgGrid.setRowCount   (0);
     QMd_MiMsgGrid.setHeaderData (MTC_TS,   Qt::Horizontal,  tr("TS"       ), Qt::DisplayRole);
+    QMd_MiMsgGrid.setHeaderData (MTC_RAW,  Qt::Horizontal,  tr("Raw"      ), Qt::DisplayRole);
     QMd_MiMsgGrid.setHeaderData (MTC_STAT, Qt::Horizontal,  tr("Status"   ), Qt::DisplayRole);
+    QMd_MiMsgGrid.setHeaderData (MTC_STA,  Qt::Horizontal,  tr("Stat"     ), Qt::DisplayRole);
     QMd_MiMsgGrid.setHeaderData (MTC_DATA, Qt::Horizontal,  tr("Data"     ), Qt::DisplayRole);
     QMd_MiMsgGrid.setHeaderData (MTC_CHAN, Qt::Horizontal,  tr("Ch"       ), Qt::DisplayRole);
     QMd_MiMsgGrid.setHeaderData (MTC_NOTE, Qt::Horizontal,  tr("Note"     ), Qt::DisplayRole);
+    QMd_MiMsgGrid.setHeaderData (MTC_CC,   Qt::Horizontal,  tr("CC"       ), Qt::DisplayRole);
     QMd_MiMsgGrid.setHeaderData (MTC_VELO, Qt::Horizontal,  tr("Vel"      ), Qt::DisplayRole);
+    QMd_MiMsgGrid.setHeaderData (MTC_BEND, Qt::Horizontal,  tr("Bend"     ), Qt::DisplayRole);
+    QMd_MiMsgGrid.setHeaderData (MTC_PROG, Qt::Horizontal,  tr("Prog"     ), Qt::DisplayRole);
     QMd_MiMsgGrid.setHeaderData (MTC_SYS,  Qt::Horizontal,  tr("Sys"      ), Qt::DisplayRole);
+    QMd_MiMsgGrid.setHeaderData (MTC_ERR,  Qt::Horizontal,  tr("Error"    ), Qt::DisplayRole);
     QMd_MiMsgGrid.setHeaderData (MTC_PAD,  Qt::Horizontal,  tr(""         ), Qt::DisplayRole);
     QTb_MiMsgGrid = getChild<QTableView>(QWd_root, "QTb_MiMsgGrid");
     QTb_MiMsgGrid->setItemDelegate(&QDg_MiMsgGrid); // The delegate to pick up after the visitors
@@ -51,12 +57,18 @@
 
   // OK, so the TableView has to actually exist first
     QTb_MiMsgGrid->setColumnWidth(MTC_TS,   108);
-    QTb_MiMsgGrid->setColumnWidth(MTC_STAT, 120);
+    QTb_MiMsgGrid->setColumnWidth(MTC_RAW,  220);
+    QTb_MiMsgGrid->setColumnWidth(MTC_STA,  220);
+    QTb_MiMsgGrid->setColumnWidth(MTC_STAT, 160);
     QTb_MiMsgGrid->setColumnWidth(MTC_DATA, 180);
-    QTb_MiMsgGrid->setColumnWidth(MTC_CHAN,  64);
-    QTb_MiMsgGrid->setColumnWidth(MTC_NOTE,  64);
-    QTb_MiMsgGrid->setColumnWidth(MTC_VELO,  64);
-    QTb_MiMsgGrid->setColumnWidth(MTC_SYS,   64);
+    QTb_MiMsgGrid->setColumnWidth(MTC_CHAN,  32);
+    QTb_MiMsgGrid->setColumnWidth(MTC_NOTE,  40);
+    QTb_MiMsgGrid->setColumnWidth(MTC_CC,    32);
+    QTb_MiMsgGrid->setColumnWidth(MTC_VELO,  40);
+    QTb_MiMsgGrid->setColumnWidth(MTC_BEND,  72);
+    QTb_MiMsgGrid->setColumnWidth(MTC_PROG,  40);
+    QTb_MiMsgGrid->setColumnWidth(MTC_SYS,  120);
+    QTb_MiMsgGrid->setColumnWidth(MTC_ERR,  120);
     QTb_MiMsgGrid->setColumnWidth(MTC_PAD,   64);
     TZ = 0;
 }
@@ -68,10 +80,19 @@ int  QVwMain::MsgAdd(quint64 i_TS, const QString &i_miStatDesc, const QString &i
   quint64           bla;
 
   Qt::AlignmentFlag alignment;
-  char  i_miChanDesc[] = "Ch";
-  char  i_miNoteDesc[] = "N";
-  char  i_miNoteVel[]  = "V";
-  char  i_miSysCmd[]   = "Sys";
+  //    TS
+  char  i_miRaw     [64];  strcpy(i_miRaw,      i_tMidi->theMS->raw);
+  char  i_miSta     [64];  strcpy(i_miSta,      i_tMidi->theMS->stat);
+  //    i_miStatDesc
+  //    i_miDataDesc
+  char  i_miChanDesc[ 4];  strcpy(i_miChanDesc, i_tMidi->theMS->ch   );
+  char  i_miNoteDesc[ 4];  strcpy(i_miNoteDesc, i_tMidi->theMS->note );
+  char  i_miChChDesc[ 4];  strcpy(i_miChChDesc, i_tMidi->theMS->cc   );
+  char  i_miNoteVel [ 4];  strcpy(i_miNoteVel,  i_tMidi->theMS->vel  );
+  char  i_miBend    [16];  strcpy(i_miBend,     i_tMidi->theMS->bend );
+  char  i_miProg    [ 4];  strcpy(i_miProg,     i_tMidi->theMS->prog );
+  char  i_miSysCmd  [32];  strcpy(i_miSysCmd,   i_tMidi->theMS->sys  );
+  char  i_miErr     [32];  strcpy(i_miErr,      i_tMidi->theMS->err  );
 
   count = QMd_MiMsgGrid.rowCount();
   QMd_MiMsgGrid.insertRow(count); // WARNING There is no check for insertion, insertRow returns a bool
@@ -80,13 +101,19 @@ int  QVwMain::MsgAdd(quint64 i_TS, const QString &i_miStatDesc, const QString &i
   bla = i_TS - TZ;
   TimeUsToStrSec(bla, i_tMidi->theMS->TS);
 
-  setModelData(count, MTC_TS,    i_tMidi->theMS->TS    );  setModelData(count, MTC_TS,   alignment,   Qt::TextAlignmentRole);
-  setModelData(count, MTC_STAT,  i_miStatDesc   );  setModelData(count, MTC_STAT, alignment,   Qt::TextAlignmentRole);
-  setModelData(count, MTC_DATA,  i_miDataDesc   );  setModelData(count, MTC_DATA, alignment,   Qt::TextAlignmentRole);
-  setModelData(count, MTC_CHAN,  i_miChanDesc   );  setModelData(count, MTC_CHAN, alignment,   Qt::TextAlignmentRole);
-  setModelData(count, MTC_NOTE,  i_miNoteDesc   );  setModelData(count, MTC_NOTE, alignment,   Qt::TextAlignmentRole);
-  setModelData(count, MTC_VELO,  i_miNoteVel    );  setModelData(count, MTC_VELO, alignment,   Qt::TextAlignmentRole);
-  setModelData(count, MTC_SYS,   i_miSysCmd     );  setModelData(count, MTC_SYS,  alignment,   Qt::TextAlignmentRole);
+  setModelData(count, MTC_TS,    i_tMidi->theMS->TS );  setModelData(count, MTC_TS,   alignment,   Qt::TextAlignmentRole);
+  setModelData(count, MTC_RAW,   i_miRaw            );  setModelData(count, MTC_RAW,  alignment,   Qt::TextAlignmentRole);
+  setModelData(count, MTC_STA,   i_miSta            );  setModelData(count, MTC_STA,  alignment,   Qt::TextAlignmentRole);
+  setModelData(count, MTC_STAT,  i_miStatDesc       );  setModelData(count, MTC_STAT, alignment,   Qt::TextAlignmentRole);
+  setModelData(count, MTC_DATA,  i_miDataDesc       );  setModelData(count, MTC_DATA, alignment,   Qt::TextAlignmentRole);
+  setModelData(count, MTC_CHAN,  i_miChanDesc       );  setModelData(count, MTC_CHAN, alignment,   Qt::TextAlignmentRole);
+  setModelData(count, MTC_NOTE,  i_miNoteDesc       );  setModelData(count, MTC_NOTE, alignment,   Qt::TextAlignmentRole);
+  setModelData(count, MTC_CC,    i_miChChDesc       );  setModelData(count, MTC_CC,   alignment,   Qt::TextAlignmentRole);
+  setModelData(count, MTC_VELO,  i_miNoteVel        );  setModelData(count, MTC_VELO, alignment,   Qt::TextAlignmentRole);
+  setModelData(count, MTC_BEND,  i_miBend           );  setModelData(count, MTC_BEND, alignment,   Qt::TextAlignmentRole);
+  setModelData(count, MTC_PROG,  i_miProg           );  setModelData(count, MTC_PROG, alignment,   Qt::TextAlignmentRole);
+  setModelData(count, MTC_SYS,   i_miSysCmd         );  setModelData(count, MTC_SYS,  alignment,   Qt::TextAlignmentRole);
+  setModelData(count, MTC_ERR,   i_miErr            );  setModelData(count, MTC_ERR,  alignment,   Qt::TextAlignmentRole);
   if(!i_val)
     setModelData(count, MTC_STAT,  QIcon(":/dmmsnoop/images/16x16/error.png"), Qt::DecorationRole);
   QTb_MiMsgGrid->resizeRowToContents(count);

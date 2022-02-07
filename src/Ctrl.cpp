@@ -222,7 +222,7 @@ void    Ctrl::MiMsgParse       (              const QByteArray &i_msg) {
 //========
   miMsgLen = i_msg.count();
   for(uint i=0; i<miMsgLen; i++)
-    miBytes[i] = (uint)i_msg[i];
+    miBytes[i] = ((uint)i_msg[i] & 0x000000FFU); // That freq king QByteArray is signed and sign extends on coersion!
   theMidi->Parse(miMsgLen, miBytes);
   if(miMsgLen == 0) {  // WEIRD Make sure we have something ... anything.
     strMiData = "";

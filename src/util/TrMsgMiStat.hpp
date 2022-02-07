@@ -43,7 +43,7 @@
       DES_PROG_CHNG   = 0x00000004U,
       DES_CHAN_PRES   = 0x00000005U,
       DES_PITCH_BEND  = 0x00000006U,
-      DES_SYS_EX      = 0x00000007U,
+      DES_SYSTEM      = 0x00000007U,
                                     // No need to size it, MIDI spec's 8 of these, we'll mask to enforce count
       DES_STAT_BIG    = 0xFFFFFFFFU // This will force it to be a uint32_t
     };
@@ -81,7 +81,7 @@ char   *MsgMiStatGet(eStatType i_theType)  { return msgMiStat[i_theType]; }
   tStrAry[DES_PROG_CHNG]   = (char *)"Program Change";
   tStrAry[DES_CHAN_PRES]   = (char *)"Channel Pressure";
   tStrAry[DES_PITCH_BEND]  = (char *)"Pitch Bend";
-  tStrAry[DES_SYS_EX]      = (char *)"SysEx";
+  tStrAry[DES_SYSTEM]      = (char *)"System";
 
 //==================================================================================================
 //==== Les trucs francais
@@ -93,7 +93,7 @@ char   *MsgMiStatGet(eStatType i_theType)  { return msgMiStat[i_theType]; }
   tStrAry[DES_PROG_CHNG]   = (char *)"Program Change";
   tStrAry[DES_CHAN_PRES]   = (char *)"Channel Pressure";
   tStrAry[DES_PITCH_BEND]  = (char *)"Pitch Bend";
-  tStrAry[DES_SYS_EX]      = (char *)"SysEx";
+  tStrAry[DES_SYSTEM]      = (char *)"System";
 //==================================================================================================
 //==== Das deutsche zeug
   tStrAry = msgMiStatPile[DEL_DEUTSCH];
@@ -104,7 +104,7 @@ char   *MsgMiStatGet(eStatType i_theType)  { return msgMiStat[i_theType]; }
   tStrAry[DES_PROG_CHNG]   = (char *)"Program Change";
   tStrAry[DES_CHAN_PRES]   = (char *)"Channel Pressure";
   tStrAry[DES_PITCH_BEND]  = (char *)"Pitch Bend";
-  tStrAry[DES_SYS_EX]      = (char *)"SysEx";
+  tStrAry[DES_SYSTEM]      = (char *)"System";
 //==================================================================================================
 //==== Las cosas españolas
   tStrAry = msgMiStatPile[DEL_ESPANOL];
@@ -115,6 +115,6 @@ char   *MsgMiStatGet(eStatType i_theType)  { return msgMiStat[i_theType]; }
   tStrAry[DES_PROG_CHNG]   = (char *)"Program Change";
   tStrAry[DES_CHAN_PRES]   = (char *)"Channel Pressure";
   tStrAry[DES_PITCH_BEND]  = (char *)"Pitch Bend";
-  tStrAry[DES_SYS_EX]      = (char *)"SysEx";
+  tStrAry[DES_SYSTEM]      = (char *)"System";
 
 #endif

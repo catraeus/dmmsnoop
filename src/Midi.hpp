@@ -37,7 +37,7 @@ class Midi: public QObject {
     struct sMsgSpec { // all are null-terminated ASCII c strings.  Whatever the calc is, I'll take it to a next 2^k
       char TS   [16] ; // hh:mm:ss.sss or ssssss.sss (one day is 86400 sec so I figure 999999.999 sec should cover most sessions.)
       char len  [ 4] ; // If we get a SysEx infinitely long blob, I'll just truncate and fake it.
-      char raw  [16] ; // ALL normal MIDI messages are 1, 2 or 3 bytes.  This will put out nn nnn nnn as hex dec dec
+      char raw  [64] ; // ALL normal MIDI messages are 1, 2 or 3 bytes.  This will put out nn nnn nnn as hex dec dec
       char stat [32] ; // If I can't make a reasonable human message in 32 characters, then something is wrong.
       char ch   [ 4] ; // There are at most 16 channels possible printed as decimal
       char vel  [ 4] ; // for notes, controls and pressures.  These are 0 to 127 and will be printed decimal.
@@ -47,17 +47,34 @@ class Midi: public QObject {
       char sys  [32] ; // Same sentiment as stat above
       char err  [32] ; // Likewise
     };
+  private:
+    enum eConst {
+      MCC_SYSEX_MIN = 0x00000003U, // The smallest possible.  Status, 1 Mfr ID and SysEx-End
+      MCC_SYSEX     = 0x000000F0U, // MAGICK to make the start detect faster.
+      MCC_SYSEX_END = 0x000000F7U, // MAGICK to make the end detect faster.
+      MCC_NUM       = 0x00000001U,
+      MCC_BIG       = 0xFFFFFFFFU
+    };
+  public:
               Midi();
              ~Midi();
-    void      Parse(uint i_N, uint *i_bytes);
+    void      Parse(uint i_len, uint *i_bytes);
     sMsgSpec            *theMS;
+  private:
+      void CheckErrors(uint *i_bytes); // Also distributes Status, Sys but not Channel, Velocity etc.
+  public:
   private:
     TrMsg               *theTrMsg;
     static const ullong  lenForStat[];
     static const ullong  lenForSys[];
+    uint                 len;
     uint                 bStat;
     uint                 bStatBase;
     uint                 bStatSub;
+    uint                 bChNo;
+    uint                 bNoteNo;
+    uint                 vVelNo;
+    bool                 valid;
 };
 
 #endif

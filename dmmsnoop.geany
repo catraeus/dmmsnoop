@@ -37,10 +37,13 @@ FILE_NAME_4=2117;C++;0;EUTF-8;0;1;0;%2Fway%2Fdev%2FSW%2Fforeign%2Fmusic%2Fdmmsno
 FILE_NAME_5=3987;C++;0;EUTF-8;0;1;0;%2Fway%2Fdev%2FSW%2Fforeign%2Fmusic%2Fdmmsnoop%2Fsrc%2FQVwMain.cpp;0;2
 FILE_NAME_6=5157;XML;0;EUTF-8;0;1;0;%2Fway%2Fdev%2FSW%2Fforeign%2Fmusic%2Fdmmsnoop%2Fsrc%2FQVwMain.ui;0;2
 FILE_NAME_7=3832;C++;0;EUTF-8;0;1;0;%2Fway%2Fdev%2FSW%2Fforeign%2Fmusic%2Fdmmsnoop%2Fsrc%2FDrvIf.hpp;0;2
-FILE_NAME_8=4347;C++;0;EUTF-8;0;1;0;%2Fway%2Fdev%2FSW%2Fforeign%2Fmusic%2Fdmmsnoop%2Fsrc%2FDrvIf.cpp;0;2
-FILE_NAME_9=2523;C++;0;EUTF-8;0;1;0;%2Fway%2Fdev%2FSW%2Fforeign%2Fmusic%2Fdmmsnoop%2Fsrc%2FMidi.hpp;0;2
-FILE_NAME_10=2454;C++;0;EUTF-8;0;1;0;%2Fway%2Fdev%2FSW%2Fforeign%2Fmusic%2Fdmmsnoop%2Fsrc%2FMidi.cpp;0;2
+FILE_NAME_8=6132;C++;0;EUTF-8;0;1;0;%2Fway%2Fdev%2FSW%2Fforeign%2Fmusic%2Fdmmsnoop%2Fsrc%2FDrvIf.cpp;0;2
+FILE_NAME_9=2318;C++;0;EUTF-8;0;1;0;%2Fway%2Fdev%2FSW%2Fforeign%2Fmusic%2Fdmmsnoop%2Fsrc%2FMidi.hpp;0;2
+FILE_NAME_10=4649;C++;0;EUTF-8;0;1;0;%2Fway%2Fdev%2FSW%2Fforeign%2Fmusic%2Fdmmsnoop%2Fsrc%2FMidi.cpp;0;2
 FILE_NAME_11=12840;C++;0;EUTF-8;0;1;0;%2Fway%2Fdev%2FSW%2Fforeign%2Fmusic%2Fdmmsnoop%2Fsrc%2Futil%2FDmmStr.cpp;0;2
+FILE_NAME_12=1687;C++;0;EUTF-8;0;1;0;%2Fway%2Fdev%2FSW%2Fforeign%2Fmusic%2Fdmmsnoop%2Fsrc%2Futil%2FTrMsgMiSys.hpp;0;2
+FILE_NAME_13=4460;C++;0;EUTF-8;0;1;0;%2Fway%2Fdev%2FSW%2Fforeign%2Fmusic%2Fdmmsnoop%2Fsrc%2Futil%2FTrMsgMiMeta.hpp;0;2
+FILE_NAME_14=1980;C++;0;EUTF-8;0;1;0;%2Fway%2Fdev%2FSW%2Fforeign%2Fmusic%2Fdmmsnoop%2Fsrc%2Futil%2FTrMsgMiStat.hpp;0;2
 
 [VTE]
 last_dir=/home/duncang

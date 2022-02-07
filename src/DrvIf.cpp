@@ -114,16 +114,16 @@ void    DrvIf::DoMiMsgRxPrep       (double i_TS, const std::vector<uint8_t> &i_v
     case 0xF1: if(modeIgnMiTim) { qWarning() << theTrMsg->MsgMiMetaGet(TrMsg::DEM_RTM_FLT_FAIL); return; } break;  // TimeCode Qtr Frm
     case 0xF2: if(modeIgnMiTim) { qWarning() << theTrMsg->MsgMiMetaGet(TrMsg::DEM_RTM_FLT_FAIL); return; } break;  // Song Position Pointer
     case 0xF3: if(modeIgnMiTim) { qWarning() << theTrMsg->MsgMiMetaGet(TrMsg::DEM_RTM_FLT_FAIL); return; } break;  // Song Select
-    case 0xF4:                  { qWarning() << theTrMsg->MsgMiMetaGet(TrMsg::DEM_STAT_UNDEF  ); return; } break;  // Undefined
-    case 0xF5:                  { qWarning() << theTrMsg->MsgMiMetaGet(TrMsg::DEM_STAT_UNDEF  ); return; } break;  // Undefined
+    case 0xF4:                  { qWarning() << theTrMsg->MsgMiSysGet (TrMsg::DEY_UNDEF_4     ); return; } break;  // Undefined
+    case 0xF5:                  { qWarning() << theTrMsg->MsgMiSysGet (TrMsg::DEY_UNDEF_5     ); return; } break;  // Undefined
     case 0xF6: if(modeIgnMiTim) { qWarning() << theTrMsg->MsgMiMetaGet(TrMsg::DEM_RTM_FLT_FAIL); return; } break;  // Tune Request
     case 0xF7: if(modeIgnSysEx) { qWarning() << theTrMsg->MsgMiMetaGet(TrMsg::DEM_RTM_FLT_FAIL); return; } break;  // SysEx End
     case 0xF8: if(modeIgnMiTim) { qWarning() << theTrMsg->MsgMiMetaGet(TrMsg::DEM_RTM_FLT_FAIL); return; } break;  // Time Clock
-    case 0xF9:                  { qWarning() << theTrMsg->MsgMiMetaGet(TrMsg::DEM_STAT_UNDEF  ); return; } break;  // Undefined
+    case 0xF9:                  { qWarning() << theTrMsg->MsgMiSysGet (TrMsg::DEY_UNDEF_9     ); return; } break;  // Undefined
     case 0xFA: if(modeIgnMiTim) { qWarning() << theTrMsg->MsgMiMetaGet(TrMsg::DEM_RTM_FLT_FAIL); return; } break;  // Song Start
     case 0xFB: if(modeIgnMiTim) { qWarning() << theTrMsg->MsgMiMetaGet(TrMsg::DEM_RTM_FLT_FAIL); return; } break;  // Song Continue
     case 0xFC: if(modeIgnMiTim) { qWarning() << theTrMsg->MsgMiMetaGet(TrMsg::DEM_RTM_FLT_FAIL); return; } break;  // Song Stop
-    case 0xFD:                  { qWarning() << theTrMsg->MsgMiMetaGet(TrMsg::DEM_STAT_UNDEF  ); return; } break;  // Undefined
+    case 0xFD:                  { qWarning() << theTrMsg->MsgMiSysGet (TrMsg::DEY_UNDEF_D     ); return; } break;  // Undefined
     case 0xFE: if(modeIgnActSn) { qWarning() << theTrMsg->MsgMiMetaGet(TrMsg::DEM_RTM_FLT_FAIL); return; } break;  // Active Sense
     case 0xFF:                                                                                             break;  // Reset
   }

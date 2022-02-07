@@ -38,11 +38,14 @@
     enum eMetaType {
       DEM_ZRO_LEN      = 0x00000000U, // Weird man! The lower layer gave us an empty byte array.
       DEM_LEN_STAT     = 0x00000001U, // Given the Status, the number of bytes the lower layer gave us is wrong.
-      DEM_SYSEX_TRUNC  = 0x00000002U, // The message after the SysEx pile of bytes wasn't 0xF7
-      DEM_STAT_UNDEF   = 0x00000003U, // Stat was one of the Undefined values, returning raw bytes in the message.
-      DEM_STAT_LOW     = 0x00000004U, // Weirder man!  The first byte sent up from the lower layer was a non-Status byte.
-      DEM_RTM_FLT_FAIL = 0x00000005U, // RtMidi was command to filter, but it came through anyway.
-      DEM_META_NUM     = 0x00000006U, // To let is size things at new char *xxx[] time.
+      DEM_LEN_SYS      = 0x00000002U, // Given the Status, the number of bytes the lower layer gave us is wrong.
+      DEM_SYSEX_TRUNC  = 0x00000003U, // The message after the SysEx pile of bytes wasn't 0xF7
+      DEM_SYSEND_START = 0x00000004U, // The message came up with just SysEx End.  Pretty goofy.
+      DEM_STAT_LOW     = 0x00000005U, // Weirder man!  The first byte sent up from the lower layer was a non-Status byte.
+      DEM_DATA_HIGH    = 0x00000006U, // The bytes after the Status byte have at least 1 greater than 0x7F
+      DEM_RTM_FLT_FAIL = 0x00000007U, // RtMidi was command to filter, but it came through anyway.
+      DEM_NONE         = 0x00000008U, // No Trouble Found.
+      DEM_META_NUM     = 0x00000009U, // To let is size things at new char *xxx[] time.
       DEM_META_BIG     = 0xFFFFFFFFU  // To force it to type uint32_t
     };
 char   *MsgMiMetaGet(eMetaType i_theType)  { return msgMiMeta[i_theType]; }
@@ -71,40 +74,52 @@ char   *MsgMiMetaGet(eMetaType i_theType)  { return msgMiMeta[i_theType]; }
 //==== The English stuff
   tStrAry = msgMiMetaPile[DEL_ENGLISH];
   tStrAry[DEM_ZRO_LEN]         = (char *)"Zero-Length";
-  tStrAry[DEM_LEN_STAT]        = (char *)"Byte Count";
-  tStrAry[DEM_SYSEX_TRUNC]     = (char *)"SysEx stream didn't have SysEx End next";
-  tStrAry[DEM_STAT_UNDEF]      = (char *)"Undefined Status Byte";
+  tStrAry[DEM_LEN_STAT]        = (char *)"N bytes Stat";
+  tStrAry[DEM_LEN_SYS]         = (char *)"N bytes Sys";
+  tStrAry[DEM_SYSEX_TRUNC]     = (char *)"SysEx no End";
+  tStrAry[DEM_SYSEND_START]    = (char *)"End without SysEx";
   tStrAry[DEM_STAT_LOW]        = (char *)"Status Byte < 0x80";
-  tStrAry[DEM_RTM_FLT_FAIL]    = (char *)"RtMidi Failed to Filter a message";
+  tStrAry[DEM_DATA_HIGH]       = (char *)"Data Byte >= 0x80";
+  tStrAry[DEM_RTM_FLT_FAIL]    = (char *)"RtMidi didn't Filter";
+  tStrAry[DEM_NONE]            = (char *)"No Trouble";
 
 //==================================================================================================
 //==== Les trucs francais
   tStrAry = msgMiMetaPile[DEL_FRANCAIS];
-  tStrAry[DEM_ZRO_LEN]         = (char *)"Message nulle";
-  tStrAry[DEM_LEN_STAT]        = (char *)"Le nombre d'octets est incorrect pour le Status";
-  tStrAry[DEM_SYSEX_TRUNC]     = (char *)"Le flux SysEx n'avait pas de SysEx End ensuite";
-  tStrAry[DEM_STAT_UNDEF]      = (char *)"Octet Status non défini ";
+  tStrAry[DEM_ZRO_LEN]         = (char *)"Longueur zero";
+  tStrAry[DEM_LEN_STAT]        = (char *)"N octets Stat";
+  tStrAry[DEM_LEN_SYS]         = (char *)"N octets Sys";
+  tStrAry[DEM_SYSEX_TRUNC]     = (char *)"SysEx sans End";
+  tStrAry[DEM_SYSEND_START]    = (char *)"End sans SysEx";
   tStrAry[DEM_STAT_LOW]        = (char *)"L'Octet Status < 0x80";
-  tStrAry[DEM_RTM_FLT_FAIL]    = (char *)"RtMidi Failed to Filter a message";
+  tStrAry[DEM_DATA_HIGH]       = (char *)"L'Octet Status >= 0x80";
+  tStrAry[DEM_RTM_FLT_FAIL]    = (char *)"RtMidi ne filtre pas";
+  tStrAry[DEM_NONE]            = (char *)"Pas de problème";
 
 //==================================================================================================
 //==== Das deutsche zeug
   tStrAry = msgMiMetaPile[DEL_DEUTSCH];
-  tStrAry[DEM_ZRO_LEN]         = (char *)"MIDI-Meldung ohne Länge";
-  tStrAry[DEM_LEN_STAT]        = (char *)"Byte Count ist für den Status falsch";
-  tStrAry[DEM_SYSEX_TRUNC]     = (char *)"Der SysEx-Stream hatte kein SysEx-End als nächstes";
-  tStrAry[DEM_STAT_UNDEF]      = (char *)"Undefiniertes Statusbyte";
+  tStrAry[DEM_ZRO_LEN]         = (char *)"Länge Null";
+  tStrAry[DEM_LEN_STAT]        = (char *)"N Bytes Stat";
+  tStrAry[DEM_LEN_SYS]         = (char *)"N Bytes Sys";
+  tStrAry[DEM_SYSEX_TRUNC]     = (char *)"SysEx ohne End";
+  tStrAry[DEM_SYSEND_START]    = (char *)"End ohne Sysex";
   tStrAry[DEM_STAT_LOW]        = (char *)"Status Byte < 0x80";
-  tStrAry[DEM_RTM_FLT_FAIL]    = (char *)"RtMidi Failed to Filter a message";
+  tStrAry[DEM_DATA_HIGH]       = (char *)"Status Byte >= 0x80";
+  tStrAry[DEM_RTM_FLT_FAIL]    = (char *)"nicht gefiltert";
+  tStrAry[DEM_NONE]            = (char *)"Kein Problem";
 
 //==================================================================================================
 //==== Las cosas españolas
   tStrAry = msgMiMetaPile[DEL_ESPANOL];
-  tStrAry[DEM_ZRO_LEN]         = (char *)"Mensaje MIDI de longitud cero";
-  tStrAry[DEM_LEN_STAT]        = (char *)"El recuento de bytes es incorrecto para el Status";
-  tStrAry[DEM_SYSEX_TRUNC]     = (char *)"SysEx stream no tenía SysEx End a continuación";
-  tStrAry[DEM_STAT_UNDEF]      = (char *)"Byte de Status indefinido";
+  tStrAry[DEM_ZRO_LEN]         = (char *)"longitud cero";
+  tStrAry[DEM_LEN_STAT]        = (char *)"N bytes Stat";
+  tStrAry[DEM_LEN_SYS]         = (char *)"N bytes Sys";
+  tStrAry[DEM_SYSEX_TRUNC]     = (char *)"SysEx no End";
+  tStrAry[DEM_SYSEND_START]    = (char *)"End sin que SysEx";
   tStrAry[DEM_STAT_LOW]        = (char *)"Byte de Status < 0x80";
-  tStrAry[DEM_RTM_FLT_FAIL]    = (char *)"RtMidi Failed to Filter a message";
+  tStrAry[DEM_DATA_HIGH]       = (char *)"Byte de Status >= 0x80";
+  tStrAry[DEM_RTM_FLT_FAIL]    = (char *)"no filtró";
+  tStrAry[DEM_NONE]            = (char *)"No hay problema";
 
 #endif

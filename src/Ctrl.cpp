@@ -328,26 +328,29 @@ void    Ctrl::MiMsgParse       (              const QByteArray &i_msg) {
         case 0x1:
           value = i_msg[1] & 0x0fU;
           switch (i_msg[1] & 0x70U) {
-            case 0x00:  strMiData = tr("Frames Low Nibble: %1"   ).arg(value);  break;
-            case 0x10:  strMiData = tr("Frames High Nibble: %1"  ).arg(value);  break;
-            case 0x20:  strMiData = tr("Seconds Low Nibble: %1"  ).arg(value);  break;
-            case 0x30:  strMiData = tr("Seconds High Nibble: %1" ).arg(value);  break;
-            case 0x40:  strMiData = tr("Minutes Low Nibble: %1"  ).arg(value);  break;
-            case 0x50:  strMiData = tr("Minutes High Nibble: %1" ).arg(value);  break;
-            case 0x60:  strMiData = tr("Hours Low Nibble: %1"    ).arg(value);  break;
+            case 0x00:   strMiData = tr("MTC ..:..:..+.f %1 rrd"  ).arg(value);  break;
+            case 0x10:   strMiData = tr("MTC ..:..:..+f. %1 rrd"  ).arg(value);  break;
+            case 0x20:   strMiData = tr("MTC ..:..:.s+.. %1 rrd"  ).arg(value);  break;
+            case 0x30:   strMiData = tr("MTC ..:..:s.+.. %1 rrd"  ).arg(value);  break;
+            case 0x40:   strMiData = tr("MTC ..:.m:..+.. %1 rrd"  ).arg(value);  break;
+            case 0x50:   strMiData = tr("MTC ..:m.:..+.. %1 rrd"  ).arg(value);  break;
+            case 0x60:   strMiData = tr("MTC .h:..:..+.. %1 rrd"  ).arg(value);  break;
             case 0x70:
-              switch ((value & 0x6) >> 1) {
-                case 0:                    s = tr("24 fps");                    break;
-                case 1:                    s = tr("25 fps");                    break;
-                case 2:                    s = tr("30 fps (drop-frame)");       break;
-                case 3:                    s = tr("30 fps");                    break;
+              switch ((value & 0x7) >> 1) {
+                case 0:  strMiData = tr("MTC h.:..:..+..  0 24."    );            break;
+                case 1:  strMiData = tr("MTC h.:..:..+..  1 24."    );            break;
+                case 2:  strMiData = tr("MTC h.:..:..+..  0 25."    );            break;
+                case 3:  strMiData = tr("MTC h.:..:..+..  1 25."    );            break;
+                case 4:  strMiData = tr("MTC h.:..:..+..  0 30D"    );            break;
+                case 5:  strMiData = tr("MTC h.:..:..+..  1 30D"    );            break;
+                case 6:  strMiData = tr("MTC h.:..:..+..  0 30."    );            break;
+                case 7:  strMiData = tr("MTC h.:..:..+..  1 30."    );            break;
                 default:   ;               // We shouldn't get here.
               }
-              strMiData = tr("Hours High Nibble: %1, SMPTE Type: %2"). arg(value & 1).arg(s);
               break;
             default:        ;        // We shouldn't get here.
           }
-          strMiStat = tr("MTC Quarter Frame");
+          strMiStat = tr("MTC QF");
           break;
         case 0x2:
           strMiData = tr("MIDI Beat: %1").arg(((static_cast<qint16>(i_msg[2])) << 7) | (static_cast<qint16>(i_msg[1])));

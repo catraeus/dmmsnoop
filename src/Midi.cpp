@@ -35,7 +35,6 @@ Midi::~Midi(){}
 
 void Midi::Parse(uint i_len, uint *i_bytes) {
 
-
   valid = false;
   len = i_len;
   theMS->TS[0]   = '\0';
@@ -48,6 +47,8 @@ void Midi::Parse(uint i_len, uint *i_bytes) {
   theMS->cc[0]   = '\0';
   theMS->prog[0] = '\0';
   theMS->bend[0] = '\0';
+  theMS->pos[0]  = '\0';
+  theMS->song[0] = '\0';
   theMS->sys[0]  = '\0';
   theMS->err[0]  = '\0';
   strcpy(theMS->err, theTrMsg->MsgMiMetaGet(TrMsg::DEM_NONE));
@@ -170,34 +171,102 @@ void Midi::ParseController(uint *i_bytes) {
   uint bendM;
   uint bendL;
   int  bend;
+
   bChNo = bStatSub;
   sprintf(theMS->ch, "%d", bChNo + 1); // Everyone below System Fx has a channel
-       if((bStatBase == TrMsg::DES_NOTE_OFF) || (bStatBase == TrMsg::DES_NOTE_ON) || (bStatBase == TrMsg::DES_POLY_PRES)) {
-    sprintf(theMS->note, "%3d", i_bytes[1]);
-    sprintf(theMS->vel,  "%3d", i_bytes[2]);
-  }
-  else if( bStatBase == TrMsg::DES_CC) {
-    sprintf(theMS->cc,   "%3d", i_bytes[1] + 1);
-    sprintf(theMS->vel,  "%3d", i_bytes[2]);
-  }
-  else if( bStatBase == TrMsg::DES_PROG_CHNG) {
-    sprintf(theMS->prog, "%3d", i_bytes[1]    ); // It is so weird where MIDI does 0 based and 1 based
-  }
-  else if( bStatBase == TrMsg::DES_CHAN_PRES) {
-    sprintf(theMS->vel,  "%3d", i_bytes[1]    );
-  }
-  else if( bStatBase == TrMsg::DES_PITCH_BEND) {
-    bendM = i_bytes[2];
-    bendL = i_bytes[1];
-    bendM <<= 7;
-    bendM += bendL;
-    bend = (int)bendM;
-    bend -= 8192;
-    sprintf(theMS->bend,  "%5d", bend    );
+  switch(bStatBase) {
+    case TrMsg::DES_NOTE_OFF:
+    case TrMsg::DES_NOTE_ON:
+    case TrMsg::DES_POLY_PRES:
+      sprintf(theMS->note, "%3d", i_bytes[1]);
+      sprintf(theMS->vel,  "%3d", i_bytes[2]);
+      break;
+    case TrMsg::DES_CC:
+      sprintf(theMS->cc,   "%3d", i_bytes[1] + 1);
+      sprintf(theMS->vel,  "%3d", i_bytes[2]);
+      break;
+    case TrMsg::DES_PROG_CHNG:
+      sprintf(theMS->prog, "%3d", i_bytes[1]    ); // It is so weird where MIDI does 0 based and 1 based
+      break;
+    case TrMsg::DES_CHAN_PRES:
+      sprintf(theMS->vel,  "%3d", i_bytes[1]    );
+      break;
+    case TrMsg::DES_PITCH_BEND:
+      bendM = i_bytes[2];
+      bendL = i_bytes[1];
+      bendM <<= 7;
+      bendM += bendL;
+      bend = (int)bendM;
+      bend -= 8192;
+      sprintf(theMS->bend,  "%5d", bend    );
+      break;
+    default:
+      break;
   }
   return;
 }
 void Midi::ParseSystem(uint *i_bytes) {
-  (void)i_bytes;
+  uint posM;
+  uint posL;
+  int  pos;
+
+  bSysNo = bStatSub;
+
+  switch(bSysNo) {
+    case TrMsg::DEY_SYSEX:
+      // We escaped this long ago.
+      break;
+    case TrMsg::DEY_TC_QF:
+      ParseTimeCode(i_bytes[1]);
+      break;
+    case TrMsg::DEY_SONG_POS:
+      posM = i_bytes[2];
+      posL = i_bytes[1];
+      posM <<= 7;
+      posM += posL;
+      pos = (int)posM;
+      sprintf(theMS->pos,  "%5d", pos    );
+      break;
+    case TrMsg::DEY_SONG_SEL:
+      posM = i_bytes[1];
+      sprintf(theMS->song, "%d", posM);
+      strcpy(theMS->sys, theTrMsg->MsgMiSysGet(TrMsg::DEY_SONG_POS));
+      break;
+    case TrMsg::DEY_UNDEF_4:
+      strcpy(theMS->sys, theTrMsg->MsgMiSysGet(TrMsg::DEY_UNDEF_4));
+      break;
+    case TrMsg::DEY_UNDEF_5:
+      strcpy(theMS->sys, theTrMsg->MsgMiSysGet(TrMsg::DEY_UNDEF_5));
+      break;
+    case TrMsg::DEY_TUNE_REQ:
+      break;
+    case TrMsg::DEY_END_SYSEX:
+      // Likewise this is long gone.
+      break;
+    case TrMsg::DEY_TIM_CLK:
+      break;
+    case TrMsg::DEY_UNDEF_9:
+      strcpy(theMS->sys, theTrMsg->MsgMiSysGet(TrMsg::DEY_UNDEF_9));
+      break;
+    case TrMsg::DEY_SONG_START:
+      break;
+    case TrMsg::DEY_SONG_CONT:
+      break;
+    case TrMsg::DEY_SONG_STOP:
+      break;
+    case TrMsg::DEY_UNDEF_D:
+      strcpy(theMS->sys, theTrMsg->MsgMiSysGet(TrMsg::DEY_UNDEF_D));
+      break;
+    case TrMsg::DEY_ACT_SENS:
+      break;
+    case TrMsg::DEY_RESET:
+      break;
+    default:
+      break;
+  }
+  return;
+}
+void Midi::ParseTimeCode(uint i_TC) {
+  (void)i_TC;
   return;
 }

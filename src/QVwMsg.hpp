@@ -33,10 +33,10 @@ public:
                  ~QVwMsg();
 
 signals:
-           void   sendRequest(const QString &data);
+           void   EmMsgSend(const QString &data);
 
 private slots:
-           void   handleSendButtonClick();
+           void   OnSend();
 
 private:
     QPushButton    *closeButton;

@@ -48,11 +48,13 @@ class QVwMain: public QVwDesgn {
       MTC_CC    = 0x00000007U,
       MTC_VELO  = 0x00000008U,
       MTC_BEND  = 0x00000009U,
-      MTC_PROG  = 0x0000000AU,
-      MTC_SYS   = 0x0000000BU,
-      MTC_ERR   = 0x0000000CU,
-      MTC_PAD   = 0x0000000DU,
-      MTC_NUM   = 0x0000000EU,
+      MTC_POS   = 0x0000000AU,
+      MTC_SONG  = 0x0000000BU,
+      MTC_PROG  = 0x0000000CU,
+      MTC_SYS   = 0x0000000DU,
+      MTC_ERR   = 0x0000000EU,
+      MTC_PAD   = 0x0000000FU,
+      MTC_NUM   = 0x00000010U,
       MTC_BIG   = 0xFFFFFFFFU
     };
   public:

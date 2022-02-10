@@ -86,7 +86,7 @@ char   *MsgMiSysGet(eSysType i_theType)  { return msgMiSys[i_theType]; }
   tStrAry[DEY_SYSEX]      = (char *)"SysEx";
   tStrAry[DEY_TC_QF]      = (char *)"MTC QFrm";
   tStrAry[DEY_SONG_POS]   = (char *)"Song Pos";
-  tStrAry[DEY_SONG_SEL]   = (char *)"Song Select";
+  tStrAry[DEY_SONG_SEL]   = (char *)"Song Sel";
   tStrAry[DEY_UNDEF_4]    = (char *)"Undef 4";
   tStrAry[DEY_UNDEF_5]    = (char *)"Undef 5";
   tStrAry[DEY_TUNE_REQ]   = (char *)"Tune Req";

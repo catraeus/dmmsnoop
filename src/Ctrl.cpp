@@ -46,7 +46,7 @@
 /*0xC0*/ 2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2, // Program Change - new patches being spec'd
 /*0xD0*/ 2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2, // Channel Pressure - whole voice aftertouch, most often used.
 /*0xE0*/ 3,  3,  3,  3,  3,  3,  3,  3,  3,  3,  3,  3,  3,  3,  3,  3, // Pitch Bend - So special it has its own command, and is a (close to) uint16_t range.
-/*0xF0*/ 0,  2,  3,  2, -1, -1,  1, -1,  1,  1,  1,  1,  1, -1,  1,  1  // Aren't we Speecial?  The SysEx and beyond controls
+/*0xF0*/ 0,  2,  3,  2,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1  // Aren't we Speecial?  The SysEx and beyond controls
 };
 
 
@@ -116,8 +116,8 @@ Ctrl:: Ctrl(App &i_theApp, QObject *i_parent) : QObject(i_parent), theApp(i_theA
 //==================================================================================================
 //==== Setup Message Send
   connect(&theQVwMsg, SIGNAL(closeRequest         (                           )),  &theQVwMsg,    SLOT(hide()));
-  connect(&theQVwMsg, SIGNAL(sendRequest          (const QString &            )),  &theQVwMsg,    SLOT(hide()));
-  connect(&theQVwMsg, SIGNAL(sendRequest          (const QString &            )),  this,          SLOT(OnMiMsgTx(const QString &)));
+  connect(&theQVwMsg, SIGNAL(EmMsgSend            (const QString &            )),  &theQVwMsg,    SLOT(hide()));
+  connect(&theQVwMsg, SIGNAL(EmMsgSend            (const QString &            )),  this,          SLOT(OnMiMsgTx(const QString &)));
 
 //==================================================================================================
 //==== Setup DrvIf worker  FIXME, there are multiple "overloads and multiple inheritances" of these.  Does order matter ! ? ! ?
@@ -179,32 +179,40 @@ void    Ctrl::OnMidiDrvChg     (                      ) {
   theQVwMain.OnMiMsgTxEn((theDrvIf->MiDrvNumGet() != -1) && (theDrvIf->getOutputPort() != -1));
 }
 void    Ctrl::OnMiMsgTx        (const QString &i_miMsgStr) {
+  QStringList lines;
   QStringList bytes;
-  int         count;
+  uint        byteCount;
+  uint        lineCount;
   bool        success;
   QByteArray  miMsgBytes;
   QString     byteStr;
   uint        value;
   quint64      TS;
 
-  bytes = i_miMsgStr.split(' ', QString::SkipEmptyParts);// MAGICK The GUI gives us the i_miMsgStr as text ...Convert the i_miMsgStr to bytes.
-  count = bytes.count();
-  for(int i = 0; i < count; i++) {
-    byteStr = bytes[i];
-    value = byteStr.toUInt(&success, 16);
-    if((! success) || (value > 0xff)) {
-      QVwErrShow(tr("'%1' is not a valid hexadecimal MIDI byte").arg(byteStr));
-      return;
+  lines = i_miMsgStr.split('\n', QString::SkipEmptyParts);
+  lineCount = lines.count();
+//bytes = i_miMsgStr.split(' ', QString::SkipEmptyParts);// MAGICK The GUI gives us the i_miMsgStr as text ...Convert the i_miMsgStr to bytes.
+  for(uint lineDex=0; lineDex<lineCount; lineDex++) {
+    bytes = lines[lineDex].split(' ', QString::SkipEmptyParts);// MAGICK The GUI gives us the i_miMsgStr as text ...Convert the i_miMsgStr to bytes.
+    byteCount = bytes.count();
+    miMsgBytes.clear();
+    for(uint byteDex = 0; byteDex<byteCount; byteDex++) {
+      byteStr = bytes[byteDex];
+      value = byteStr.toUInt(&success, 16);
+      if((! success) || (value > 0xff)) {
+        QVwErrShow(tr("'%1' is not a valid hexadecimal MIDI byte").arg(byteStr));
+        return;
+      }
+      miMsgBytes.append(static_cast<char>(static_cast<quint8>(value)));
     }
-    miMsgBytes.append(static_cast<char>(static_cast<quint8>(value)));
-  }
 
-  MiMsgParse(miMsgBytes);  // Make sure the bytes represent a valid MIDI i_miMsgStr.
-  if(valid)
-    TS = theDrvIf->OnMiMsgTx(miMsgBytes);
-  else
-    TS = GetTS();
-  theQVwMain.OnMiMsgTX(TS, strMiStat, strMiData, theMidi, valid);
+    MiMsgParse(miMsgBytes);  // Make sure the bytes represent a valid MIDI i_miMsgStr.
+    if(valid)
+      TS = theDrvIf->OnMiMsgTx(miMsgBytes);
+    else
+      TS = GetTS();
+    theQVwMain.OnMiMsgTX(TS, strMiStat, strMiData, theMidi, valid);
+  }
 }
 void    Ctrl::OnMiMsgRx        (quint64 i_TS, const QByteArray &i_msg) {
     MiMsgParse(i_msg);
@@ -255,37 +263,43 @@ void    Ctrl::MiMsgParse       (              const QByteArray &i_msg) {
 // Validate length and data.
   lenMidiSpec = lenMidiSpecAry[miStat - 0x80];
   switch (lenMidiSpec) {
-    case -1:  // FIXME  4, 5 and D are reserved, but 7 is SysEx End, we have to build a stateful machine to detect this being OK or Bad.
-      MiMsgDatBytesStr(i_msg, tStr);
-      strMiData = tStr;
-      strMiStat = tr("%1 (undefined status)").arg(static_cast<uint>(miStat), 2, 16, QChar('0'));
-      valid = false;
-      return;
-      break;
+    //case -1:  // FIXME  4, 5 and D are reserved, but 7 is SysEx End, we have to build a stateful machine to detect this being OK or Bad.
+    //  MiMsgDatBytesStr(i_msg, tStr);
+    //  strMiData = tStr;
+    //  strMiStat = tr("%1 (undefined status)").arg(static_cast<uint>(miStat), 2, 16, QChar('0'));
+    //  valid = false;
+    //  return;
+    //  break;
     case 0:
-      if(miMsgLen == 1) {
-        strMiData = "";
-        strMiStat = tr("System Exclusive (no data)");
-        valid = false;
-        return;
-      }
-      if(static_cast<quint8>(i_msg[miMsgLen - 1]) != 0xf7) {
-        MiMsgDatBytesStr(i_msg, tStr);
-        strMiData = tStr;
-        strMiStat = tr("System Exclusive (end not found)"); // So I guess that the RtMidi
-        valid = false;
-        return;
-      }
+    //  if(miMsgLen == 1) {
+    //    strMiData = "";
+    //    strMiStat = tr("System Exclusive (no data)");
+    //    valid = false;
+    //    return;
+    //  }
+    //  if(static_cast<quint8>(i_msg[miMsgLen - 1]) != 0xf7) {
+    //    MiMsgDatBytesStr(i_msg, tStr);
+    //    strMiData = tStr;
+    //    strMiStat = tr("System Exclusive (end not found)"); // So I guess that the RtMidi
+    //    valid = false;
+    //    return;
+    //  }
       lastDataIndex = miMsgLen - 2;
-      break;
+        break;
     default:
-      if(miMsgLen != lenMidiSpec) {
+      //if(miMsgLen != lenMidiSpec) {
+      //  MiMsgDatBytesStr(i_msg, tStr);
+      //  strMiData = tStr;
+      //  strMiStat = tr("%1 (incorrect length)").arg(static_cast<uint>(miStat), 2, 16, QChar('0'));
+      //  valid = false;
+      //  return;
+      //}
+      //else {
         MiMsgDatBytesStr(i_msg, tStr);
         strMiData = tStr;
-        strMiStat = tr("%1 (incorrect length)").arg(static_cast<uint>(miStat), 2, 16, QChar('0'));
+        strMiStat = tr("Workin' it");
         valid = false;
-        return;
-      }
+      //}
       lastDataIndex = miMsgLen - 1;
       break;
     }
@@ -325,7 +339,7 @@ void    Ctrl::MiMsgParse       (              const QByteArray &i_msg) {
           strMiData = tr("");
           strMiStat = tr("");
           break;
-        case 0x1:
+        case 0x1: // FIXME, MTC needs order validation, accumulation and time correlation.
           value = i_msg[1] & 0x0fU;
           switch (i_msg[1] & 0x70U) {
             case 0x00:   strMiData = tr("MTC ..:..:..+.f %1 rrd"  ).arg(value);  break;
@@ -353,12 +367,9 @@ void    Ctrl::MiMsgParse       (              const QByteArray &i_msg) {
           strMiStat = tr("MTC QF");
           break;
         case 0x2:
-          strMiData = tr("MIDI Beat: %1").arg(((static_cast<qint16>(i_msg[2])) << 7) | (static_cast<qint16>(i_msg[1])));
-          strMiStat = tr("Song Position Pointer");
-          break;
         case 0x3:
-          strMiData = tr("Song Number: %1").arg(static_cast<quint8>(i_msg[1]));
-          strMiStat = tr("Song Select");
+          strMiData = "";
+          strMiStat = "";
           break;
         case 0x6:  strMiData = "";  strMiStat = tr("Tune Request"  );  break;
         case 0x8:  strMiData = "";  strMiStat = tr("MIDI Clock"    );  break;

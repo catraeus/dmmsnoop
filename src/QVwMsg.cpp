@@ -29,9 +29,9 @@
   message = getChild<QPlainTextEdit>(rootWidget, "message");
 
   sendButton = getChild<QPushButton>(rootWidget, "sendButton");
-  connect(sendButton, SIGNAL(clicked()), SLOT(handleSendButtonClick()));
+  connect(sendButton, SIGNAL(clicked()), SLOT(OnSend()));
 }
 
      QVwMsg::~QVwMsg() {}
-void QVwMsg::handleSendButtonClick() { emit sendRequest(message->toPlainText());  }
+void QVwMsg::OnSend() { emit EmMsgSend(message->toPlainText());  }
 

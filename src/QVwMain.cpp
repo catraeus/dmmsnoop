@@ -47,6 +47,8 @@
     QMd_MiMsgGrid.setHeaderData (MTC_CC,   Qt::Horizontal,  tr("CC"       ), Qt::DisplayRole);
     QMd_MiMsgGrid.setHeaderData (MTC_VELO, Qt::Horizontal,  tr("Vel"      ), Qt::DisplayRole);
     QMd_MiMsgGrid.setHeaderData (MTC_BEND, Qt::Horizontal,  tr("Bend"     ), Qt::DisplayRole);
+    QMd_MiMsgGrid.setHeaderData (MTC_POS,  Qt::Horizontal,  tr("Pos"      ), Qt::DisplayRole);
+    QMd_MiMsgGrid.setHeaderData (MTC_SONG, Qt::Horizontal,  tr("Song"     ), Qt::DisplayRole);
     QMd_MiMsgGrid.setHeaderData (MTC_PROG, Qt::Horizontal,  tr("Prog"     ), Qt::DisplayRole);
     QMd_MiMsgGrid.setHeaderData (MTC_SYS,  Qt::Horizontal,  tr("Sys"      ), Qt::DisplayRole);
     QMd_MiMsgGrid.setHeaderData (MTC_ERR,  Qt::Horizontal,  tr("Error"    ), Qt::DisplayRole);
@@ -57,15 +59,17 @@
 
   // OK, so the TableView has to actually exist first
     QTb_MiMsgGrid->setColumnWidth(MTC_TS,   108);
-    QTb_MiMsgGrid->setColumnWidth(MTC_RAW,  220);
-    QTb_MiMsgGrid->setColumnWidth(MTC_STA,  220);
-    QTb_MiMsgGrid->setColumnWidth(MTC_STAT, 160);
-    QTb_MiMsgGrid->setColumnWidth(MTC_DATA, 180);
+    QTb_MiMsgGrid->setColumnWidth(MTC_RAW,  120);
+    QTb_MiMsgGrid->setColumnWidth(MTC_STA,  120);
+    QTb_MiMsgGrid->setColumnWidth(MTC_STAT, 160); // Old One
+    QTb_MiMsgGrid->setColumnWidth(MTC_DATA, 180); // Old One
     QTb_MiMsgGrid->setColumnWidth(MTC_CHAN,  32);
     QTb_MiMsgGrid->setColumnWidth(MTC_NOTE,  40);
     QTb_MiMsgGrid->setColumnWidth(MTC_CC,    32);
     QTb_MiMsgGrid->setColumnWidth(MTC_VELO,  40);
     QTb_MiMsgGrid->setColumnWidth(MTC_BEND,  72);
+    QTb_MiMsgGrid->setColumnWidth(MTC_POS,   72);
+    QTb_MiMsgGrid->setColumnWidth(MTC_SONG,  40);
     QTb_MiMsgGrid->setColumnWidth(MTC_PROG,  40);
     QTb_MiMsgGrid->setColumnWidth(MTC_SYS,  120);
     QTb_MiMsgGrid->setColumnWidth(MTC_ERR,  120);
@@ -76,6 +80,7 @@
 
 void QVwMain::SetTimeZero(quint64 i_TZ) {  TZ = i_TZ;  return;}
 int  QVwMain::MsgAdd(quint64 i_TS, const QString &i_miStatDesc, const QString &i_miDataDesc, Midi *i_tMidi, bool i_val) {
+  (void)i_val;
   int               count;
   quint64           bla;
 
@@ -90,6 +95,8 @@ int  QVwMain::MsgAdd(quint64 i_TS, const QString &i_miStatDesc, const QString &i
   char  i_miChChDesc[ 4];  strcpy(i_miChChDesc, i_tMidi->theMS->cc   );
   char  i_miNoteVel [ 4];  strcpy(i_miNoteVel,  i_tMidi->theMS->vel  );
   char  i_miBend    [16];  strcpy(i_miBend,     i_tMidi->theMS->bend );
+  char  i_miPos     [16];  strcpy(i_miPos,      i_tMidi->theMS->pos  );
+  char  i_miSong    [ 4];  strcpy(i_miSong,     i_tMidi->theMS->song );
   char  i_miProg    [ 4];  strcpy(i_miProg,     i_tMidi->theMS->prog );
   char  i_miSysCmd  [32];  strcpy(i_miSysCmd,   i_tMidi->theMS->sys  );
   char  i_miErr     [32];  strcpy(i_miErr,      i_tMidi->theMS->err  );
@@ -111,10 +118,12 @@ int  QVwMain::MsgAdd(quint64 i_TS, const QString &i_miStatDesc, const QString &i
   setModelData(count, MTC_CC,    i_miChChDesc       );  setModelData(count, MTC_CC,   alignment,   Qt::TextAlignmentRole);
   setModelData(count, MTC_VELO,  i_miNoteVel        );  setModelData(count, MTC_VELO, alignment,   Qt::TextAlignmentRole);
   setModelData(count, MTC_BEND,  i_miBend           );  setModelData(count, MTC_BEND, alignment,   Qt::TextAlignmentRole);
+  setModelData(count, MTC_POS,   i_miPos            );  setModelData(count, MTC_POS,  alignment,   Qt::TextAlignmentRole);
+  setModelData(count, MTC_SONG,  i_miSong           );  setModelData(count, MTC_SONG, alignment,   Qt::TextAlignmentRole);
   setModelData(count, MTC_PROG,  i_miProg           );  setModelData(count, MTC_PROG, alignment,   Qt::TextAlignmentRole);
   setModelData(count, MTC_SYS,   i_miSysCmd         );  setModelData(count, MTC_SYS,  alignment,   Qt::TextAlignmentRole);
   setModelData(count, MTC_ERR,   i_miErr            );  setModelData(count, MTC_ERR,  alignment,   Qt::TextAlignmentRole);
-  if(!i_val)
+  if(!i_tMidi->GetValid())
     setModelData(count, MTC_STAT,  QIcon(":/dmmsnoop/images/16x16/error.png"), Qt::DecorationRole);
   QTb_MiMsgGrid->resizeRowToContents(count);
   QTb_MiMsgGrid->scrollToBottom();

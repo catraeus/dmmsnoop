@@ -45,6 +45,8 @@ class Midi: public QObject {
       char cc   [ 4] ; // There are only 128 channels possible.  Print decimal.  FIXME But, there are LSB/MSB channel pairs to figure.
       char prog [ 4] ; // 128 programs possible.
       char bend [16] ; // Is a Speshul uint16_t
+      char pos  [16] ; // Is a Speshul uint16_t song position
+      char song [ 4] ; // 128 possible song numbers.
       char sys  [32] ; // Same sentiment as stat above
       char err  [32] ; // Likewise
     };
@@ -60,11 +62,13 @@ class Midi: public QObject {
               Midi();
              ~Midi();
     void      Parse(uint i_len, uint *i_bytes);
+    bool      GetValid(void) {return valid;};
     sMsgSpec            *theMS;
   private:
       void CheckErrors    (uint *i_bytes); // Also distributes Status, Sys but not Channel, Velocity etc.
       void ParseController(uint *i_bytes);
       void ParseSystem    (uint *i_bytes);
+      void ParseTimeCode  (uint  i_TC);
   public:
   private:
     TrMsg               *theTrMsg;
@@ -75,6 +79,7 @@ class Midi: public QObject {
     uint                 bStatBase;
     uint                 bStatSub;
     uint                 bChNo;
+    uint                 bSysNo;
     uint                 bNoteNo;
     uint                 vVelNo;
     bool                 valid;

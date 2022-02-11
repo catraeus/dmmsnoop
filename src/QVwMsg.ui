@@ -25,7 +25,7 @@
   </property>
   <layout class="QVBoxLayout" stretch="1,0">
    <item>
-    <widget class="QPlainTextEdit" name="message">
+    <widget class="QPlainTextEdit" name="QPt_Messages">
      <property name="text" stdset="0">
       <string/>
      </property>
@@ -47,7 +47,7 @@
       </spacer>
      </item>
      <item>
-      <widget class="QPushButton" name="sendButton">
+      <widget class="QPushButton" name="QPb_Send">
        <property name="text">
         <string>Send</string>
        </property>
@@ -58,7 +58,7 @@
       </widget>
      </item>
      <item>
-      <widget class="QPushButton" name="closeButton">
+      <widget class="QPushButton" name="QPb_Close">
        <property name="text">
         <string>Close</string>
        </property>

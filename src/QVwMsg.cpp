@@ -23,15 +23,15 @@
      QVwMsg::QVwMsg(QObject *parent) : QVwDesgn(":/dmmsnoop/QVwMsg.ui", parent) {
   QWidget *rootWidget = getRootWidget();
 
-  closeButton = getChild<QPushButton>(rootWidget, "closeButton");
-  connect(closeButton, SIGNAL(clicked()), SIGNAL(closeRequest()));
+  QPb_Close = getChild<QPushButton>(rootWidget, "QPb_Close");
+  connect(QPb_Close, SIGNAL(clicked()), SIGNAL(closeRequest()));
 
-  message = getChild<QPlainTextEdit>(rootWidget, "message");
+  QPt_Messages = getChild<QPlainTextEdit>(rootWidget, "QPt_Messages");
 
-  sendButton = getChild<QPushButton>(rootWidget, "sendButton");
-  connect(sendButton, SIGNAL(clicked()), SLOT(OnSend()));
+  QPb_Send = getChild<QPushButton>(rootWidget, "QPb_Send");
+  connect(QPb_Send, SIGNAL(clicked()), SLOT(OnSend()));
 }
 
      QVwMsg::~QVwMsg() {}
-void QVwMsg::OnSend() { emit EmMsgSend(message->toPlainText());  }
+void QVwMsg::OnSend() { emit EmMsgSend(QPt_Messages->toPlainText());  }
 

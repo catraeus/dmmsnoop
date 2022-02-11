@@ -39,9 +39,9 @@ private slots:
            void   OnSend();
 
 private:
-    QPushButton    *closeButton;
-    QPlainTextEdit *message;
-    QPushButton    *sendButton;
+    QPushButton    *QPb_Close;
+    QPlainTextEdit *QPt_Messages;
+    QPushButton    *QPb_Send;
 
 };
 

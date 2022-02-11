@@ -116,7 +116,7 @@ Ctrl:: Ctrl(App &i_theApp, QObject *i_parent) : QObject(i_parent), theApp(i_theA
 //==================================================================================================
 //==== Setup Message Send
   connect(&theQVwMsg, SIGNAL(closeRequest         (                           )),  &theQVwMsg,    SLOT(hide()));
-  connect(&theQVwMsg, SIGNAL(EmMsgSend            (const QString &            )),  &theQVwMsg,    SLOT(hide()));
+//connect(&theQVwMsg, SIGNAL(EmMsgSend            (const QString &            )),  &theQVwMsg,    SLOT(hide()));
   connect(&theQVwMsg, SIGNAL(EmMsgSend            (const QString &            )),  this,          SLOT(OnMiMsgTx(const QString &)));
 
 //==================================================================================================

@@ -19,6 +19,7 @@
 
 #include <stdio.h>
 #include <sys/time.h>
+#include <unistd.h>
 
 #include <QtCore/QDebug>
 #include <QtCore/QMetaType>
@@ -116,7 +117,6 @@ Ctrl:: Ctrl(App &i_theApp, QObject *i_parent) : QObject(i_parent), theApp(i_theA
 //==================================================================================================
 //==== Setup Message Send
   connect(&theQVwMsg, SIGNAL(closeRequest         (                           )),  &theQVwMsg,    SLOT(hide()));
-//connect(&theQVwMsg, SIGNAL(EmMsgSend            (const QString &            )),  &theQVwMsg,    SLOT(hide()));
   connect(&theQVwMsg, SIGNAL(EmMsgSend            (const QString &            )),  this,          SLOT(OnMiMsgTx(const QString &)));
 
 //==================================================================================================
@@ -192,6 +192,12 @@ void    Ctrl::OnMiMsgTx        (const QString &i_miMsgStr) {
   lines = i_miMsgStr.split('\n', QString::SkipEmptyParts);
   lineCount = lines.count();
 //bytes = i_miMsgStr.split(' ', QString::SkipEmptyParts);// MAGICK The GUI gives us the i_miMsgStr as text ...Convert the i_miMsgStr to bytes.
+  if(lineCount == 0) {
+    miMsgBytes.clear();
+    MiMsgParse(miMsgBytes);
+    TS = GetTS();
+    theQVwMain.OnMiMsgTX(TS, strMiStat, strMiData, theMidi, valid);
+  }
   for(uint lineDex=0; lineDex<lineCount; lineDex++) {
     bytes = lines[lineDex].split(' ', QString::SkipEmptyParts);// MAGICK The GUI gives us the i_miMsgStr as text ...Convert the i_miMsgStr to bytes.
     byteCount = bytes.count();
@@ -207,11 +213,13 @@ void    Ctrl::OnMiMsgTx        (const QString &i_miMsgStr) {
     }
 
     MiMsgParse(miMsgBytes);  // Make sure the bytes represent a valid MIDI i_miMsgStr.
+    fprintf(stdout, "Goofy: %s\n", theMidi->theMS->sys); fflush(stdout);
     if(valid)
       TS = theDrvIf->OnMiMsgTx(miMsgBytes);
     else
       TS = GetTS();
     theQVwMain.OnMiMsgTX(TS, strMiStat, strMiData, theMidi, valid);
+    usleep(10000);
   }
 }
 void    Ctrl::OnMiMsgRx        (quint64 i_TS, const QByteArray &i_msg) {
@@ -220,9 +228,9 @@ void    Ctrl::OnMiMsgRx        (quint64 i_TS, const QByteArray &i_msg) {
 }
 void    Ctrl::MiMsgParse       (              const QByteArray &i_msg) {
   uint     lenMidiSpec;
-  char     miStatByteStr[3]; // two nibbles and a trailing zero
+//char     miStatByteStr[3]; // two nibbles and a trailing zero
   uint     miBytes[1024];
-  char     tStr[256];
+//  char     tStr[256];
   int      lastDataIndex;
   QString  s;
   int      value;
@@ -234,8 +242,7 @@ void    Ctrl::MiMsgParse       (              const QByteArray &i_msg) {
   theMidi->Parse(miMsgLen, miBytes);
   if(miMsgLen == 0) {  // WEIRD Make sure we have something ... anything.
     strMiData = "";
-    strcpy(tStr, theTrMsg->MsgMiMetaGet(TrMsg::DEM_ZRO_LEN));
-    strMiStat = tStr;
+    strMiStat = "";
     valid = false;
     return;
   }
@@ -243,18 +250,12 @@ void    Ctrl::MiMsgParse       (              const QByteArray &i_msg) {
 
 //========
   miStat = (uint8_t)(i_msg[0]);
-  ByteToString(miStat, miStatByteStr);
+//ByteToString(miStat, miStatByteStr);
 
 //========
   if(miStat < 0x80U) {// WEIRD Validate status byte.
-    MiMsgDatBytesStr(i_msg, tStr);
-    strMiData = tStr;
-    strcpy(tStr, theTrMsg->MsgMiMetaGet(TrMsg::DEM_STAT_LOW));
-    strcat(tStr, " ");
-    strcat(tStr, miStatByteStr);
-    strMiStat = tStr;
-//  strMiStat = tr("%1 (invalid status)").arg(static_cast<uint>(miStat), 2, 16, QChar('0'));
-//  strMiStat = tr("%1 (invalid status)").arg(static_cast<uint>(miStat), 2, 16, QChar('0'));
+    strMiData = "";
+    strMiStat = "";
     valid     = false;
     return;
   }
@@ -295,9 +296,8 @@ void    Ctrl::MiMsgParse       (              const QByteArray &i_msg) {
       //  return;
       //}
       //else {
-        MiMsgDatBytesStr(i_msg, tStr);
-        strMiData = tStr;
-        strMiStat = tr("Workin' it");
+        strMiData = "";
+        strMiStat = "";
         valid = false;
       //}
       lastDataIndex = miMsgLen - 1;
@@ -308,9 +308,9 @@ void    Ctrl::MiMsgParse       (              const QByteArray &i_msg) {
 // Validate data bytes.
   for(int i = 1; i <= lastDataIndex; i++) {
     if(static_cast<quint8>(i_msg[i]) >= 0x80) {
-      MiMsgDatBytesStr(i_msg, tStr);
-      strMiData = tStr;
-      strMiStat = tr("%1 (invalid data)").arg(static_cast<uint>(miStat), 2, 16, QChar('0'));
+//      MiMsgDatBytesStr(i_msg, tStr);
+      strMiData = "";
+      strMiStat = "";
       valid = false;
       return;
     }
@@ -368,17 +368,14 @@ void    Ctrl::MiMsgParse       (              const QByteArray &i_msg) {
           break;
         case 0x2:
         case 0x3:
-          strMiData = "";
-          strMiStat = "";
-          break;
-        case 0x6:  strMiData = "";  strMiStat = tr("Tune Request"  );  break;
-        case 0x8:  strMiData = "";  strMiStat = tr("MIDI Clock"    );  break;
-        case 0x9:  strMiData = "";  strMiStat = tr("MIDI Tick"     );  break;
-        case 0xa:  strMiData = "";  strMiStat = tr("MIDI Start"    );  break;
-        case 0xb:  strMiData = "";  strMiStat = tr("MIDI Continue" );  break;
-        case 0xc:  strMiData = "";  strMiStat = tr("MIDI Stop"     );  break;
-        case 0xe:  strMiData = "";  strMiStat = tr("Active Sense"  );  break;
-        case 0xf:  strMiData = "";  strMiStat = tr("Reset"         );  break;
+        case 0x6:
+        case 0x8:
+        case 0x9:
+        case 0xa:
+        case 0xb:
+        case 0xc:
+        case 0xe:
+        case 0xf:  strMiData = "";  strMiStat = "";  break;
         default:        ;   // We shouldn't get here.
         }
         break;

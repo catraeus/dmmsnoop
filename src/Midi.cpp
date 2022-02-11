@@ -106,6 +106,7 @@ void Midi::CheckErrors(uint *i_bytes) {
   if(bStatBase == TrMsg::DES_SYSTEM) {
     strcpy(theMS->sys, theTrMsg->MsgMiSysGet((TrMsg::eSysType)bStatSub));
     lenSpec = lenForSys[bStatSub];
+    fprintf(stdout, "ErrChk --   %s  --  %s::%s  --  %s\n", theMS->err, theMS->stat, theMS->sys, theMS->raw); fflush(stdout);
   }
   else {
     sprintf(theMS->ch, "%d", bStatSub);
@@ -186,7 +187,7 @@ void Midi::ParseController(uint *i_bytes) {
       sprintf(theMS->vel,  "%3d", i_bytes[2]);
       break;
     case TrMsg::DES_PROG_CHNG:
-      sprintf(theMS->prog, "%3d", i_bytes[1]    ); // It is so weird where MIDI does 0 based and 1 based
+      sprintf(theMS->prog, "%3d", i_bytes[1]    ); // It is so weird where MIDI does 0 based and 1 based ... sometimes yes, sometimes no
       break;
     case TrMsg::DES_CHAN_PRES:
       sprintf(theMS->vel,  "%3d", i_bytes[1]    );

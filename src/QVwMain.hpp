@@ -94,6 +94,20 @@ class QVwMain: public QVwDesgn {
     DelgMsgTbl            QDg_MiMsgGrid;
     QStandardItemModel    QMd_MiMsgGrid;
     QTableView           *QTb_MiMsgGrid;
+
+  char  i_miRaw     [64];
+  char  i_miSta     [64];
+  char  i_miChanDesc[ 4];
+  char  i_miNoteDesc[ 4];
+  char  i_miChChDesc[ 4];
+  char  i_miNoteVel [ 4];
+  char  i_miBend    [16];
+  char  i_miPos     [16];
+  char  i_miSong    [ 4];
+  char  i_miProg    [ 4];
+  char  i_miSysCmd  [32];
+  char  i_miErr     [32];
+
 };
 
 #endif

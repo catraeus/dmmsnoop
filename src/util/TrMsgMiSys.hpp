@@ -71,7 +71,7 @@ char   *MsgMiSysGet(eSysType i_theType)  { return msgMiSys[i_theType]; }
 
   fprintf(stdout, "In TrMsgMiSys.hpp\n");fflush(stdout);
   msgMiSysPile   = new char**[DEL_NUM_LANG];   // As many as we have languages.  First dim is language enum
-  msgMiSysEn     = new char *[16];   // Only 1 size in MIDI Sped
+  msgMiSysEn     = new char *[16];   // Only 1 size in MIDI Spec
   msgMiSysFr     = new char *[16];   //
   msgMiSysDe     = new char *[16];   // I don't know Deutsch
   msgMiSysEs     = new char *[16];   // I don't know Espanol
@@ -85,19 +85,19 @@ char   *MsgMiSysGet(eSysType i_theType)  { return msgMiSys[i_theType]; }
   tStrAry = msgMiSysPile[DEL_ENGLISH];
   tStrAry[DEY_SYSEX]      = (char *)"SysEx";
   tStrAry[DEY_TC_QF]      = (char *)"MTC QFrm";
-  tStrAry[DEY_SONG_POS]   = (char *)"Song Pos";
-  tStrAry[DEY_SONG_SEL]   = (char *)"Song Sel";
+  tStrAry[DEY_SONG_POS]   = (char *)"Xport Pos";
+  tStrAry[DEY_SONG_SEL]   = (char *)"Xport Sel";
   tStrAry[DEY_UNDEF_4]    = (char *)"Undef 4";
   tStrAry[DEY_UNDEF_5]    = (char *)"Undef 5";
   tStrAry[DEY_TUNE_REQ]   = (char *)"Tune Req";
   tStrAry[DEY_END_SYSEX]  = (char *)"SysEx End";
   tStrAry[DEY_TIM_CLK]    = (char *)"Time Clock";
   tStrAry[DEY_UNDEF_9]    = (char *)"Undef 9";
-  tStrAry[DEY_SONG_START] = (char *)"Song Start";
-  tStrAry[DEY_SONG_CONT]  = (char *)"Song Cont";
-  tStrAry[DEY_SONG_STOP]  = (char *)"Song Stop";
+  tStrAry[DEY_SONG_START] = (char *)"Xport Start";
+  tStrAry[DEY_SONG_CONT]  = (char *)"Xport Cont";
+  tStrAry[DEY_SONG_STOP]  = (char *)"Xport Stop";
   tStrAry[DEY_UNDEF_D]    = (char *)"Undef D";
-  tStrAry[DEY_ACT_SENS]   = (char *)"Active Sense";
+  tStrAry[DEY_ACT_SENS]   = (char *)"Watchdog AS";
   tStrAry[DEY_RESET]      = (char *)"Reset";
 
 //==================================================================================================

@@ -1,9 +1,7 @@
 #!/bin/sh
 git add   gitit
-git add   dmmsnoop.geany
-git add   src/Ctrl.cpp
-git add   src/Midi.cpp
-git add   src/QVwMain.cpp
-git add   src/QVwMain.hpp
-git add   src/util/TrMsgMiSys.hpp
+git add  src/Ctrl.cpp
+git add  src/Midi.cpp
+git add  src/QVwMain.cpp
+git add  test/time
 

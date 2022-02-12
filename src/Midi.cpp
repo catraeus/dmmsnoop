@@ -106,7 +106,7 @@ void Midi::CheckErrors(uint *i_bytes) {
   if(bStatBase == TrMsg::DES_SYSTEM) {
     strcpy(theMS->sys, theTrMsg->MsgMiSysGet((TrMsg::eSysType)bStatSub));
     lenSpec = lenForSys[bStatSub];
-    fprintf(stdout, "ErrChk --   %s  --  %s::%s  --  %s\n", theMS->err, theMS->stat, theMS->sys, theMS->raw); fflush(stdout);
+    //fprintf(stdout, "ErrChk --   %s  --  %s::%s  --  %s\n", theMS->err, theMS->stat, theMS->sys, theMS->raw); fflush(stdout);
   }
   else {
     sprintf(theMS->ch, "%d", bStatSub);
@@ -231,7 +231,7 @@ void Midi::ParseSystem(uint *i_bytes) {
     case TrMsg::DEY_SONG_SEL:
       posM = i_bytes[1];
       sprintf(theMS->song, "%d", posM);
-      strcpy(theMS->sys, theTrMsg->MsgMiSysGet(TrMsg::DEY_SONG_POS));
+      strcpy(theMS->sys, theTrMsg->MsgMiSysGet(TrMsg::DEY_SONG_SEL));
       break;
     case TrMsg::DEY_UNDEF_4:
       strcpy(theMS->sys, theTrMsg->MsgMiSysGet(TrMsg::DEY_UNDEF_4));

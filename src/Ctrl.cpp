@@ -213,7 +213,6 @@ void    Ctrl::OnMiMsgTx        (const QString &i_miMsgStr) {
     }
 
     MiMsgParse(miMsgBytes);  // Make sure the bytes represent a valid MIDI i_miMsgStr.
-    fprintf(stdout, "Goofy: %s\n", theMidi->theMS->sys); fflush(stdout);
     if(valid)
       TS = theDrvIf->OnMiMsgTx(miMsgBytes);
     else

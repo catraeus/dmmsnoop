@@ -44,8 +44,9 @@
       DEM_STAT_LOW     = 0x00000005U, // Weirder man!  The first byte sent up from the lower layer was a non-Status byte.
       DEM_DATA_HIGH    = 0x00000006U, // The bytes after the Status byte have at least 1 greater than 0x7F
       DEM_RTM_FLT_FAIL = 0x00000007U, // RtMidi was command to filter, but it came through anyway.
-      DEM_NONE         = 0x00000008U, // No Trouble Found.
-      DEM_META_NUM     = 0x00000009U, // To let is size things at new char *xxx[] time.
+      DEM_MTC_OOO      = 0x00000008U, // The MTC in Qtr Frm mode was out of order
+      DEM_NONE         = 0x00000009U, // No Trouble Found.
+      DEM_META_NUM     = 0x0000000AU, // To let is size things at new char *xxx[] time.
       DEM_META_BIG     = 0xFFFFFFFFU  // To force it to type uint32_t
     };
 char   *MsgMiMetaGet(eMetaType i_theType)  { return msgMiMeta[i_theType]; }

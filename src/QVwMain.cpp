@@ -50,6 +50,7 @@
     QMd_MiMsgGrid.setHeaderData (MTC_POS,  Qt::Horizontal,  tr("Pos"      ), Qt::DisplayRole);
     QMd_MiMsgGrid.setHeaderData (MTC_SONG, Qt::Horizontal,  tr("Song"     ), Qt::DisplayRole);
     QMd_MiMsgGrid.setHeaderData (MTC_PROG, Qt::Horizontal,  tr("Prog"     ), Qt::DisplayRole);
+    QMd_MiMsgGrid.setHeaderData (MTC_MTC,  Qt::Horizontal,  tr("MTC"      ), Qt::DisplayRole);
     QMd_MiMsgGrid.setHeaderData (MTC_SYS,  Qt::Horizontal,  tr("Sys"      ), Qt::DisplayRole);
     QMd_MiMsgGrid.setHeaderData (MTC_ERR,  Qt::Horizontal,  tr("Error"    ), Qt::DisplayRole);
     QMd_MiMsgGrid.setHeaderData (MTC_PAD,  Qt::Horizontal,  tr(""         ), Qt::DisplayRole);
@@ -59,9 +60,9 @@
 
   // OK, so the TableView has to actually exist first
     QTb_MiMsgGrid->setColumnWidth(MTC_TS,   108);
-    QTb_MiMsgGrid->setColumnWidth(MTC_RAW,  120);
-    QTb_MiMsgGrid->setColumnWidth(MTC_STA,  120);
-    QTb_MiMsgGrid->setColumnWidth(MTC_STAT, 160); // Old One
+    QTb_MiMsgGrid->setColumnWidth(MTC_RAW,   60);
+    QTb_MiMsgGrid->setColumnWidth(MTC_STA,   70);
+    QTb_MiMsgGrid->setColumnWidth(MTC_STAT,  60); // Old One
     QTb_MiMsgGrid->setColumnWidth(MTC_DATA, 180); // Old One
     QTb_MiMsgGrid->setColumnWidth(MTC_CHAN,  32);
     QTb_MiMsgGrid->setColumnWidth(MTC_NOTE,  40);
@@ -71,6 +72,7 @@
     QTb_MiMsgGrid->setColumnWidth(MTC_POS,   72);
     QTb_MiMsgGrid->setColumnWidth(MTC_SONG,  40);
     QTb_MiMsgGrid->setColumnWidth(MTC_PROG,  40);
+    QTb_MiMsgGrid->setColumnWidth(MTC_MTC,  144);
     QTb_MiMsgGrid->setColumnWidth(MTC_SYS,  120);
     QTb_MiMsgGrid->setColumnWidth(MTC_ERR,  120);
     QTb_MiMsgGrid->setColumnWidth(MTC_PAD,   64);
@@ -95,6 +97,7 @@ int  QVwMain::MsgAdd(quint64 i_TS, const QString &i_miStatDesc, const QString &i
     strcpy(i_miPos,      i_tMidi->theMS->pos  );
     strcpy(i_miSong,     i_tMidi->theMS->song );
     strcpy(i_miProg,     i_tMidi->theMS->prog );
+    strcpy(i_miMtc,      i_tMidi->theMS->mtc  );
     strcpy(i_miSysCmd,   i_tMidi->theMS->sys  );
     strcpy(i_miErr,      i_tMidi->theMS->err  );
 
@@ -118,6 +121,7 @@ int  QVwMain::MsgAdd(quint64 i_TS, const QString &i_miStatDesc, const QString &i
   setModelData(count, MTC_POS,   i_miPos            );  setModelData(count, MTC_POS,  alignment,   Qt::TextAlignmentRole);
   setModelData(count, MTC_SONG,  i_miSong           );  setModelData(count, MTC_SONG, alignment,   Qt::TextAlignmentRole);
   setModelData(count, MTC_PROG,  i_miProg           );  setModelData(count, MTC_PROG, alignment,   Qt::TextAlignmentRole);
+  setModelData(count, MTC_MTC,   i_miMtc            );  setModelData(count, MTC_MTC,  alignment,   Qt::TextAlignmentRole);
   setModelData(count, MTC_SYS,   i_miSysCmd         );  setModelData(count, MTC_SYS,  alignment,   Qt::TextAlignmentRole);
   setModelData(count, MTC_ERR,   i_miErr            );  setModelData(count, MTC_ERR,  alignment,   Qt::TextAlignmentRole);
   if(!i_tMidi->GetValid())

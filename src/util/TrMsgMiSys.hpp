@@ -37,7 +37,7 @@
   public:
     enum eSysType { // Second nibble iff first is F
       DEY_SYSEX       = 0x00000000U,
-      DEY_TC_QF       = 0x00000001U,
+      DEY_MTC_QF       = 0x00000001U,
       DEY_SONG_POS    = 0x00000002U,
       DEY_SONG_SEL    = 0x00000003U,
       DEY_UNDEF_4     = 0x00000004U,
@@ -84,7 +84,7 @@ char   *MsgMiSysGet(eSysType i_theType)  { return msgMiSys[i_theType]; }
 //==== The English stuff
   tStrAry = msgMiSysPile[DEL_ENGLISH];
   tStrAry[DEY_SYSEX]      = (char *)"SysEx";
-  tStrAry[DEY_TC_QF]      = (char *)"MTC QFrm";
+  tStrAry[DEY_MTC_QF]      = (char *)"MTC QFrm";
   tStrAry[DEY_SONG_POS]   = (char *)"Xport Pos";
   tStrAry[DEY_SONG_SEL]   = (char *)"Xport Sel";
   tStrAry[DEY_UNDEF_4]    = (char *)"Undef 4";
@@ -104,7 +104,7 @@ char   *MsgMiSysGet(eSysType i_theType)  { return msgMiSys[i_theType]; }
 //==== Les trucs francais
   tStrAry = msgMiSysPile[DEL_FRANCAIS];
   tStrAry[DEY_SYSEX]      = (char *)"SysEx";
-  tStrAry[DEY_TC_QF]      = (char *)"MTC QFrm";
+  tStrAry[DEY_MTC_QF]      = (char *)"MTC QFrm";
   tStrAry[DEY_SONG_POS]   = (char *)"Song Pos";
   tStrAry[DEY_SONG_SEL]   = (char *)"Song Select";
   tStrAry[DEY_UNDEF_4]    = (char *)"Undef 4";
@@ -123,7 +123,7 @@ char   *MsgMiSysGet(eSysType i_theType)  { return msgMiSys[i_theType]; }
 //==== Das deutsche zeug
   tStrAry = msgMiSysPile[DEL_DEUTSCH];
   tStrAry[DEY_SYSEX]      = (char *)"SysEx";
-  tStrAry[DEY_TC_QF]      = (char *)"MTC QFrm";
+  tStrAry[DEY_MTC_QF]      = (char *)"MTC QFrm";
   tStrAry[DEY_SONG_POS]   = (char *)"Song Pos";
   tStrAry[DEY_SONG_SEL]   = (char *)"Song Select";
   tStrAry[DEY_UNDEF_4]    = (char *)"Undef 4";
@@ -142,7 +142,7 @@ char   *MsgMiSysGet(eSysType i_theType)  { return msgMiSys[i_theType]; }
 //==== Las cosas españolas
   tStrAry = msgMiSysPile[DEL_ESPANOL];
   tStrAry[DEY_SYSEX]      = (char *)"SysEx";
-  tStrAry[DEY_TC_QF]      = (char *)"MTC QFrm";
+  tStrAry[DEY_MTC_QF]      = (char *)"MTC QFrm";
   tStrAry[DEY_SONG_POS]   = (char *)"Song Pos";
   tStrAry[DEY_SONG_SEL]   = (char *)"Song Select";
   tStrAry[DEY_UNDEF_4]    = (char *)"Undef 4";

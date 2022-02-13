@@ -51,10 +51,11 @@ class QVwMain: public QVwDesgn {
       MTC_POS   = 0x0000000AU,
       MTC_SONG  = 0x0000000BU,
       MTC_PROG  = 0x0000000CU,
-      MTC_SYS   = 0x0000000DU,
-      MTC_ERR   = 0x0000000EU,
-      MTC_PAD   = 0x0000000FU,
-      MTC_NUM   = 0x00000010U,
+      MTC_MTC   = 0x0000000DU,
+      MTC_SYS   = 0x0000000EU,
+      MTC_ERR   = 0x0000000FU,
+      MTC_PAD   = 0x00000010U,
+      MTC_NUM   = 0x00000011U,
       MTC_BIG   = 0xFFFFFFFFU
     };
   public:
@@ -105,6 +106,7 @@ class QVwMain: public QVwDesgn {
   char  i_miPos     [16];
   char  i_miSong    [ 4];
   char  i_miProg    [ 4];
+  char  i_miMtc     [32];
   char  i_miSysCmd  [32];
   char  i_miErr     [32];
 

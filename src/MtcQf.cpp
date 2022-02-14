@@ -40,7 +40,7 @@ MtcQf:: MtcQf(char **i_mtc, char *i_err) {
   mtc         = i_mtc;
   err         = i_err;
   theTrMsg    = TrMsg::GetInstance(TrMsg::DEL_ENGLISH);
-//  *mtc        = (char *)mtcBlank;
+ *mtc        = (char *)mtcBlank;
   strcpy(mtcWorking, mtcBase);
   mtcBseqPrev = MTQ_HRSH; // Make believe we are starting from scratch
   mtcFps      = MTF_24;

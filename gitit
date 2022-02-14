@@ -1,8 +1,5 @@
 git add   gitit
-git add   dmmsnoop.geany
 git add   src/Midi.cpp
 git add   src/Midi.hpp
-git add   src/src.pro
 git add   src/MtcQf.cpp
-git add   src/MtcQf.hpp
 

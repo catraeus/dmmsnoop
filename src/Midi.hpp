@@ -61,41 +61,6 @@ class Midi: public QObject {
       MCC_NUM       = 0x00000001U,
       MCC_BIG       = 0xFFFFFFFFU
     };
-    enum eMtcParse {
-      MTP_SEQ_MSK        = 0x00000070U, // The Sequence is here, there are only 8 of them.
-      MTP_SEQ_SHR        = 0x00000004U, // The Sequence shifts this much to make it zero-based
-      MTP_HBYT_MSK       = 0x00000001U, // The half-byte marker is here (after bringing down the Sequence)
-      MTP_VALUE_MSK      = 0x0000000FU, // The starting point for the numbers.
-      MTP_VALHI_SHL      = 0x00000004U, // All numbers, the high half goes left by this many bits
-      MTP_FRM_MSK_LO     = 0x0000000FU, // Frames      in the high half can only be 1 bit
-      MTP_FRM_MSK_HI     = 0x00000001U, // Frames      in the high half can only be 4 bit
-      MTP_SECMIN_MSK_LO  = 0x0000000FU, // Sec and Min in the low  half can only be 2 bit
-      MTP_SECMIN_MSK_HI  = 0x00000003U, // Sec and Min in the high half can only be 4 bit
-      MTP_SECMIN_MAX     = 0x0000003BU, // 59 zero based.
-      MTP_HRS_MSK_LO     = 0x0000000FU, // Hours       in the low  half can only be 4 bit
-      MTP_HRS_MSK_HI     = 0x00000001U, // Hours       in the high half can only be 1 bit
-      MTP_HRS_MAX        = 0x00000017U, // 23 hrs in a 24-hr clock
-      MTP_FRMRT_MSK      = 0x00000006U, // The location of the Rate enum.
-      MTP_FRMRT_SHR      = 0x00000001U  // The shift-down of the Rate enum.
-    };
-    enum eMtcSeq {
-      MTQ_FRML = 0x00000000U,
-      MTQ_FRMH = 0x00000001U,
-      MTQ_SECL = 0x00000002U,
-      MTQ_SECH = 0x00000003U,
-      MTQ_MINL = 0x00000004U,
-      MTQ_MINH = 0x00000005U,
-      MTQ_HRSL = 0x00000006U,
-      MTQ_HRSH = 0x00000007U,
-      MTQ_BIG  = 0xFFFFFFFFU
-    };
-    enum eMtcFrm {
-      MTF_24  = 0x00000000U,
-      MTF_25  = 0x00000001U,
-      MTF_29D = 0x00000002U,
-      MTF_30  = 0x00000003U,
-      MTF_BIG = 0xFFFFFFFFU
-    };
   public:
               Midi();
              ~Midi();
@@ -106,18 +71,12 @@ class Midi: public QObject {
       void CheckErrors    (uint *i_bytes); // Also distributes Status, Sys but not Channel, Velocity etc.
       void ParseController(uint *i_bytes);
       void ParseSystem    (uint *i_bytes);
-      void ParseTimeCode  (uint  i_TC);
   public:
   private:
                  MtcQf  *theMtcQf;
                  TrMsg  *theTrMsg;
     static const ullong  lenForStat[];
     static const ullong  lenForSys[];
-    static const char   *sprintfMTC[];
-    static const char   *sprintfFrm[];
-    static const char    mtcBlank[];
-    static const char    mtcBase[];
-    static const ulong   mtcFrmLims[];
                  uint    len;
                  uint    bStat;
                  uint    bStatBase;
@@ -127,27 +86,6 @@ class Midi: public QObject {
                  uint    bNoteNo;
                  uint    vVelNo;
                  bool    valid;
-
-                 char    mtcWorking[32];
-                 eMtcSeq mtcBseq;
-                 eMtcSeq mtcBseqPrev;
-                 uint    mtcBhlf;
-                 uint    mtcBnum;
-                 uint    mtcFrmL;
-                 uint    mtcFrmH;
-                 uint    mtcFrm;
-                 uint    mtcFrmMax;
-                 uint    mtcSecL;
-                 uint    mtcSecH;
-                 uint    mtcSec;
-                 uint    mtcMinL;
-                 uint    mtcMinH;
-                 uint    mtcMin;
-                 uint    mtcHrsL;
-                 uint    mtcHrsH;
-                 uint    mtcHrs;
-                 eMtcFrm mtcFpsL;
-                 eMtcFrm mtcFps;
 };
 
 #endif

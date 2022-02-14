@@ -18,7 +18,7 @@
     <font>
      <family>Liberation Mono</family>
      <pointsize>9</pointsize>
-     <italic>true</italic>
+     <italic>false</italic>
     </font>
    </property>
    <property name="midLineWidth">

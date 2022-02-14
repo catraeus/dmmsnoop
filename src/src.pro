@@ -73,6 +73,7 @@ HEADERS +=          \
     App.hpp         \
     Ctrl.hpp        \
     Midi.hpp        \
+    MtcQf.hpp       \
     DrvIf.hpp       \
     QVwClose.hpp    \
     DelgMsgTbl.hpp  \
@@ -102,6 +103,7 @@ SOURCES +=          \
     App.cpp         \
     Ctrl.cpp        \
     Midi.cpp        \
+    MtcQf.cpp       \
     DrvIf.cpp       \
     QVwClose.cpp    \
     DelgMsgTbl.cpp  \

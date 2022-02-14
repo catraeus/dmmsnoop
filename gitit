@@ -2,9 +2,7 @@ git add   gitit
 git add   dmmsnoop.geany
 git add   src/Midi.cpp
 git add   src/Midi.hpp
-git add   src/QVwMain.cpp
-git add   src/QVwMain.hpp
-git add   src/util/TrMsgMiMeta.hpp
-git add   src/util/TrMsgMiSys.hpp
-git add   test/time
+git add   src/src.pro
+git add   src/MtcQf.cpp
+git add   src/MtcQf.hpp
 

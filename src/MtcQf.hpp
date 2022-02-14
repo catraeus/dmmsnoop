@@ -17,50 +17,18 @@
  * Ave, Cambridge, MA 02139, USA.
  */
 
-#ifndef __MIDI_HPP_
-#define __MIDI_HPP_
+#ifndef __MTC_QF_HPP_
+#define __MTC_QF_HPP_
 
 #include <stdint.h>
-
-#include <QtCore/QByteArray>
-#include <QtCore/QStringList>
-#include <QtCore/QVector>
-#include <QtCore/QObject>
 
 #include "util/DmmTypes.hpp"
 #include "util/DmmStr.hpp"
 #include "util/TrMsg.hpp"
 
-#include "MtcQf.hpp"
-
-
-class Midi: public QObject {
+class MtcQf {
   public:
-    struct sMsgSpec { // all are null-terminated ASCII c strings.  Whatever the calc is, I'll take it to a next 2^k
-      char  TS   [16] ; // hh:mm:ss.sss or ssssss.sss (one day is 86400 sec so I figure 999999.999 sec should cover most sessions.)
-      char  len  [ 4] ; // If we get a SysEx infinitely long blob, I'll just truncate and fake it.
-      char  raw  [64] ; // ALL normal MIDI messages are 1, 2 or 3 bytes.  This will put out nn nnn nnn as hex dec dec
-      char  stat [32] ; // If I can't make a reasonable human message in 32 characters, then something is wrong.
-      char  ch   [ 4] ; // There are at most 16 channels possible printed as decimal
-      char  note [ 8] ; // two decimal key num, space, 8va, Note, mod
-      char  vel  [ 4] ; // for notes, controls and pressures.  These are 0 to 127 and will be printed decimal.
-      char  cc   [ 4] ; // There are only 128 channels possible.  Print decimal.  FIXME But, there are LSB/MSB channel pairs to figure.
-      char  prog [ 4] ; // 128 programs possible.
-      char  bend [16] ; // Is a Speshul uint16_t
-      char  pos  [16] ; // Is a Speshul uint16_t song position
-      char  song [ 4] ; // 128 possible song numbers.
-      char *mtc       ; // Special since non-MTC needs blank and MTC needs a built mtcWorking as hh:mm:ss:ff ccd will put a * into it when it is incomplete.
-      char  sys  [32] ; // Same sentiment as stat above
-      char  err  [32] ; // Likewise
-    };
   private:
-    enum eConst {
-      MCC_SYSEX_MIN = 0x00000003U, // The smallest possible.  Status, 1 Mfr ID and SysEx-End
-      MCC_SYSEX     = 0x000000F0U, // MAGICK to make the start detect faster.
-      MCC_SYSEX_END = 0x000000F7U, // MAGICK to make the end detect faster.
-      MCC_NUM       = 0x00000001U,
-      MCC_BIG       = 0xFFFFFFFFU
-    };
     enum eMtcParse {
       MTP_SEQ_MSK        = 0x00000070U, // The Sequence is here, there are only 8 of them.
       MTP_SEQ_SHR        = 0x00000004U, // The Sequence shifts this much to make it zero-based
@@ -97,35 +65,21 @@ class Midi: public QObject {
       MTF_BIG = 0xFFFFFFFFU
     };
   public:
-              Midi();
-             ~Midi();
-    void      Parse(uint i_len, uint *i_bytes);
+              MtcQf(char **i_mtc, char *i_err);
+             ~MtcQf();
+    void      Parse(uint i_TC);
     bool      GetValid(void) {return valid;};
-    sMsgSpec            *theMS;
   private:
-      void CheckErrors    (uint *i_bytes); // Also distributes Status, Sys but not Channel, Velocity etc.
-      void ParseController(uint *i_bytes);
-      void ParseSystem    (uint *i_bytes);
-      void ParseTimeCode  (uint  i_TC);
   public:
   private:
-                 MtcQf  *theMtcQf;
                  TrMsg  *theTrMsg;
-    static const ullong  lenForStat[];
-    static const ullong  lenForSys[];
+                 char  **mtc;
+                 char   *err;
     static const char   *sprintfMTC[];
     static const char   *sprintfFrm[];
     static const char    mtcBlank[];
     static const char    mtcBase[];
     static const ulong   mtcFrmLims[];
-                 uint    len;
-                 uint    bStat;
-                 uint    bStatBase;
-                 uint    bStatSub;
-                 uint    bChNo;
-                 uint    bSysNo;
-                 uint    bNoteNo;
-                 uint    vVelNo;
                  bool    valid;
 
                  char    mtcWorking[32];

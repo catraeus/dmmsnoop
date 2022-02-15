@@ -30,25 +30,6 @@
 #include "util/Error.hpp"
 #include "util/DmmStr.hpp"
 
-// MAGICK  0xF0   0 -  SysEx with infinite length terminated by 0xF7
-// MAGICK  0xF4  -1 -  Undefined
-// MAGICK  0xF5  -1 -  Undefined
-// MAGICK  0xF7  -1 -  End of SysEx
-// MAGICK  0xFD  -1 -  Undefined
-// IMPORTANT The "lengths" below also have meta-information about validity.  0 and -1 meaning special handling.
-// IMPORTANT The length (that are truly length) are the length including the Midi Status first byte.
-// TODO.  Make a first nibble mask to see what to do with the second nibble and lengths.
-    int Ctrl::lenMidiSpecAry[] = {
-/*       0   1   2   3   4   5   6   7   8   9   A   B   C   D   E   F */
-/*0x80*/ 3,  3,  3,  3,  3,  3,  3,  3,  3,  3,  3,  3,  3,  3,  3,  3, // Note Off
-/*0x90*/ 3,  3,  3,  3,  3,  3,  3,  3,  3,  3,  3,  3,  3,  3,  3,  3, // Note On
-/*0xA0*/ 3,  3,  3,  3,  3,  3,  3,  3,  3,  3,  3,  3,  3,  3,  3,  3, // Polyphonic Key Pressure (Aftertouch, super rare)
-/*0xB0*/ 3,  3,  3,  3,  3,  3,  3,  3,  3,  3,  3,  3,  3,  3,  3,  3, // Control Change (CC), knobs are being turned, spun, slid, pushed, banged, whatever
-/*0xC0*/ 2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2, // Program Change - new patches being spec'd
-/*0xD0*/ 2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2, // Channel Pressure - whole voice aftertouch, most often used.
-/*0xE0*/ 3,  3,  3,  3,  3,  3,  3,  3,  3,  3,  3,  3,  3,  3,  3,  3, // Pitch Bend - So special it has its own command, and is a (close to) uint16_t range.
-/*0xF0*/ 0,  2,  3,  2,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1  // Aren't we Speecial?  The SysEx and beyond controls
-};
 
 
 
@@ -187,16 +168,19 @@ void    Ctrl::OnMiMsgTx        (const QString &i_miMsgStr) {
   QByteArray  miMsgBytes;
   QString     byteStr;
   uint        value;
-  quint64      TS;
+  quint64     TS;
+  uint        miMsgLen;
+  uint        miBytes[1024];
 
   lines = i_miMsgStr.split('\n', QString::SkipEmptyParts);
   lineCount = lines.count();
-//bytes = i_miMsgStr.split(' ', QString::SkipEmptyParts);// MAGICK The GUI gives us the i_miMsgStr as text ...Convert the i_miMsgStr to bytes.
   if(lineCount == 0) {
     miMsgBytes.clear();
-    MiMsgParse(miMsgBytes);
+    miMsgLen = 0;
+    //========================================================================
+    theMidi->Parse(miMsgLen, miBytes);
     TS = GetTS();
-    theQVwMain.OnMiMsgTX(TS, strMiStat, strMiData, theMidi, valid);
+    theQVwMain.OnMiMsgTX(TS, theMidi, valid);
   }
   for(uint lineDex=0; lineDex<lineCount; lineDex++) {
     bytes = lines[lineDex].split(' ', QString::SkipEmptyParts);// MAGICK The GUI gives us the i_miMsgStr as text ...Convert the i_miMsgStr to bytes.
@@ -212,173 +196,30 @@ void    Ctrl::OnMiMsgTx        (const QString &i_miMsgStr) {
       miMsgBytes.append(static_cast<char>(static_cast<quint8>(value)));
     }
 
-    MiMsgParse(miMsgBytes);  // Make sure the bytes represent a valid MIDI i_miMsgStr.
+
+//========
+  miMsgLen = miMsgBytes.count();
+  for(uint i=0; i<miMsgLen; i++)
+    miBytes[i] = ((uint)miMsgBytes[i] & 0x000000FFU); // That freq king QByteArray is signed and sign extends on coersion!
+  theMidi->Parse(miMsgLen, miBytes);
+
+//    MiMsgParse(miMsgBytes);  // Make sure the bytes represent a valid MIDI i_miMsgStr.
     if(valid)
       TS = theDrvIf->OnMiMsgTx(miMsgBytes);
     else
       TS = GetTS();
-    theQVwMain.OnMiMsgTX(TS, strMiStat, strMiData, theMidi, valid);
+    theQVwMain.OnMiMsgTX(TS, theMidi, valid);
     usleep(10000);
   }
 }
 void    Ctrl::OnMiMsgRx        (quint64 i_TS, const QByteArray &i_msg) {
-    MiMsgParse(i_msg);
-    theQVwMain.OnMiMsgRX(i_TS, strMiStat, strMiData, theMidi, valid);
-}
-void    Ctrl::MiMsgParse       (              const QByteArray &i_msg) {
-  uint     lenMidiSpec;
-//char     miStatByteStr[3]; // two nibbles and a trailing zero
-  uint     miBytes[1024];
-//  char     tStr[256];
-  int      lastDataIndex;
-  QString  s;
-  int      value;
-
 //========
-  miMsgLen = i_msg.count();
+  uint     miBytes[1024];
+  uint miMsgLen = i_msg.count();
   for(uint i=0; i<miMsgLen; i++)
     miBytes[i] = ((uint)i_msg[i] & 0x000000FFU); // That freq king QByteArray is signed and sign extends on coersion!
   theMidi->Parse(miMsgLen, miBytes);
-  if(miMsgLen == 0) {  // WEIRD Make sure we have something ... anything.
-    strMiData = "";
-    strMiStat = "";
-    valid = false;
-    return;
-  }
-
-
-//========
-  miStat = (uint8_t)(i_msg[0]);
-//ByteToString(miStat, miStatByteStr);
-
-//========
-  if(miStat < 0x80U) {// WEIRD Validate status byte.
-    strMiData = "";
-    strMiStat = "";
-    valid     = false;
-    return;
-  }
-
-//========
-// Validate length and data.
-  lenMidiSpec = lenMidiSpecAry[miStat - 0x80];
-  switch (lenMidiSpec) {
-    //case -1:  // FIXME  4, 5 and D are reserved, but 7 is SysEx End, we have to build a stateful machine to detect this being OK or Bad.
-    //  MiMsgDatBytesStr(i_msg, tStr);
-    //  strMiData = tStr;
-    //  strMiStat = tr("%1 (undefined status)").arg(static_cast<uint>(miStat), 2, 16, QChar('0'));
-    //  valid = false;
-    //  return;
-    //  break;
-    case 0:
-    //  if(miMsgLen == 1) {
-    //    strMiData = "";
-    //    strMiStat = tr("System Exclusive (no data)");
-    //    valid = false;
-    //    return;
-    //  }
-    //  if(static_cast<quint8>(i_msg[miMsgLen - 1]) != 0xf7) {
-    //    MiMsgDatBytesStr(i_msg, tStr);
-    //    strMiData = tStr;
-    //    strMiStat = tr("System Exclusive (end not found)"); // So I guess that the RtMidi
-    //    valid = false;
-    //    return;
-    //  }
-      lastDataIndex = miMsgLen - 2;
-        break;
-    default:
-      //if(miMsgLen != lenMidiSpec) {
-      //  MiMsgDatBytesStr(i_msg, tStr);
-      //  strMiData = tStr;
-      //  strMiStat = tr("%1 (incorrect length)").arg(static_cast<uint>(miStat), 2, 16, QChar('0'));
-      //  valid = false;
-      //  return;
-      //}
-      //else {
-        strMiData = "";
-        strMiStat = "";
-        valid = false;
-      //}
-      lastDataIndex = miMsgLen - 1;
-      break;
-    }
-
-//========
-// Validate data bytes.
-  for(int i = 1; i <= lastDataIndex; i++) {
-    if(static_cast<quint8>(i_msg[i]) >= 0x80) {
-//      MiMsgDatBytesStr(i_msg, tStr);
-      strMiData = "";
-      strMiStat = "";
-      valid = false;
-      return;
-    }
-  }
-
-//========
-// Convert i_msg to user-friendly strings.
-  valid = true;
-  miStatBase   = (uint)miStat;
-  miStatBase  &= 0x70U;
-  miStatBase >>= 4;
-  switch (miStatBase) {
-    case 0x0:
-    case 0x1:
-    case 0x2:
-    case 0x3:
-    case 0x4:
-    case 0x5:
-    case 0x6:
-      strMiData = tr(""   );
-      strMiStat = tr(""   );
-      break;
-    case 0x7: // FIXME, unload this to a whole new function.
-      switch (miStat & (uint8_t)0x0F) {
-        case 0x0:
-          strMiData = tr("");
-          strMiStat = tr("");
-          break;
-        case 0x1: // FIXME, MTC needs order validation, accumulation and time correlation.
-          value = i_msg[1] & 0x0fU;
-          switch (i_msg[1] & 0x70U) {
-            case 0x00:
-            case 0x10:
-            case 0x20:
-            case 0x30:
-            case 0x40:
-            case 0x50:
-            case 0x60:   strMiData = "";  break;
-            case 0x70:
-              switch ((value & 0x7) >> 1) {
-                case 0:
-                case 1:
-                case 2:
-                case 3:
-                case 4:
-                case 5:
-                case 6:
-                case 7:  strMiData = "";
-                default:   ;               // We shouldn't get here.
-              }
-              break;
-            default:        ;        // We shouldn't get here.
-          }
-          strMiStat = "";
-          break;
-        case 0x2:
-        case 0x3:
-        case 0x6:
-        case 0x8:
-        case 0x9:
-        case 0xa:
-        case 0xb:
-        case 0xc:
-        case 0xe:
-        case 0xf:  strMiData = "";  strMiStat = "";  break;
-        default:        ;   // We shouldn't get here.
-        }
-        break;
-    default:    ;  // We shouldn't get here.
-  }
+//    MiMsgParse(i_msg);
+    theQVwMain.OnMiMsgRX(i_TS, theMidi, valid);
 }
 

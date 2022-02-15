@@ -39,9 +39,9 @@
     QMd_MiMsgGrid.setRowCount   (0);
     QMd_MiMsgGrid.setHeaderData (MTC_TS,   Qt::Horizontal,  tr("TS"       ), Qt::DisplayRole);
     QMd_MiMsgGrid.setHeaderData (MTC_RAW,  Qt::Horizontal,  tr("Raw"      ), Qt::DisplayRole);
-    QMd_MiMsgGrid.setHeaderData (MTC_STAT, Qt::Horizontal,  tr("Status"   ), Qt::DisplayRole);
+//    QMd_MiMsgGrid.setHeaderData (MTC_STAT, Qt::Horizontal,  tr("Status"   ), Qt::DisplayRole);
     QMd_MiMsgGrid.setHeaderData (MTC_STA,  Qt::Horizontal,  tr("Stat"     ), Qt::DisplayRole);
-    QMd_MiMsgGrid.setHeaderData (MTC_DATA, Qt::Horizontal,  tr("Data"     ), Qt::DisplayRole);
+//    QMd_MiMsgGrid.setHeaderData (MTC_DATA, Qt::Horizontal,  tr("Data"     ), Qt::DisplayRole);
     QMd_MiMsgGrid.setHeaderData (MTC_CHAN, Qt::Horizontal,  tr("Ch"       ), Qt::DisplayRole);
     QMd_MiMsgGrid.setHeaderData (MTC_NOTE, Qt::Horizontal,  tr("Note"     ), Qt::DisplayRole);
     QMd_MiMsgGrid.setHeaderData (MTC_CC,   Qt::Horizontal,  tr("CC"       ), Qt::DisplayRole);
@@ -62,8 +62,8 @@
     QTb_MiMsgGrid->setColumnWidth(MTC_TS,   108);
     QTb_MiMsgGrid->setColumnWidth(MTC_RAW,   60);
     QTb_MiMsgGrid->setColumnWidth(MTC_STA,   70);
-    QTb_MiMsgGrid->setColumnWidth(MTC_STAT,  60); // Old One
-    QTb_MiMsgGrid->setColumnWidth(MTC_DATA, 180); // Old One
+//    QTb_MiMsgGrid->setColumnWidth(MTC_STAT,  60); // Old One
+//    QTb_MiMsgGrid->setColumnWidth(MTC_DATA, 180); // Old One
     QTb_MiMsgGrid->setColumnWidth(MTC_CHAN,  32);
     QTb_MiMsgGrid->setColumnWidth(MTC_NOTE,  40);
     QTb_MiMsgGrid->setColumnWidth(MTC_CC,    32);
@@ -81,7 +81,7 @@
      QVwMain::~QVwMain() {}
 
 void QVwMain::SetTimeZero(quint64 i_TZ) {  TZ = i_TZ;  return;}
-int  QVwMain::MsgAdd(quint64 i_TS, const QString &i_miStatDesc, const QString &i_miDataDesc, Midi *i_tMidi, bool i_val) {
+int  QVwMain::MsgAdd(quint64 i_TS, Midi *i_tMidi, bool i_val) {
   (void)i_val;
   int               count;
   quint64           bla;
@@ -111,8 +111,8 @@ int  QVwMain::MsgAdd(quint64 i_TS, const QString &i_miStatDesc, const QString &i
   setModelData(count, MTC_TS,    i_tMidi->theMS->TS );  setModelData(count, MTC_TS,   alignment,   Qt::TextAlignmentRole);
   setModelData(count, MTC_RAW,   i_miRaw            );  setModelData(count, MTC_RAW,  alignment,   Qt::TextAlignmentRole);
   setModelData(count, MTC_STA,   i_miSta            );  setModelData(count, MTC_STA,  alignment,   Qt::TextAlignmentRole);
-  setModelData(count, MTC_STAT,  i_miStatDesc       );  setModelData(count, MTC_STAT, alignment,   Qt::TextAlignmentRole);
-  setModelData(count, MTC_DATA,  i_miDataDesc       );  setModelData(count, MTC_DATA, alignment,   Qt::TextAlignmentRole);
+//  setModelData(count, MTC_STAT,  i_miStatDesc       );  setModelData(count, MTC_STAT, alignment,   Qt::TextAlignmentRole);
+//  setModelData(count, MTC_DATA,  i_miDataDesc       );  setModelData(count, MTC_DATA, alignment,   Qt::TextAlignmentRole);
   setModelData(count, MTC_CHAN,  i_miChanDesc       );  setModelData(count, MTC_CHAN, alignment,   Qt::TextAlignmentRole);
   setModelData(count, MTC_NOTE,  i_miNoteDesc       );  setModelData(count, MTC_NOTE, alignment,   Qt::TextAlignmentRole);
   setModelData(count, MTC_CC,    i_miChChDesc       );  setModelData(count, MTC_CC,   alignment,   Qt::TextAlignmentRole);
@@ -125,20 +125,19 @@ int  QVwMain::MsgAdd(quint64 i_TS, const QString &i_miStatDesc, const QString &i
   setModelData(count, MTC_SYS,   i_miSysCmd         );  setModelData(count, MTC_SYS,  alignment,   Qt::TextAlignmentRole);
   setModelData(count, MTC_ERR,   i_miErr            );  setModelData(count, MTC_ERR,  alignment,   Qt::TextAlignmentRole);
   if(!i_tMidi->GetValid())
-    setModelData(count, MTC_STAT,  QIcon(":/dmmsnoop/images/16x16/error.png"), Qt::DecorationRole);
+    setModelData(count, MTC_STA,  QIcon(":/dmmsnoop/images/16x16/error.png"), Qt::DecorationRole);
   QTb_MiMsgGrid->resizeRowToContents(count);
   QTb_MiMsgGrid->scrollToBottom();
   return count;
 }
-void QVwMain::OnMiMsgRX(quint64 i_TS, const QString &i_miMsgStatStr,  const QString &i_miMsgDataStr, Midi *i_tMidi, bool valid) {
-  MsgAdd(i_TS, i_miMsgStatStr, i_miMsgDataStr, i_tMidi, valid);
+void QVwMain::OnMiMsgRX(quint64 i_TS, Midi *i_tMidi, bool valid) {
+  MsgAdd(i_TS, i_tMidi, valid);
 }
-void QVwMain::OnMiMsgTX(quint64 i_TS, const QString &i_miMsgStatStr, const QString &i_miMsgDataStr, Midi *i_tMidi, bool valid) {
+void QVwMain::OnMiMsgTX(quint64 i_TS, Midi *i_tMidi, bool valid) {
   int   index;
   const QBrush &brush = qApp->palette().alternateBase();
-  index = MsgAdd(i_TS, i_miMsgStatStr, i_miMsgDataStr, i_tMidi, valid);
-  setModelData(index, MTC_DATA,  brush, Qt::BackgroundRole);
-  setModelData(index, MTC_STAT,  brush, Qt::BackgroundRole);
+  index = MsgAdd(i_TS, i_tMidi, valid);
+  setModelData(index, MTC_STA,  brush, Qt::BackgroundRole);
   setModelData(index, MTC_TS,    brush, Qt::BackgroundRole);
 }
 void QVwMain::OnMiMsgTabClr() {

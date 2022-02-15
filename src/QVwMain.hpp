@@ -41,21 +41,21 @@ class QVwMain: public QVwDesgn {
       MTC_TS    = 0x00000000U,
       MTC_RAW   = 0x00000001U,
       MTC_STA   = 0x00000002U,
-      MTC_STAT  = 0x00000003U,
-      MTC_DATA  = 0x00000004U,
-      MTC_CHAN  = 0x00000005U,
-      MTC_NOTE  = 0x00000006U,
-      MTC_CC    = 0x00000007U,
-      MTC_VELO  = 0x00000008U,
-      MTC_BEND  = 0x00000009U,
-      MTC_POS   = 0x0000000AU,
-      MTC_SONG  = 0x0000000BU,
-      MTC_PROG  = 0x0000000CU,
-      MTC_MTC   = 0x0000000DU,
-      MTC_SYS   = 0x0000000EU,
-      MTC_ERR   = 0x0000000FU,
-      MTC_PAD   = 0x00000010U,
-      MTC_NUM   = 0x00000011U,
+//      MTC_STAT  = 0x00000003U,
+//      MTC_DATA  = 0x00000004U,
+      MTC_CHAN  = 0x00000003U,
+      MTC_NOTE  = 0x00000004U,
+      MTC_CC    = 0x00000005U,
+      MTC_VELO  = 0x00000006U,
+      MTC_BEND  = 0x00000007U,
+      MTC_POS   = 0x00000008U,
+      MTC_SONG  = 0x00000009U,
+      MTC_PROG  = 0x0000000AU,
+      MTC_MTC   = 0x0000000BU,
+      MTC_SYS   = 0x0000000CU,
+      MTC_ERR   = 0x0000000DU,
+      MTC_PAD   = 0x0000000EU,
+      MTC_NUM   = 0x0000000FU,
       MTC_BIG   = 0xFFFFFFFFU
     };
   public:
@@ -64,8 +64,8 @@ class QVwMain: public QVwDesgn {
 
   public slots:
 
-    void  OnMiMsgRX      (quint64 i_TS, const QString &i_miMsgStatStr, const QString &i_miMsgDataStr, Midi *i_tMidi, bool i_val);
-    void  OnMiMsgTX      (quint64 i_TS, const QString &i_miMsgStatStr, const QString &i_miMsgDataStr, Midi *i_tMidi, bool i_val);
+    void  OnMiMsgRX      (quint64 i_TS, Midi *i_tMidi, bool i_val);
+    void  OnMiMsgTX      (quint64 i_TS, Midi *i_tMidi, bool i_val);
     void  OnMiMsgTabClr  (void      );
     void  OnMiMsgTxEn    (bool i_en );
 
@@ -79,7 +79,7 @@ class QVwMain: public QVwDesgn {
     void  SetTimeZero    (quint64 i_TZ);
 
   private:
-    int   MsgAdd         (quint64 i_TS, const QString &i_miMsgStatStr, const QString &i_miMsgDataStr, Midi *i_tMidi, bool i_val);
+    int   MsgAdd         (quint64 i_TS, Midi *i_tMidi, bool i_val);
     void  setModelData   (int     i_R,  int   i_C, const QVariant &value, int role=Qt::DisplayRole);
 
   public:

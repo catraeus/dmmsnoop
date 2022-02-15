@@ -47,7 +47,6 @@ private slots:
 
 private:
   void      MiMsgDatBytesStr(const QByteArray &message, char *o_dStr, int lastIndex=-1);
-  void      MiMsgParse(const QByteArray &i_msg);
   void      QVwErrShow(const QString &message);
 
        App           &theApp;
@@ -60,18 +59,10 @@ private:
        QVwMsg         theQVwMsg;
        QVwErr         theQVwErr;
 
-       uint           miMsgLen;
-       uint8_t        miStat;
-       uint           miStatBase;
-       QString        strMiData;
-       QString        strMiStat;
-
        TrMsg          *theTrMsg;
        Midi           *theMidi;
 
        bool            valid;
-
-static int             lenMidiSpecAry[];
 
 };
 

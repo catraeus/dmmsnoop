@@ -51,7 +51,7 @@ class Midi: public QObject {
       char  song [ 4] ; // 128 possible song numbers.
       char *mtc       ; // Special since non-MTC needs blank and MTC needs a built mtcWorking as hh:mm:ss:ff ccd will put a * into it when it is incomplete.
       char  sys  [32] ; // Same sentiment as stat above
-      char  err  [32] ; // Likewise
+      char  err  [64] ; // Likewise
     };
   private:
     enum eConst {

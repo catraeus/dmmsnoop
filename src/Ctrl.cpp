@@ -341,29 +341,29 @@ void    Ctrl::MiMsgParse       (              const QByteArray &i_msg) {
         case 0x1: // FIXME, MTC needs order validation, accumulation and time correlation.
           value = i_msg[1] & 0x0fU;
           switch (i_msg[1] & 0x70U) {
-            case 0x00:   strMiData = tr("MTC ..:..:..+.f %1 rrd"  ).arg(value);  break;
-            case 0x10:   strMiData = tr("MTC ..:..:..+f. %1 rrd"  ).arg(value);  break;
-            case 0x20:   strMiData = tr("MTC ..:..:.s+.. %1 rrd"  ).arg(value);  break;
-            case 0x30:   strMiData = tr("MTC ..:..:s.+.. %1 rrd"  ).arg(value);  break;
-            case 0x40:   strMiData = tr("MTC ..:.m:..+.. %1 rrd"  ).arg(value);  break;
-            case 0x50:   strMiData = tr("MTC ..:m.:..+.. %1 rrd"  ).arg(value);  break;
-            case 0x60:   strMiData = tr("MTC .h:..:..+.. %1 rrd"  ).arg(value);  break;
+            case 0x00:
+            case 0x10:
+            case 0x20:
+            case 0x30:
+            case 0x40:
+            case 0x50:
+            case 0x60:   strMiData = "";  break;
             case 0x70:
               switch ((value & 0x7) >> 1) {
-                case 0:  strMiData = tr("MTC h.:..:..+..  0 24."    );            break;
-                case 1:  strMiData = tr("MTC h.:..:..+..  1 24."    );            break;
-                case 2:  strMiData = tr("MTC h.:..:..+..  0 25."    );            break;
-                case 3:  strMiData = tr("MTC h.:..:..+..  1 25."    );            break;
-                case 4:  strMiData = tr("MTC h.:..:..+..  0 30D"    );            break;
-                case 5:  strMiData = tr("MTC h.:..:..+..  1 30D"    );            break;
-                case 6:  strMiData = tr("MTC h.:..:..+..  0 30."    );            break;
-                case 7:  strMiData = tr("MTC h.:..:..+..  1 30."    );            break;
+                case 0:
+                case 1:
+                case 2:
+                case 3:
+                case 4:
+                case 5:
+                case 6:
+                case 7:  strMiData = "";
                 default:   ;               // We shouldn't get here.
               }
               break;
             default:        ;        // We shouldn't get here.
           }
-          strMiStat = tr("MTC QF");
+          strMiStat = "";
           break;
         case 0x2:
         case 0x3:

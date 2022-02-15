@@ -82,6 +82,7 @@ char   *MsgMiMetaGet(eMetaType i_theType)  { return msgMiMeta[i_theType]; }
   tStrAry[DEM_STAT_LOW]        = (char *)"Status Byte < 0x80";
   tStrAry[DEM_DATA_HIGH]       = (char *)"Data Byte >= 0x80";
   tStrAry[DEM_RTM_FLT_FAIL]    = (char *)"RtMidi didn't Filter";
+  tStrAry[DEM_MTC_OOO]         = (char *)"MTC OOO";
   tStrAry[DEM_NONE]            = (char *)"No Trouble";
 
 //==================================================================================================
@@ -95,6 +96,7 @@ char   *MsgMiMetaGet(eMetaType i_theType)  { return msgMiMeta[i_theType]; }
   tStrAry[DEM_STAT_LOW]        = (char *)"L'Octet Status < 0x80";
   tStrAry[DEM_DATA_HIGH]       = (char *)"L'Octet Status >= 0x80";
   tStrAry[DEM_RTM_FLT_FAIL]    = (char *)"RtMidi ne filtre pas";
+  tStrAry[DEM_MTC_OOO]         = (char *)"MTC OOO";
   tStrAry[DEM_NONE]            = (char *)"Pas de problème";
 
 //==================================================================================================
@@ -108,6 +110,7 @@ char   *MsgMiMetaGet(eMetaType i_theType)  { return msgMiMeta[i_theType]; }
   tStrAry[DEM_STAT_LOW]        = (char *)"Status Byte < 0x80";
   tStrAry[DEM_DATA_HIGH]       = (char *)"Status Byte >= 0x80";
   tStrAry[DEM_RTM_FLT_FAIL]    = (char *)"nicht gefiltert";
+  tStrAry[DEM_MTC_OOO]         = (char *)"MTC OOO";
   tStrAry[DEM_NONE]            = (char *)"Kein Problem";
 
 //==================================================================================================
@@ -121,6 +124,7 @@ char   *MsgMiMetaGet(eMetaType i_theType)  { return msgMiMeta[i_theType]; }
   tStrAry[DEM_STAT_LOW]        = (char *)"Byte de Status < 0x80";
   tStrAry[DEM_DATA_HIGH]       = (char *)"Byte de Status >= 0x80";
   tStrAry[DEM_RTM_FLT_FAIL]    = (char *)"no filtró";
+  tStrAry[DEM_MTC_OOO]         = (char *)"MTC OOO";
   tStrAry[DEM_NONE]            = (char *)"No hay problema";
 
 #endif

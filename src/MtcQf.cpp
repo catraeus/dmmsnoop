@@ -52,19 +52,19 @@ void MtcQf::Parse(uint i_TC) {
   *mtc = mtcWorking;
   mtcFrmMax = mtcFrmLims[mtcFps];
   //====  Just parse out everything and let the case statements simplify without the shif/mask confusion.
-                                                                         fprintf(stdout, "#=============\n"        ); fflush(stdout);
-  mtcBseq = (eMtcSeq)((i_TC    & MTP_SEQ_MSK       ) >> MTP_SEQ_SHR   ); fprintf(stdout, "mtcBseq: %02X\n", mtcBseq); fflush(stdout);
-  mtcBhlf =           (mtcBseq & MTP_HBYT_MSK      )                   ; fprintf(stdout, "mtcBhlf: %02X\n", mtcBhlf); fflush(stdout);
-  mtcBnum =           (i_TC    & MTP_VALUE_MSK     )                   ; fprintf(stdout, "mtcBnum: %02X\n", mtcBnum); fflush(stdout);
-  mtcFrmL =           (mtcBnum & MTP_FRM_MSK_LO    )                   ; fprintf(stdout, "mtcFrmL: %02X\n", mtcFrmL); fflush(stdout);
-  mtcFrmH =           (mtcBnum & MTP_FRM_MSK_HI    ) << MTP_VALHI_SHL  ; fprintf(stdout, "mtcFrmH: %02X\n", mtcFrmH); fflush(stdout);
-  mtcSecL =           (mtcBnum & MTP_SECMIN_MSK_LO )                   ; fprintf(stdout, "mtcSecL: %02X\n", mtcSecL); fflush(stdout);
-  mtcSecH =           (mtcBnum & MTP_SECMIN_MSK_HI ) << MTP_VALHI_SHL  ; fprintf(stdout, "mtcSecH: %02X\n", mtcSecH); fflush(stdout);
-  mtcMinL =           (mtcBnum & MTP_SECMIN_MSK_LO )                   ; fprintf(stdout, "mtcMinL: %02X\n", mtcMinL); fflush(stdout);
-  mtcMinH =           (mtcBnum & MTP_SECMIN_MSK_HI ) << MTP_VALHI_SHL  ; fprintf(stdout, "mtcMinH: %02X\n", mtcMinH); fflush(stdout);
-  mtcHrsL =           (mtcBnum & MTP_HRS_MSK_LO    )                   ; fprintf(stdout, "mtcHrsL: %02X\n", mtcHrsL); fflush(stdout);
-  mtcHrsH =           (mtcBnum & MTP_HRS_MSK_HI    ) << MTP_VALHI_SHL  ; fprintf(stdout, "mtcHrsH: %02X\n", mtcHrsH); fflush(stdout);
-  mtcFpsL = (eMtcFrm)((mtcBnum & MTP_FRMRT_MSK     ) >> MTP_FRMRT_SHR ); fprintf(stdout, "mtcFps : %02X\n", mtcFps ); fflush(stdout);
+                                                                         //fprintf(stdout, "#=============\n"        ); fflush(stdout);
+  mtcBseq = (eMtcSeq)((i_TC    & MTP_SEQ_MSK       ) >> MTP_SEQ_SHR   ); //fprintf(stdout, "mtcBseq: %02X\n", mtcBseq); fflush(stdout);
+  mtcBhlf =           (mtcBseq & MTP_HBYT_MSK      )                   ; //fprintf(stdout, "mtcBhlf: %02X\n", mtcBhlf); fflush(stdout);
+  mtcBnum =           (i_TC    & MTP_VALUE_MSK     )                   ; //fprintf(stdout, "mtcBnum: %02X\n", mtcBnum); fflush(stdout);
+  mtcFrmL =           (mtcBnum & MTP_FRM_MSK_LO    )                   ; //fprintf(stdout, "mtcFrmL: %02X\n", mtcFrmL); fflush(stdout);
+  mtcFrmH =           (mtcBnum & MTP_FRM_MSK_HI    ) << MTP_VALHI_SHL  ; //fprintf(stdout, "mtcFrmH: %02X\n", mtcFrmH); fflush(stdout);
+  mtcSecL =           (mtcBnum & MTP_SECMIN_MSK_LO )                   ; //fprintf(stdout, "mtcSecL: %02X\n", mtcSecL); fflush(stdout);
+  mtcSecH =           (mtcBnum & MTP_SECMIN_MSK_HI ) << MTP_VALHI_SHL  ; //fprintf(stdout, "mtcSecH: %02X\n", mtcSecH); fflush(stdout);
+  mtcMinL =           (mtcBnum & MTP_SECMIN_MSK_LO )                   ; //fprintf(stdout, "mtcMinL: %02X\n", mtcMinL); fflush(stdout);
+  mtcMinH =           (mtcBnum & MTP_SECMIN_MSK_HI ) << MTP_VALHI_SHL  ; //fprintf(stdout, "mtcMinH: %02X\n", mtcMinH); fflush(stdout);
+  mtcHrsL =           (mtcBnum & MTP_HRS_MSK_LO    )                   ; //fprintf(stdout, "mtcHrsL: %02X\n", mtcHrsL); fflush(stdout);
+  mtcHrsH =           (mtcBnum & MTP_HRS_MSK_HI    ) << MTP_VALHI_SHL  ; //fprintf(stdout, "mtcHrsH: %02X\n", mtcHrsH); fflush(stdout);
+  mtcFpsL = (eMtcFrm)((mtcBnum & MTP_FRMRT_MSK     ) >> MTP_FRMRT_SHR ); //fprintf(stdout, "mtcFps : %02X\n", mtcFps ); fflush(stdout);
 
   switch(mtcBseq) {
     //==============================================================================================

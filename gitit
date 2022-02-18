@@ -1,9 +1,4 @@
 git add gitit
-git add   dmmsnoop.geany
-git add   gitit
-git add   src/Ctrl.cpp
-git add   src/Ctrl.hpp
-git add   src/QVwMain.hpp
-git add   src/_main.cpp
-git add   src/_main.hpp
+	modified:   src/Ctrl.cpp
+	modified:   src/Ctrl.hpp
 

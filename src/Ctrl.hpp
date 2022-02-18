@@ -53,16 +53,16 @@ private:
 
        DrvIf         *theDrvIf;
 
-       QVwMain        theQVwMain;
-       QVwConfig      theQVwConfig;
-       QVwAbout       theQVwAbout;
-       QVwMsg         theQVwMsg;
-       QVwErr         theQVwErr;
+       QVwMain       *theQVwMain;
+       QVwConfig     *theQVwConfig;
+       QVwAbout      *theQVwAbout;
+       QVwMsg        *theQVwMsg;
+       QVwErr        *theQVwErr;
 
-       TrMsg          *theTrMsg;
-       Midi           *theMidi;
+       TrMsg         *theTrMsg;
+       Midi          *theMidi;
 
-       bool            valid;
+       bool           valid;
 
 };
 

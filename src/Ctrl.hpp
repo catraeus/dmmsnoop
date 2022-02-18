@@ -36,7 +36,7 @@ class Ctrl: public QObject {
   Q_OBJECT
 
 public:
-  explicit  Ctrl(App &i_theApp, QObject *parent=0);
+  explicit  Ctrl(App *i_theApp, QObject *parent=0);
            ~Ctrl();
   void      run();  // RESEARCH Might be Inherited via QThread::run
 
@@ -49,9 +49,9 @@ private:
   void      MiMsgDatBytesStr(const QByteArray &message, char *o_dStr, int lastIndex=-1);
   void      QVwErrShow(const QString &message);
 
-       App           &theApp;
+       App           *theApp;
 
-       DrvIf          *theDrvIf;
+       DrvIf         *theDrvIf;
 
        QVwMain        theQVwMain;
        QVwConfig      theQVwConfig;

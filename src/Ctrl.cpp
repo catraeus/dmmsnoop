@@ -33,7 +33,7 @@
 
 
 
-Ctrl:: Ctrl(App &i_theApp, QObject *i_parent) : QObject(i_parent), theApp(i_theApp) {
+Ctrl:: Ctrl(App *i_theApp, QObject *i_parent) : QObject(i_parent), theApp(i_theApp) {
   int      driverCount;
   int      driver;
   int      outputPort;
@@ -93,7 +93,7 @@ Ctrl:: Ctrl(App &i_theApp, QObject *i_parent) : QObject(i_parent), theApp(i_theA
   connect(&theQVwMain, SIGNAL(EmMiMsgTXAdd        (                           )),  &theQVwMsg,    SLOT(show()));
   connect(&theQVwMain, SIGNAL(EmMiMsgTabClr       (                           )),  &theQVwMain,   SLOT(OnMiMsgTabClr()));
   connect(&theQVwMain, SIGNAL(EmAppConfig         (                           )),  &theQVwConfig, SLOT(show()));
-  connect(&theQVwMain, SIGNAL(closeRequest        (                           )),  &theApp,       SLOT(quit()));
+  connect(&theQVwMain, SIGNAL(closeRequest        (                           )),   theApp,       SLOT(quit()));
 
 //==================================================================================================
 //==== Setup Message Send
@@ -119,8 +119,8 @@ Ctrl:: Ctrl(App &i_theApp, QObject *i_parent) : QObject(i_parent), theApp(i_theA
 
 //==================================================================================================
 //==== Setup theApp
-  connect(&theApp,  SIGNAL(eventError             (QString                    )),  &theQVwErr,    SLOT(setMessage(QString)));
-  connect(&theApp,  SIGNAL(eventError             (QString                    )),  &theQVwErr,    SLOT(show()));
+  connect( theApp,  SIGNAL(eventError             (QString                    )),  &theQVwErr,    SLOT(setMessage(QString)));
+  connect( theApp,  SIGNAL(eventError             (QString                    )),  &theQVwErr,    SLOT(show()));
 }
 Ctrl::~Ctrl() {
 // Disconnect theDrvIf signals handled by the controller before the theDrvIf is deleted.
@@ -133,7 +133,7 @@ Ctrl::~Ctrl() {
 
 void    Ctrl::run              (                      ) { // Overridden from QApplicatoin
   theQVwMain.show();
-  theApp.exec();
+  theApp->exec();
 }
 void    Ctrl::QVwErrShow       (const QString &message) {
   theQVwErr.setMessage(message);

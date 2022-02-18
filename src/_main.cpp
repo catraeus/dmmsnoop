@@ -20,54 +20,49 @@
 #include "_main.hpp"
 
 int main(int argc, char **argv) {
-  App           theApp(argc, argv);
-  QString       errorMessage;
-  QTranslator   qtTranslator;
-  QTranslator   translator;
+  App          *theApp;
+  QString       errorMessage; // MAGICK, this is templated somehow, it gets filled in ghostland of Qt.
+  QString       directory;
+  QString       language;
+  QTranslator  *theTrQtf;
+  QTranslator  *theTrApp;
   TrMsg        *theTrMsg;
+  Ctrl         *theCtrl;
   int           result;
+
+  theApp   = new App(argc, argv);
+  theTrQtf = new QTranslator();
+  theTrApp = new QTranslator();
 
   theTrMsg = TrMsg::GetInstance(TrMsg::DEL_ENGLISH);
 
-  theApp.setApplicationName(theTrMsg->MsgAppGet(TrMsg::DAT_APP_DOM));
-  theApp.setOrganizationDomain("dmmsnoop.catraeus.com");
-  theApp.setOrganizationName("dmmsnoop.catraeus.com");
+  theApp->setApplicationName(theTrMsg->MsgAppGet(TrMsg::DAT_APP_DOM));
+  theApp->setOrganizationDomain("dmmsnoop.catraeus.com");
+  theApp->setOrganizationName("dmmsnoop.catraeus.com");
 
-// Translations
-  QString      directory = QLibraryInfo::location(QLibraryInfo::TranslationsPath);
-  QString      language = QLocale::system().name();
+  directory = QLibraryInfo::location(QLibraryInfo::TranslationsPath);
+  language  = QLocale::system().name();
 
-  qtTranslator.load("qt_" + language, directory);
-  theApp.installTranslator(&qtTranslator);
+  theTrQtf->load("qt_" + language, directory);
+  theApp->installTranslator(theTrQtf);
 
-  translator.load("dmmsnoop_" + language);
-  theApp.installTranslator(&translator);
-  qDebug() <<   theApp.tr("Translations loaded.");
+  theTrApp->load("dmmsnoop_" + language);
+  theApp->installTranslator(theTrApp);
+  theCtrl = new Ctrl(theApp); // Has to wait for theApp to be translate-stuffed
 
-// Ctrl
-  fprintf(stdout, "Instantiating the Controller\n");  fflush(stdout);
-  Ctrl theCtrl(  theApp);
-  fprintf(stdout, "Controller instantiated.\n");  fflush(stdout);
+  theCtrl->run();
 
-// Run the program
-  qDebug() <<   theApp.tr("Running ...");
-  theCtrl.run();
-
-
-    // Deal with errors.
   if(errorMessage.isEmpty()) {
-    qDebug() <<   theApp.tr("Exiting without errors ...");
+    fprintf(stdout, "Exiting without errors ...\n");  fflush(stdout);
     result = EXIT_SUCCESS;
   }
   else {
-    QTextStream(stderr) <<   theApp.tr("Error: %1\n").arg(errorMessage);
+    fprintf(stdout, "Error: %s\n", errorMessage.toStdString().c_str());
     result = EXIT_FAILURE;
   }
 
-// Cleanup
-  qDebug() <<   theApp.tr("Unloading translations ...");
-  theApp.removeTranslator(&translator);
-  theApp.removeTranslator(&qtTranslator);
+  theApp->removeTranslator(theTrApp);
+  theApp->removeTranslator(theTrQtf);
 
   return result;
 }

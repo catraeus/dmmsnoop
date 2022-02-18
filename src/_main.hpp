@@ -18,16 +18,14 @@
  */
 
 #ifndef  ___MAIN_HPP_
-#define ___MAIN_HPP_
+#define  ___MAIN_HPP_
 
 #include <cstdio>
 #include <cstdlib>
 
-#include <QtCore/QDebug>
 #include <QtCore/QLibraryInfo>
 #include <QtCore/QLocale>
 #include <QtCore/QTranslator>
-#include <QtCore/QTextStream>
 
 #include "Ctrl.hpp"
 #include "error.h"

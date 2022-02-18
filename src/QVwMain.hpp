@@ -41,8 +41,6 @@ class QVwMain: public QVwDesgn {
       MTC_TS    = 0x00000000U,
       MTC_RAW   = 0x00000001U,
       MTC_STA   = 0x00000002U,
-//      MTC_STAT  = 0x00000003U,
-//      MTC_DATA  = 0x00000004U,
       MTC_CHAN  = 0x00000003U,
       MTC_NOTE  = 0x00000004U,
       MTC_CC    = 0x00000005U,

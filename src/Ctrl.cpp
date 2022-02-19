@@ -72,13 +72,13 @@ Ctrl:: Ctrl(App *i_theApp, QObject *i_parent) : QObject(i_parent), theApp(i_theA
 
 //==================================================================================================
 //==== Setup Config
-  driverCount = theDrvIf->getDriverCount();
+  driverCount = theDrvIf->DrvCntGet();
   if(! driverCount)        throw Error(tr("no MIDI drivers found"));
-  for(int i = 0; i < driverCount; i++)        theQVwConfig->OnMidiDrvAdd(i, theDrvIf->getDriverName(i));
-  driver = theDrvIf->MiDrvNumGet();
-  outputPort = theDrvIf->getOutputPort();
+  for(int i = 0; i < driverCount; i++)        theQVwConfig->OnMidiDrvAdd(i, QString::fromStdString(theDrvIf->getDriverName(i)));
+  driver = theDrvIf->DrvNumGet();
+  outputPort = theDrvIf->PortOutNoGet();
   theQVwConfig->OnMidiDrvChg                        (driver);
-  theQVwConfig->OnPortInpChg(theDrvIf->getInputPort ());
+  theQVwConfig->OnPortInpChg(theDrvIf->PortInNoGet ());
   theQVwConfig->OnModeIgnActSnChg   (theDrvIf->ModeIgnActSnGet());
   theQVwConfig->OnModeIgnSysExChg   (theDrvIf->ModeIgnSysExGet());
   theQVwConfig->OnModeIgnMiTimChg   (theDrvIf->ModeIgnMiTimGet());
@@ -168,7 +168,7 @@ void    Ctrl::MiMsgDatBytesStr (const QByteArray &i_msgbb, char *o_dStr, int i_d
   return;
 }
 void    Ctrl::OnMidiDrvChg     (                      ) {
-  theQVwMain->OnMiMsgTxEn((theDrvIf->MiDrvNumGet() != -1) && (theDrvIf->getOutputPort() != -1));
+  theQVwMain->OnMiMsgTxEn((theDrvIf->DrvNumGet() != -1) && (theDrvIf->PortOutNoGet() != -1));
 }
 void    Ctrl::OnMiMsgTx        (const QString &i_miMsgStr) {
   QStringList lines;

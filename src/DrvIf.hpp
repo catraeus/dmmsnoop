@@ -40,18 +40,18 @@ public:
   explicit  DrvIf(QObject *parent=0);
            ~DrvIf();
   void      SetMidi           (Midi *i_theMidi) {theMidi = i_theMidi;}; // IMPORTANT, This MUST be done ASAP after the constructor.
-  int       MiDrvNumGet       () const;
-  int       getDriverCount    () const;
-  QString   getDriverName     (int i_dex) const;
+  int       DrvNumGet       () const;
+  int       DrvCntGet    () const;
+  std::string   getDriverName     (int i_dex) const;
   bool      ModeIgnActSnGet   () const;
   bool      ModeIgnSysExGet   () const;
   bool      ModeIgnMiTimGet   () const;
-  int       getInputPort      () const;
-  int       getInputPortCount () const;
-  QString   getInputPortName  (int i_dex) const;
-  int       getOutputPort     (           ) const;
-  int       getOutputPortCount() const;
-  QString   getOutputPortName (int i_dex) const;
+  int       PortInNoGet      () const;
+  int       PortInCntGet () const;
+  std::string   PortInNameGet  (int i_dex) const;
+  int       PortOutNoGet     (           ) const;
+  int       PortOutCntGet() const;
+  std::string   PortOutNameGet (int i_dex) const;
 
 public slots:
   void      OnDrvChg          (int i_dex);

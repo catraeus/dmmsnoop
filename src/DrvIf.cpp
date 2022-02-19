@@ -74,18 +74,18 @@ DrvIf::~DrvIf(               )                   {
   OnDrvChg(-1);
 }
 
-int     DrvIf::MiDrvNumGet          (         ) const { return miDrvNo                  ; }
-int     DrvIf::getDriverCount       (         ) const { return miDrvApis.size()        ; }
-QString DrvIf::getDriverName        (int i_dex) const { return miDrvNames[i_dex]        ; }
-bool    DrvIf::ModeIgnActSnGet      (         ) const { return modeIgnActSn             ; }
-bool    DrvIf::ModeIgnSysExGet      (         ) const { return modeIgnSysEx             ; }
-bool    DrvIf::ModeIgnMiTimGet      (         ) const { return modeIgnMiTim             ; }
-int     DrvIf::getInputPort         (         ) const { return miPortInpNum             ; }
-int     DrvIf::getInputPortCount    (         ) const { return miPortInpNames.count()   ; }
-QString DrvIf::getInputPortName     (int i_dex) const { return miPortInpNames[i_dex]    ; }
-int     DrvIf::getOutputPort        (         ) const { return miPortOutNum             ; }
-int     DrvIf::getOutputPortCount   (         ) const { return miPortOutNames.count()   ; }
-QString DrvIf::getOutputPortName    (int i_dex) const { return miPortOutNames[i_dex]    ; }
+int          DrvIf::DrvNumGet       (         ) const { return miDrvNo                  ; }
+int          DrvIf::DrvCntGet       (         ) const { return miDrvApis.size()        ; }
+std::string  DrvIf::getDriverName   (int i_dex) const { return (miDrvNames[i_dex]).toStdString()        ; }
+bool         DrvIf::ModeIgnActSnGet (         ) const { return modeIgnActSn             ; }
+bool         DrvIf::ModeIgnSysExGet (         ) const { return modeIgnSysEx             ; }
+bool         DrvIf::ModeIgnMiTimGet (         ) const { return modeIgnMiTim             ; }
+int          DrvIf::PortInNoGet     (         ) const { return miPortInpNum             ; }
+int          DrvIf::PortInCntGet    (         ) const { return miPortInpNames.count()   ; }
+std::string  DrvIf::PortInNameGet   (int i_dex) const { return (miPortInpNames[i_dex]).toStdString()    ; }
+int          DrvIf::PortOutNoGet    (         ) const { return miPortOutNum             ; }
+int          DrvIf::PortOutCntGet   (         ) const { return miPortOutNames.count()   ; }
+std::string  DrvIf::PortOutNameGet  (int i_dex) const { return (miPortOutNames[i_dex]).toStdString()    ; }
 
 void    DrvIf::DoMiMsgRxPrep       (double i_TS,       std::vector<uint8_t> *i_vbMsg, void *i_aDrvIf) {
   DrvIf *aDrvIf;

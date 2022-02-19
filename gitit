@@ -1,5 +1,8 @@
 git add   gitit
+git add   src/Ctrl.cpp
+git add   src/Ctrl.hpp
+git add   src/DrvIf.cpp
+git add   src/DrvIf.hpp
 git add   src/QVwMain.cpp
-git add   src/resources.qrc
-git add   src/images/08x08/
+git add   src/QVwMain.hpp
 

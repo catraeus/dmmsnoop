@@ -22,6 +22,7 @@
 
 #include "util/DmmTypes.hpp"
 #include "util/TrMsg.hpp"
+#include "libs/CaesCallBack.hpp"
 
 #include <QtGui/QStandardItemModel>
 #include <QtWidgets/QAction>
@@ -81,6 +82,7 @@ class QVwMain: public QVwDesgn {
     void  setModelData   (int     i_R,  int   i_C, const QVariant &value, int role=Qt::DisplayRole);
 
   public:
+    CbV               *MSU_WinMain; // Hope This Works.
   private:
     qint64                TZ;
 

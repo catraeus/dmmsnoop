@@ -58,7 +58,7 @@ DrvIf:: DrvIf(QObject *parent) : QObject(parent) {
       case RtMidi::UNSPECIFIED:
         continue;
     }
-    miDrvApis.append(theMidiAPI);
+    miDrvApis.push_back(theMidiAPI);
   }
 
   miBuffSize = 0;
@@ -75,7 +75,7 @@ DrvIf::~DrvIf(               )                   {
 }
 
 int     DrvIf::MiDrvNumGet          (         ) const { return miDrvNo                  ; }
-int     DrvIf::getDriverCount       (         ) const { return miDrvApis.count()        ; }
+int     DrvIf::getDriverCount       (         ) const { return miDrvApis.size()        ; }
 QString DrvIf::getDriverName        (int i_dex) const { return miDrvNames[i_dex]        ; }
 bool    DrvIf::ModeIgnActSnGet      (         ) const { return modeIgnActSn             ; }
 bool    DrvIf::ModeIgnSysExGet      (         ) const { return modeIgnSysEx             ; }
@@ -156,7 +156,7 @@ quint64 DrvIf::OnMiMsgTx       (const QByteArray &i_qbMsg) {
 void DrvIf::OnDrvChg    (int i_dex) {
   RtMidi::Api api;
   uint        count;
-  QString name;
+  std::string name;
 
   if(miDrvNo != i_dex) { // Then we aren't doing nothing new.
     if(miDrvNo != -1) {// Close the currently open MIDI driver.
@@ -174,27 +174,27 @@ void DrvIf::OnDrvChg    (int i_dex) {
       // Add ports.
       count = miPortInpInst->getPortCount();
       for(uint i = 0; i < count; i++) {
-        name = QString::fromStdString(miPortInpInst->getPortName(i));
-        miPortInpNames.append(name);
-        emit EmPortInpAdd(i, name);
+        name = miPortInpInst->getPortName(i);
+        miPortInpNames.append(QString::fromStdString(name));
+        emit EmPortInpAdd(i, QString::fromStdString(name));
       }
       count = miPortOutInst->getPortCount();
       for(uint i = 0; i < count; i++) {
-        name = QString::fromStdString(miPortOutInst->getPortName(i));
-        miPortOutNames.append(name);
-        emit EmPortOutAdd(i, name);
+        name = miPortOutInst->getPortName(i);
+        miPortOutNames.append(QString::fromStdString(name));
+        emit EmPortOutAdd(i, QString::fromStdString(name));
       }
       // Add a virtual port to drivers that support virtual ports.
       switch (api) {
         case RtMidi::LINUX_ALSA:
         case RtMidi::MACOSX_CORE:
         case RtMidi::UNIX_JACK:
-          name = tr("[virtual input]");
-          miPortInpNames.append(name);
-          emit EmPortInpAdd(miPortInpNames.count() - 1, name);
-          name = tr("[virtual output]");
-          miPortOutNames.append(name);
-          emit EmPortOutAdd(miPortOutNames.count() - 1, name);
+          name = "[virtual input]";
+          miPortInpNames.append(QString::fromStdString(name));
+          emit EmPortInpAdd(miPortInpNames.count() - 1, QString::fromStdString(name));
+          name = "[virtual output]";
+          miPortOutNames.append(QString::fromStdString(name));
+          emit EmPortOutAdd(miPortOutNames.count() - 1, QString::fromStdString(name));
           hasPortsVirtual = true;
           break;
         default:

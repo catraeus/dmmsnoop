@@ -101,7 +101,7 @@ private:
     char                *miMsgChChStr;    // iff is 0xA0
 
     int                  miDrvNo;
-    QList<RtMidi::Api>   miDrvApis;
+    std::vector<RtMidi::Api>   miDrvApis;
     QStringList          miDrvNames;
 
     bool                 modeIgnActSn;

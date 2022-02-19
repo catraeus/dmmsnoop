@@ -30,6 +30,7 @@
 #include "QVwAbout.hpp"
 #include "QVwErr.hpp"
 
+#include "libs/CaesCallBack.hpp"
 #include "util/TrMsg.hpp"
 
 class Ctrl: public QObject {
@@ -48,6 +49,7 @@ private slots:
 private:
   void      MiMsgDatBytesStr(const QByteArray &message, char *o_dStr, int lastIndex=-1);
   void      QVwErrShow(const QString &message);
+  bool      OnTestCb(void *i_blob);
 
        App           *theApp;
 
@@ -63,6 +65,8 @@ private:
        Midi          *theMidi;
 
        bool           valid;
+
+       CbT<Ctrl>     *MRU_WinMain;
 
 };
 

@@ -52,6 +52,11 @@ Ctrl:: Ctrl(App *i_theApp, QObject *i_parent) : QObject(i_parent), theApp(i_theA
 
   theDrvIf->SetMidi(theMidi);
   theTrMsg = TrMsg::GetInstance();
+
+  MRU_WinMain = new CbT<Ctrl>();
+  MRU_WinMain->SetCallback(this, &Ctrl::OnTestCb);
+  theQVwMain->MSU_WinMain = MRU_WinMain;
+
 //==================================================================================================
 //==== Do time things.
   TS = GetTS();
@@ -229,3 +234,8 @@ void    Ctrl::OnMiMsgRx        (quint64 i_TS, const QByteArray &i_msg) {
     theQVwMain->OnMiMsgRX(i_TS, theMidi, valid);
 }
 
+bool    Ctrl::OnTestCb(void *i_blob) {
+  (void) i_blob;
+  fprintf(stdout, "Callback\n"); fflush(stdout);
+  return true;
+}

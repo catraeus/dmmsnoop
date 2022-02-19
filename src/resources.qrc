@@ -1,5 +1,6 @@
 <RCC>
   <qresource prefix="/dmmsnoop">
+    <file>images/08x08/error.png</file>
     <file>images/16x16/add.png</file>
     <file>images/16x16/clear.png</file>
     <file>images/16x16/close.png</file>

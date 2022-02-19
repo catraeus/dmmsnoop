@@ -102,15 +102,13 @@ int  QVwMain::MsgAdd(quint64 i_TS, Midi *i_tMidi, bool i_val) {
   count = QMd_MiMsgGrid.rowCount();
   QMd_MiMsgGrid.insertRow(count); // WARNING There is no check for insertion, insertRow returns a bool
 
-  alignment = Qt::AlignTop;
+  alignment = Qt::AlignVCenter;
   bla = i_TS - TZ;
   TimeUsToStrSec(bla, i_tMidi->theMS->TS);
 
   setModelData(count, MTC_TS,    i_tMidi->theMS->TS );  setModelData(count, MTC_TS,   alignment,   Qt::TextAlignmentRole);
   setModelData(count, MTC_RAW,   i_miRaw            );  setModelData(count, MTC_RAW,  alignment,   Qt::TextAlignmentRole);
   setModelData(count, MTC_STA,   i_miSta            );  setModelData(count, MTC_STA,  alignment,   Qt::TextAlignmentRole);
-//  setModelData(count, MTC_STAT,  i_miStatDesc       );  setModelData(count, MTC_STAT, alignment,   Qt::TextAlignmentRole);
-//  setModelData(count, MTC_DATA,  i_miDataDesc       );  setModelData(count, MTC_DATA, alignment,   Qt::TextAlignmentRole);
   setModelData(count, MTC_CHAN,  i_miChanDesc       );  setModelData(count, MTC_CHAN, alignment,   Qt::TextAlignmentRole);
   setModelData(count, MTC_NOTE,  i_miNoteDesc       );  setModelData(count, MTC_NOTE, alignment,   Qt::TextAlignmentRole);
   setModelData(count, MTC_CC,    i_miChChDesc       );  setModelData(count, MTC_CC,   alignment,   Qt::TextAlignmentRole);
@@ -135,8 +133,9 @@ void QVwMain::OnMiMsgTX(quint64 i_TS, Midi *i_tMidi, bool valid) {
   int   index;
   const QBrush &brush = qApp->palette().alternateBase();
   index = MsgAdd(i_TS, i_tMidi, valid);
-  setModelData(index, MTC_STA,  brush, Qt::BackgroundRole);
-  setModelData(index, MTC_TS,    brush, Qt::BackgroundRole);
+  for(uint i=0; i<MTC_NUM; i++ )
+    setModelData(index, i,  brush, Qt::BackgroundRole);
+  //setModelData(index, MTC_TS,    brush, Qt::BackgroundRole);
 }
 void QVwMain::OnMiMsgTabClr() {
   int count = QMd_MiMsgGrid.rowCount();

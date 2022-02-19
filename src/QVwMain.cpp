@@ -60,20 +60,18 @@
 
   // OK, so the TableView has to actually exist first
     QTb_MiMsgGrid->setColumnWidth(MTC_TS,   108);
-    QTb_MiMsgGrid->setColumnWidth(MTC_RAW,   60);
-    QTb_MiMsgGrid->setColumnWidth(MTC_STA,   70);
-//    QTb_MiMsgGrid->setColumnWidth(MTC_STAT,  60); // Old One
-//    QTb_MiMsgGrid->setColumnWidth(MTC_DATA, 180); // Old One
+    QTb_MiMsgGrid->setColumnWidth(MTC_RAW,   72);
+    QTb_MiMsgGrid->setColumnWidth(MTC_STA,   88);
     QTb_MiMsgGrid->setColumnWidth(MTC_CHAN,  32);
     QTb_MiMsgGrid->setColumnWidth(MTC_NOTE,  40);
     QTb_MiMsgGrid->setColumnWidth(MTC_CC,    32);
     QTb_MiMsgGrid->setColumnWidth(MTC_VELO,  40);
     QTb_MiMsgGrid->setColumnWidth(MTC_BEND,  72);
-    QTb_MiMsgGrid->setColumnWidth(MTC_POS,   72);
+    QTb_MiMsgGrid->setColumnWidth(MTC_POS,   64);
     QTb_MiMsgGrid->setColumnWidth(MTC_SONG,  40);
     QTb_MiMsgGrid->setColumnWidth(MTC_PROG,  40);
-    QTb_MiMsgGrid->setColumnWidth(MTC_MTC,  144);
-    QTb_MiMsgGrid->setColumnWidth(MTC_SYS,  120);
+    QTb_MiMsgGrid->setColumnWidth(MTC_MTC,  120);
+    QTb_MiMsgGrid->setColumnWidth(MTC_SYS,  108);
     QTb_MiMsgGrid->setColumnWidth(MTC_ERR,  120);
     QTb_MiMsgGrid->setColumnWidth(MTC_PAD,   64);
     TZ = 0;

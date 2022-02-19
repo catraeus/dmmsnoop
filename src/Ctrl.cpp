@@ -37,7 +37,7 @@ Ctrl:: Ctrl(App *i_theApp, QObject *i_parent) : QObject(i_parent), theApp(i_theA
   int      driverCount;
   int      driver;
   int      outputPort;
-  quint64   TS;
+  quint64  TS;
   char     tStr[256];
 
 //==================================================================================================
@@ -51,7 +51,7 @@ Ctrl:: Ctrl(App *i_theApp, QObject *i_parent) : QObject(i_parent), theApp(i_theA
   theQVwErr    = new QVwErr();
 
   theDrvIf->SetMidi(theMidi);
-  theTrMsg = TrMsg::GetInstance(TrMsg::DEL_ENGLISH);
+  theTrMsg = TrMsg::GetInstance();
 //==================================================================================================
 //==== Do time things.
   TS = GetTS();

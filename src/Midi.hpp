@@ -22,10 +22,6 @@
 
 #include <stdint.h>
 
-#include <QtCore/QByteArray>
-#include <QtCore/QStringList>
-#include <QtCore/QVector>
-#include <QtCore/QObject>
 
 #include "util/DmmTypes.hpp"
 #include "util/DmmStr.hpp"
@@ -34,7 +30,7 @@
 #include "MtcQf.hpp"
 
 
-class Midi: public QObject {
+class Midi {
   public:
     struct sMsgSpec { // all are null-terminated ASCII c strings.  Whatever the calc is, I'll take it to a next 2^k
       char  TS   [16] ; // hh:mm:ss.sss or ssssss.sss (one day is 86400 sec so I figure 999999.999 sec should cover most sessions.)

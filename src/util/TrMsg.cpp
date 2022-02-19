@@ -37,7 +37,7 @@
 #include "TrMsg.hpp"
 #include <stdio.h>
 
-        TrMsg *TrMsg::theTrMsgInstance = (TrMsg *)0;
+        TrMsg *TrMsg::theTrMsgInstance = (TrMsg *)NULL;
 
          TrMsg::TrMsg(eLang i_lang) {
   char **tStrAry; // Only really for use in the following language files
@@ -49,11 +49,20 @@
   return;
 }
 TrMsg  *TrMsg::GetInstance(eLang i_lang) {
-  if((uint64_t)theTrMsgInstance != (uint64_t)0) {
+  if((TrMsg *)theTrMsgInstance != (TrMsg *)NULL) {
     theTrMsgInstance->SetLang(i_lang);
   }
   else {
     theTrMsgInstance = new TrMsg(i_lang);
+  }
+  return theTrMsgInstance;
+}
+TrMsg  *TrMsg::GetInstance(void        ) {
+  if((TrMsg *)theTrMsgInstance != (TrMsg *)NULL) {
+    theTrMsgInstance->SetLang(theTrMsgInstance->lang);
+  }
+  else {
+    theTrMsgInstance = new TrMsg(DEL_NONE_SET);
   }
   return theTrMsgInstance;
 }

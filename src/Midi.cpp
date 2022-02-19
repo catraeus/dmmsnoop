@@ -78,7 +78,6 @@ void Midi::CheckErrors(uint *i_bytes) {
 //---- Zero Length
   if(len == 0) {
     strcpy(theMS->err, theTrMsg->MsgMiMetaGet(TrMsg::DEM_ZRO_LEN));
-  //fprintf(stdout, "ErrChk --   %s\n", theMS->err); fflush(stdout);
     valid = false;
     return;
   }

@@ -43,7 +43,8 @@ class TrMsg {
       DEL_FRANCAIS   = 0x00000001U,
       DEL_DEUTSCH    = 0x00000002U,
       DEL_ESPANOL    = 0x00000003U,
-      DEL_NUM_LANG   = 0x00000005U,
+      DEL_NUM_LANG   = 0x00000004U,
+      DEL_NONE_SET   = 0x00000005U,
       DEL_LANG_BIG   = 0xFFFFFFFFU
     };
   #include "TrMsgApp.hpp"
@@ -56,10 +57,11 @@ class TrMsg {
             TrMsg(eLang i_lang);       // For singleton pattern
   public:
     static  TrMsg  *GetInstance(eLang i_lang); // For singleton pattern
+    static  TrMsg  *GetInstance(void        );
            ~TrMsg();
     void    SetLang(eLang i_lang);
   private:
-    eLang   lang;
+    eLang   lang = DEL_NONE_SET;
 
 
     char  **msgMiCc;

@@ -21,17 +21,22 @@
 #include "util/DmmStr.hpp"
 
      QVwMsg::QVwMsg(QObject *parent) : QVwDesgn(":/dmmsnoop/QVwMsg.ui", parent) {
-  QWidget *rootWidget = getRootWidget();
 
-  QPb_Close = getChild<QPushButton>(rootWidget, "QPb_Close");
-  connect(QPb_Close, SIGNAL(clicked()), SIGNAL(closeRequest()));
+  QWidget *rootWidget;
+  rootWidget = getRootWidget();
 
+  QPb_Close    = getChild<QPushButton>   (rootWidget, "QPb_Close");
   QPt_Messages = getChild<QPlainTextEdit>(rootWidget, "QPt_Messages");
+  QPb_Send     = getChild<QPushButton>   (rootWidget, "QPb_Send");
 
-  QPb_Send = getChild<QPushButton>(rootWidget, "QPb_Send");
-  connect(QPb_Send, SIGNAL(clicked()), SLOT(OnSend()));
+  connect(QPb_Close, SIGNAL(clicked()), SIGNAL(closeRequest()));
+  connect(QPb_Send,  SIGNAL(clicked()), SLOT  (OnSend      ()));
 }
-
      QVwMsg::~QVwMsg() {}
-void QVwMsg::OnSend() { emit EmMsgSend(QPt_Messages->toPlainText());  }
+
+void QVwMsg::OnSend() {
+  QString theMsg;
+  theMsg = QPt_Messages->toPlainText();
+  emit EmMsgSend(theMsg);
+}
 

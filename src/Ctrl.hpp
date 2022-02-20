@@ -39,8 +39,18 @@ class Ctrl: public QObject {
 public:
   explicit  Ctrl(App *i_theApp, QObject *parent=0);
            ~Ctrl();
-  void      run();  // RESEARCH Might be Inherited via QThread::run
+//  void      run();  // RESEARCH Might be Inherited via QThread::run
+  QVwMain *GetWinMain() {return theQVwMain;};
 
+  void     BuildWinConfig  (void);
+  void     BuildWinMain    (void);
+
+  void     ConnSigWinAbout (void);
+  void     ConnSigWinConfig(void);
+  void     ConnSigWinMain  (void);
+  void     ConnSigWinMsg   (void);
+  void     ConnSigDrvIf    (void);
+  void     ConnSigApp      (void);
 private slots:
   void      OnMidiDrvChg();
   void      OnMiMsgTx(const QString &message);
@@ -63,6 +73,11 @@ private:
 
        TrMsg         *theTrMsg;
        Midi          *theMidi;
+
+  int      driverCount;
+  int      driver;
+  int      outputPort;
+
 
        bool           valid;
 

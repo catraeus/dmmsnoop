@@ -34,14 +34,11 @@
 
 
 Ctrl:: Ctrl(App *i_theApp, QObject *i_parent) : QObject(i_parent), theApp(i_theApp) {
-  int      driverCount;
-  int      driver;
-  int      outputPort;
-  quint64  TS;
-  char     tStr[256];
 
 //==================================================================================================
 //==== Do the important first things.
+
+
   theDrvIf     = new DrvIf();
   theMidi      = new Midi();
   theQVwMain   = new QVwMain();
@@ -49,9 +46,9 @@ Ctrl:: Ctrl(App *i_theApp, QObject *i_parent) : QObject(i_parent), theApp(i_theA
   theQVwAbout  = new QVwAbout();
   theQVwMsg    = new QVwMsg();
   theQVwErr    = new QVwErr();
+  theTrMsg     = TrMsg::GetInstance();
 
   theDrvIf->SetMidi(theMidi);
-  theTrMsg = TrMsg::GetInstance();
 
   MRU_WinMain = new CbT<Ctrl>();
   MRU_WinMain->SetCallback(this, &Ctrl::OnTestCb);
@@ -59,19 +56,36 @@ Ctrl:: Ctrl(App *i_theApp, QObject *i_parent) : QObject(i_parent), theApp(i_theA
 
 //==================================================================================================
 //==== Do time things.
-  TS = GetTS();
-  TimeUsToStrSec(TS, tStr);
-  fprintf(stdout, "MICROSECONDS:  %s\n", tStr);
 
 //==================================================================================================
 //==== Setup About
   theQVwAbout->setMajorVersion(DMMSNOOP_MAJOR_VERSION);
   theQVwAbout->setMinorVersion(DMMSNOOP_MINOR_VERSION);
   theQVwAbout->setRevision(DMMSNOOP_REVISION);
-  connect(theQVwAbout, SIGNAL(closeRequest()), theQVwAbout, SLOT(hide()));
+  ConnSigWinAbout  ();
 
 //==================================================================================================
 //==== Setup Config
+
+  BuildWinConfig  ();
+  ConnSigWinConfig();
+  BuildWinMain    ();
+  ConnSigWinMain  ();
+  ConnSigWinMsg   ();
+  ConnSigDrvIf    ();
+  ConnSigApp      ();
+}
+Ctrl::~Ctrl() {
+// Disconnect theDrvIf signals handled by the controller before the theDrvIf is deleted.
+  disconnect(theDrvIf, SIGNAL(EmMiMsgRx    (quint64, const QByteArray &)), this, SLOT(OnMiMsgRx(quint64, const QByteArray &)));
+  disconnect(theDrvIf, SIGNAL(EmDrvChange  (int                        )), this, SLOT(OnMidiDrvChg()));
+  disconnect(theDrvIf, SIGNAL(EmPortInpChg (int                        )), this, SLOT(OnMidiDrvChg()));
+  disconnect(theDrvIf, SIGNAL(EmPortOutChg (int                        )), this, SLOT(OnMidiDrvChg()));
+}
+
+
+
+void Ctrl::BuildWinConfig  (void) {
   driverCount = theDrvIf->DrvCntGet();
   if(! driverCount)        throw Error(tr("no MIDI drivers found"));
   for(int i = 0; i < driverCount; i++)        theQVwConfig->OnMidiDrvAdd(i, QString::fromStdString(theDrvIf->getDriverName(i)));
@@ -83,6 +97,25 @@ Ctrl:: Ctrl(App *i_theApp, QObject *i_parent) : QObject(i_parent), theApp(i_theA
   theQVwConfig->OnModeIgnSysExChg   (theDrvIf->ModeIgnSysExGet());
   theQVwConfig->OnModeIgnMiTimChg   (theDrvIf->ModeIgnMiTimGet());
   theQVwConfig->OnPortOutChg        (outputPort);
+  return;
+}
+void Ctrl::BuildWinMain    (void) {
+  quint64  TS;
+  char     tStr[256];
+  TS = GetTS();
+  TimeUsToStrSec(TS, tStr);
+  fprintf(stdout, "MICROSECONDS:  %s\n", tStr);
+  theQVwMain->OnMiMsgTxEn((driver != -1) && (outputPort != -1));
+  theQVwMain->SetTimeZero(TS);
+  return;
+}
+
+
+void Ctrl::ConnSigWinAbout (void) {
+  connect(theQVwAbout, SIGNAL(closeRequest()), theQVwAbout, SLOT(hide()));
+  return;
+}
+void Ctrl::ConnSigWinConfig(void) {
   connect(theQVwConfig, SIGNAL(closeRequest      (                           )),  theQVwConfig, SLOT(hide()));
   connect(theQVwConfig, SIGNAL(EmMidiDrvChg      (int                        )),  theDrvIf,      SLOT(OnDrvChg(int)));
   connect(theQVwConfig, SIGNAL(EmModeIgnActSnChg (bool                       )),  theDrvIf,      SLOT(OnModeIgnActSnChg(bool)));
@@ -90,29 +123,22 @@ Ctrl:: Ctrl(App *i_theApp, QObject *i_parent) : QObject(i_parent), theApp(i_theA
   connect(theQVwConfig, SIGNAL(EmModeIgnMiTimChg (bool                       )),  theDrvIf,      SLOT(OnModeIgnMiTimChg(bool)));
   connect(theQVwConfig, SIGNAL(EmPortInpChg      (int                        )),  theDrvIf,      SLOT(OnPortInpChg(int)));
   connect(theQVwConfig, SIGNAL(EmPortOutChg      (int                        )),  theDrvIf,      SLOT(OnPortOutChg(int)));
-
-//==================================================================================================
-//==== Setup Error
-  connect(theQVwErr,  SIGNAL(closeRequest        (                           )),  theQVwErr,    SLOT(hide()));
-
-//==================================================================================================
-//==== Setup Main
-  theQVwMain->OnMiMsgTxEn((driver != -1) && (outputPort != -1));
-  TS = GetTS();
-  theQVwMain->SetTimeZero(TS);
+  return;
+}
+void Ctrl::ConnSigWinMain  (void) {
   connect(theQVwMain, SIGNAL(EmAppAbout          (                           )),  theQVwAbout,  SLOT(show()));
   connect(theQVwMain, SIGNAL(EmMiMsgTXAdd        (                           )),  theQVwMsg,    SLOT(show()));
   connect(theQVwMain, SIGNAL(EmMiMsgTabClr       (                           )),  theQVwMain,   SLOT(OnMiMsgTabClr()));
   connect(theQVwMain, SIGNAL(EmAppConfig         (                           )),  theQVwConfig, SLOT(show()));
   connect(theQVwMain, SIGNAL(closeRequest        (                           )),  theApp,       SLOT(quit()));
-
-//==================================================================================================
-//==== Setup Message Send
+  return;
+}
+void Ctrl::ConnSigWinMsg   (void) {
   connect(theQVwMsg, SIGNAL(closeRequest         (                           )),  theQVwMsg,    SLOT(hide()));
   connect(theQVwMsg, SIGNAL(EmMsgSend            (const QString &            )),  this,          SLOT(OnMiMsgTx(const QString &)));
-
-//==================================================================================================
-//==== Setup DrvIf worker  FIXME, there are multiple "overloads and multiple inheritances" of these.  Does order matter ! ? ! ?
+  return;
+}
+void Ctrl::ConnSigDrvIf    (void) {
   connect(theDrvIf, SIGNAL(EmMiMsgRx              (quint64, const QByteArray &)),  this,          SLOT(OnMiMsgRx(quint64, const QByteArray &)));
   connect(theDrvIf, SIGNAL(EmDrvChange            (int                        )),  theQVwConfig, SLOT(OnMidiDrvChg(int)));
   connect(theDrvIf, SIGNAL(EmDrvChange            (int                        )),  this,          SLOT(OnMidiDrvChg()));
@@ -127,25 +153,22 @@ Ctrl:: Ctrl(App *i_theApp, QObject *i_parent) : QObject(i_parent), theApp(i_theA
   connect(theDrvIf, SIGNAL(EmPortOutChg           (int                        )),  theQVwConfig, SLOT(OnPortOutChg(int)));
   connect(theDrvIf, SIGNAL(EmPortOutChg           (int                        )),  this,          SLOT(OnMidiDrvChg()));
   connect(theDrvIf, SIGNAL(EmPortOutDel           (int                        )),  theQVwConfig, SLOT(OnPortOutDel(int)));
-
-//==================================================================================================
-//==== Setup theApp
+  return;
+}
+void Ctrl::ConnSigApp      (void) {
   connect( theApp,  SIGNAL(eventError             (QString                    )),  theQVwErr,    SLOT(setMessage(QString)));
   connect( theApp,  SIGNAL(eventError             (QString                    )),  theQVwErr,    SLOT(show()));
-}
-Ctrl::~Ctrl() {
-// Disconnect theDrvIf signals handled by the controller before the theDrvIf is deleted.
-  delete  theTrMsg;
-  disconnect(theDrvIf, SIGNAL(EmMiMsgRx    (quint64, const QByteArray &)), this, SLOT(OnMiMsgRx(quint64, const QByteArray &)));
-  disconnect(theDrvIf, SIGNAL(EmDrvChange  (int                        )), this, SLOT(OnMidiDrvChg()));
-  disconnect(theDrvIf, SIGNAL(EmPortInpChg (int                        )), this, SLOT(OnMidiDrvChg()));
-  disconnect(theDrvIf, SIGNAL(EmPortOutChg (int                        )), this, SLOT(OnMidiDrvChg()));
+  return;
 }
 
-void    Ctrl::run              (                      ) { // Overridden from QApplicatoin
-  theQVwMain->show();
-  theApp->exec();
-}
+
+
+
+
+
+
+
+
 void    Ctrl::QVwErrShow       (const QString &message) {
   theQVwErr->setMessage(message);
   theQVwErr->show();

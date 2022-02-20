@@ -1,7 +1,24 @@
+
+// $Id: _main.cpp 497 2019-08-17 20:46:44Z duncang $
+
+//=================================================================================================
+// Original File Name : _main.cpp
+// Original Author    : duncang
+// Creation Date      : Jan 14, 2022
+// Copyright          : Copyright © 2022 by Catraeus and Duncan Gray
+//
+// Description        :
 /*
- * dmmsnoop - MIDI monitor and prober
- * Copyright (C) 2012 Devin Anderson
- *
+  dmmsnoop - Developer MIDI Message Snoop.
+    Based on Devin Anderson's midisnoop.
+  + Prints a "disassembled" version of MIDI messages.
+  + Sends messages that you build as ascii Hex and decodes them.
+  + Hope to get it to make a cross-connect from any CC to any CC
+*/
+//
+//=================================================================================================
+
+/*
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the Free
  * Software Foundation; either version 2 of the License, or (at your option)
@@ -30,6 +47,8 @@ int main(int argc, char **argv) {
   Ctrl         *theCtrl;
   int           result;
 
+  QVwMain *theQVwMain;
+
   theApp   = new App(argc, argv);
   theTrQtf = new QTranslator();
   theTrApp = new QTranslator();
@@ -50,7 +69,10 @@ int main(int argc, char **argv) {
   theApp->installTranslator(theTrApp);
   theCtrl = new Ctrl(theApp); // Has to wait for theApp to be translate-stuffed
 
-  theCtrl->run();
+  theQVwMain = theCtrl->GetWinMain();
+  theQVwMain->show();
+  theApp->exec();
+
 
   if(errorMessage.isEmpty()) {
     fprintf(stdout, "Exiting without errors ...\n");  fflush(stdout);
@@ -63,6 +85,7 @@ int main(int argc, char **argv) {
 
   theApp->removeTranslator(theTrApp);
   theApp->removeTranslator(theTrQtf);
+  delete  theTrMsg;
 
   return result;
 }

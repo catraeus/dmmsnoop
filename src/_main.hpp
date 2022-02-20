@@ -28,6 +28,8 @@
 #include <QtCore/QTranslator>
 
 #include "Ctrl.hpp"
+#include "App.hpp"
+#include "QVwMain.hpp"
 #include "error.h"
 #include "util/TrMsg.hpp"
 

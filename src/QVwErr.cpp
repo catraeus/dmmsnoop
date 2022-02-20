@@ -21,10 +21,11 @@
 #include "util/DmmStr.hpp"
 
         QVwErr::QVwErr(QObject *parent) : QVwDlg(":/dmmsnoop/QVwErr.ui", parent) {
+//==== Build
   closeButton = getChild<QPushButton>(dialog, "closeButton");
-  connect(closeButton, SIGNAL(clicked()), SIGNAL(closeRequest()));
-
   message = getChild<QLabel>(dialog, "message");
+//==== Connect
+  connect(closeButton,  SIGNAL(clicked()),  SLOT(hide()));
 }
 
         QVwErr::~QVwErr() {}

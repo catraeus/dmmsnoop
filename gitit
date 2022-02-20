@@ -7,3 +7,13 @@ git add   src/_main.cpp
 git add   src/_main.hpp
 git add   src/libs/CaesCallBack.hpp
 
+On branch master
+Your branch is up to date with 'origin/master'.
+
+Changes not staged for commit:
+  (use "git add <file>..." to update what will be committed)
+  (use "git restore <file>..." to discard changes in working directory)
+	modified:   src/Ctrl.cpp
+	modified:   src/Ctrl.hpp
+
+no changes added to commit (use "git add" and/or "git commit -a")

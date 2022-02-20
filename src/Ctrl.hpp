@@ -42,6 +42,8 @@ public:
 //  void      run();  // RESEARCH Might be Inherited via QThread::run
   QVwMain *GetWinMain() {return theQVwMain;};
 
+  void     BuildDrvIf      (void);
+  void     BuildWinAbout   (void);
   void     BuildWinConfig  (void);
   void     BuildWinMain    (void);
 

@@ -48,32 +48,18 @@ Ctrl:: Ctrl(App *i_theApp, QObject *i_parent) : QObject(i_parent), theApp(i_theA
   theQVwErr    = new QVwErr();
   theTrMsg     = TrMsg::GetInstance();
 
-  theDrvIf->SetMidi(theMidi);
 
-  MRU_WinMain = new CbT<Ctrl>();
-  MRU_WinMain->SetCallback(this, &Ctrl::OnTestCb);
-  theQVwMain->MSU_WinMain = MRU_WinMain;
-
-//==================================================================================================
-//==== Do time things.
-
-//==================================================================================================
 //==== Setup About
-  theQVwAbout->setMajorVersion(DMMSNOOP_MAJOR_VERSION);
-  theQVwAbout->setMinorVersion(DMMSNOOP_MINOR_VERSION);
-  theQVwAbout->setRevision(DMMSNOOP_REVISION);
+  BuildDrvIf       ();
+  BuildWinAbout    ();
   ConnSigWinAbout  ();
-
-//==================================================================================================
-//==== Setup Config
-
-  BuildWinConfig  ();
-  ConnSigWinConfig();
-  BuildWinMain    ();
-  ConnSigWinMain  ();
-  ConnSigWinMsg   ();
-  ConnSigDrvIf    ();
-  ConnSigApp      ();
+  BuildWinConfig   ();
+  ConnSigWinConfig ();
+  BuildWinMain     ();
+  ConnSigWinMain   ();
+  ConnSigWinMsg    ();
+  ConnSigDrvIf     ();
+  ConnSigApp       ();
 }
 Ctrl::~Ctrl() {
 // Disconnect theDrvIf signals handled by the controller before the theDrvIf is deleted.
@@ -83,8 +69,16 @@ Ctrl::~Ctrl() {
   disconnect(theDrvIf, SIGNAL(EmPortOutChg (int                        )), this, SLOT(OnMidiDrvChg()));
 }
 
-
-
+void Ctrl::BuildDrvIf      (void) {
+  theDrvIf->SetMidi(theMidi);
+  return;
+}
+void Ctrl::BuildWinAbout   (void) {
+  theQVwAbout->setMajorVersion(DMMSNOOP_MAJOR_VERSION);
+  theQVwAbout->setMinorVersion(DMMSNOOP_MINOR_VERSION);
+  theQVwAbout->setRevision(DMMSNOOP_REVISION);
+  return;
+}
 void Ctrl::BuildWinConfig  (void) {
   driverCount = theDrvIf->DrvCntGet();
   if(! driverCount)        throw Error(tr("no MIDI drivers found"));
@@ -107,6 +101,9 @@ void Ctrl::BuildWinMain    (void) {
   fprintf(stdout, "MICROSECONDS:  %s\n", tStr);
   theQVwMain->OnMiMsgTxEn((driver != -1) && (outputPort != -1));
   theQVwMain->SetTimeZero(TS);
+  MRU_WinMain = new CbT<Ctrl>();
+  MRU_WinMain->SetCallback(this, &Ctrl::OnTestCb);
+  theQVwMain->MSU_WinMain = MRU_WinMain;
   return;
 }
 

@@ -154,7 +154,7 @@
     <string>Quit</string>
    </property>
    <property name="toolTip">
-    <string>Quit this application.</string>
+    <string>Quit dmmsnoop.</string>
    </property>
    <property name="shortcut">
     <string>Ctrl+Q</string>

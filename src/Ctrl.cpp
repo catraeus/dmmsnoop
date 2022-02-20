@@ -33,7 +33,7 @@
 
 
 
-Ctrl:: Ctrl(App *i_theApp, QObject *i_parent) : QObject(i_parent), theApp(i_theApp) {
+Ctrl:: Ctrl(App *i_theApp, QObject *i_parent) : QObject(i_parent),  theApp(i_theApp) {
 
 //==================================================================================================
 //==== Do the important first things.
@@ -42,7 +42,7 @@ Ctrl:: Ctrl(App *i_theApp, QObject *i_parent) : QObject(i_parent), theApp(i_theA
   theDrvIf     = new DrvIf();
   theMidi      = new Midi();
   theQVwMain   = new QVwMain();
-  theQVwConfig = new QVwConfig();
+  theQVwConfig = new QVwConfig(theDrvIf);
   theQVwAbout  = new QVwAbout();
   theQVwMsg    = new QVwMsg();
   theQVwErr    = new QVwErr();
@@ -52,8 +52,7 @@ Ctrl:: Ctrl(App *i_theApp, QObject *i_parent) : QObject(i_parent), theApp(i_theA
 //==== Setup About
   BuildDrvIf       ();
   BuildWinAbout    ();
-  ConnSigWinAbout  ();
-  BuildWinConfig   ();
+  theQVwConfig->Build();
   ConnSigWinConfig ();
   BuildWinMain     ();
   ConnSigWinMain   ();
@@ -79,27 +78,16 @@ void Ctrl::BuildWinAbout   (void) {
   theQVwAbout->setRevision(DMMSNOOP_REVISION);
   return;
 }
-void Ctrl::BuildWinConfig  (void) {
-  driverCount = theDrvIf->DrvCntGet();
-  if(! driverCount)        throw Error(tr("no MIDI drivers found"));
-  for(int i = 0; i < driverCount; i++)        theQVwConfig->OnMidiDrvAdd(i, QString::fromStdString(theDrvIf->getDriverName(i)));
-  driver = theDrvIf->DrvNumGet();
-  outputPort = theDrvIf->PortOutNoGet();
-  theQVwConfig->OnMidiDrvChg                        (driver);
-  theQVwConfig->OnPortInpChg(theDrvIf->PortInNoGet ());
-  theQVwConfig->OnModeIgnActSnChg   (theDrvIf->ModeIgnActSnGet());
-  theQVwConfig->OnModeIgnSysExChg   (theDrvIf->ModeIgnSysExGet());
-  theQVwConfig->OnModeIgnMiTimChg   (theDrvIf->ModeIgnMiTimGet());
-  theQVwConfig->OnPortOutChg        (outputPort);
-  return;
-}
 void Ctrl::BuildWinMain    (void) {
   quint64  TS;
   char     tStr[256];
+  bool     drvReady;
+
   TS = GetTS();
   TimeUsToStrSec(TS, tStr);
   fprintf(stdout, "MICROSECONDS:  %s\n", tStr);
-  theQVwMain->OnMiMsgTxEn((driver != -1) && (outputPort != -1));
+  drvReady = theDrvIf->DrvReadyGet();
+  theQVwMain->OnMiMsgTxEn(drvReady);
   theQVwMain->SetTimeZero(TS);
   MRU_WinMain = new CbT<Ctrl>();
   MRU_WinMain->SetCallback(this, &Ctrl::OnTestCb);
@@ -108,12 +96,8 @@ void Ctrl::BuildWinMain    (void) {
 }
 
 
-void Ctrl::ConnSigWinAbout (void) {
-  connect(theQVwAbout, SIGNAL(closeRequest()), theQVwAbout, SLOT(hide()));
-  return;
-}
+
 void Ctrl::ConnSigWinConfig(void) {
-  connect(theQVwConfig, SIGNAL(closeRequest      (                           )),  theQVwConfig, SLOT(hide()));
   connect(theQVwConfig, SIGNAL(EmMidiDrvChg      (int                        )),  theDrvIf,      SLOT(OnDrvChg(int)));
   connect(theQVwConfig, SIGNAL(EmModeIgnActSnChg (bool                       )),  theDrvIf,      SLOT(OnModeIgnActSnChg(bool)));
   connect(theQVwConfig, SIGNAL(EmModeIgnSysExChg (bool                       )),  theDrvIf,      SLOT(OnModeIgnSysExChg(bool)));
@@ -131,7 +115,6 @@ void Ctrl::ConnSigWinMain  (void) {
   return;
 }
 void Ctrl::ConnSigWinMsg   (void) {
-  connect(theQVwMsg, SIGNAL(closeRequest         (                           )),  theQVwMsg,    SLOT(hide()));
   connect(theQVwMsg, SIGNAL(EmMsgSend            (const QString &            )),  this,          SLOT(OnMiMsgTx(const QString &)));
   return;
 }

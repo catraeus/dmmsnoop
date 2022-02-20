@@ -35,24 +35,25 @@
 
 class DrvIf: public QObject {
     Q_OBJECT
-public:
-public:
-  explicit      DrvIf(QObject *parent=0);
-               ~DrvIf(                 );
+  public:
+  public:
+    explicit      DrvIf(QObject *parent=0);
+                 ~DrvIf(                 );
 
-  void          SetMidi         (Midi *i_theMidi) {theMidi = i_theMidi;}; // IMPORTANT, This MUST be done ASAP after the constructor.
-  int           DrvNumGet       (         ) const;
-  int           DrvCntGet       (         ) const;
-  std::string   getDriverName   (int i_dex) const;
-  bool          ModeIgnActSnGet (         ) const;
-  bool          ModeIgnSysExGet (         ) const;
-  bool          ModeIgnMiTimGet (         ) const;
-  int           PortInNoGet     (         ) const;
-  int           PortInCntGet    (         ) const;
-  std::string   PortInNameGet   (int i_dex) const;
-  int           PortOutNoGet    (         ) const;
-  int           PortOutCntGet   (         ) const;
-  std::string   PortOutNameGet  (int i_dex) const;
+    void          SetMidi         (Midi *i_theMidi) {theMidi = i_theMidi;}; // IMPORTANT, This MUST be done ASAP after the constructor.
+    bool          DrvReadyGet     (void     ) const { return (miDrvNo != -1) && (miPortOutNum != -1);};
+    int           DrvNumGet       (         ) const { return miDrvNo                  ; }
+    int           DrvCntGet       (         ) const { return miDrvApis.size()         ; }
+    std::string   DrvNameGet      (int i_dex) const { return miDrvNames[i_dex]        ; }
+    int           PortInpNoGet    (         ) const { return miPortInpNum             ; }
+    int           PortInpCntGet   (         ) const { return miPortInpNames.size()    ; }
+    std::string   PortInpNameGet  (int i_dex) const { return miPortInpNames[i_dex]    ; }
+    int           PortOutNoGet    (         ) const { return miPortOutNum             ; }
+    int           PortOutCntGet   (         ) const { return miPortOutNames.size()    ; }
+    std::string   PortOutNameGet  (int i_dex) const { return miPortOutNames[i_dex]    ; }
+    bool          ModeIgnActSnGet (         ) const { return modeIgnActSn             ; }
+    bool          ModeIgnSysExGet (         ) const { return modeIgnSysEx             ; }
+    bool          ModeIgnMiTimGet (         ) const { return modeIgnMiTim             ; }
 
 public slots:
   void      OnDrvChg            (int     i_dex);

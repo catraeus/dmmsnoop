@@ -2,18 +2,11 @@ git add   gitit
 git add   dmmsnoop.geany
 git add   src/Ctrl.cpp
 git add   src/Ctrl.hpp
-git add   src/QVwErr.cpp
-git add   src/_main.cpp
-git add   src/_main.hpp
-git add   src/libs/CaesCallBack.hpp
+git add   src/DrvIf.cpp
+git add   src/DrvIf.hpp
+git add   src/QVwAbout.cpp
+git add   src/QVwConfig.cpp
+git add   src/QVwConfig.hpp
+git add   src/QVwMain.ui
+git add   src/QVwMsg.cpp
 
-On branch master
-Your branch is up to date with 'origin/master'.
-
-Changes not staged for commit:
-  (use "git add <file>..." to update what will be committed)
-  (use "git restore <file>..." to discard changes in working directory)
-	modified:   src/Ctrl.cpp
-	modified:   src/Ctrl.hpp
-
-no changes added to commit (use "git add" and/or "git commit -a")

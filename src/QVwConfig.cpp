@@ -20,20 +20,41 @@
 #include "QVwConfig.hpp"
 #include "util/DmmStr.hpp"
 
-  QVwConfig::QVwConfig(QObject *parent) : QVwDesgn(":/dmmsnoop/QVwConfig.ui", parent) {
+  QVwConfig::QVwConfig(DrvIf *i_theDrvIf, QObject *parent) : QVwDesgn(":/dmmsnoop/QVwConfig.ui", parent), theDrvIf(i_theDrvIf) {
   QWidget *rootWidget = getRootWidget();
 
   QCoMidiDrv      = getChild<QComboBox>  (rootWidget, "QCoMidiDrv"     ); connect(QCoMidiDrv,      SIGNAL(activated(int )), SLOT(DoMidiDrvChg(int)));
 
   QCoPortInp      = getChild<QComboBox>  (rootWidget, "QCoPortInp"     ); connect(QCoPortInp,      SIGNAL(activated(int )), SLOT(DoPortInpChg(int)));
   QCoPortOut      = getChild<QComboBox>  (rootWidget, "QCoPortOut"     ); connect(QCoPortOut,      SIGNAL(activated(int )), SLOT(DoPortOutChg(int)));
-  QPbDlgClose     = getChild<QPushButton>(rootWidget, "QPbDlgClose"    ); connect(QPbDlgClose,     SIGNAL(clicked  (    )), SIGNAL(closeRequest()));
+//  QPbDlgClose     = getChild<QPushButton>(rootWidget, "QPbDlgClose"    ); connect(QPbDlgClose,     SIGNAL(clicked  (    )), SIGNAL(closeRequest()));
+  QPbDlgClose     = getChild<QPushButton>(rootWidget, "QPbDlgClose"    ); connect(QPbDlgClose,     SIGNAL(clicked  (    )), SLOT(hide()));
 
   QChModeIgnActSn = getChild<QCheckBox>  (rootWidget, "QChModeIgnActSn"); connect(QChModeIgnActSn, SIGNAL(clicked  (bool)), SIGNAL(EmModeIgnActSnChg(bool)));
   QChModeIgnSysEx = getChild<QCheckBox>  (rootWidget, "QChModeIgnSysEx"); connect(QChModeIgnSysEx, SIGNAL(clicked  (bool)), SIGNAL(EmModeIgnSysExChg(bool)));
   QChModeIgnMiTim = getChild<QCheckBox>  (rootWidget, "QChModeIgnMiTim"); connect(QChModeIgnMiTim, SIGNAL(clicked  (bool)), SIGNAL(EmModeIgnMiTimChg(bool)));
 }
      QVwConfig::~QVwConfig() {}
+
+void QVwConfig::Build(void) {
+  drvCnt = theDrvIf->DrvCntGet();
+  if(drvCnt == 0)      {  fprintf(stderr, "no MIDI drivers found"); fflush(stderr);}
+  for(int i = 0; i < drvCnt; i++)
+    OnMidiDrvAdd(i, QString::fromStdString(theDrvIf->DrvNameGet(i)));
+  drvNo = theDrvIf->DrvNumGet();
+  OnMidiDrvChg(drvNo);
+
+  portInpNo  = theDrvIf->PortInpNoGet();
+  OnPortInpChg(portInpNo);
+
+  portOutNo = theDrvIf->PortOutNoGet();
+  OnPortOutChg(portOutNo);
+
+  OnModeIgnActSnChg   (theDrvIf->ModeIgnActSnGet());
+  OnModeIgnSysExChg   (theDrvIf->ModeIgnSysExGet());
+  OnModeIgnMiTimChg   (theDrvIf->ModeIgnMiTimGet());
+  return;
+}
 
 void QVwConfig::OnMidiDrvAdd      (int  i_dex, const QString &i_name) {  QCoMidiDrv->insertItem              (i_dex + 1, i_name); }
 void QVwConfig::OnMidiDrvChg      (int  i_dex                       ) {  QCoMidiDrv->setCurrentIndex         (i_dex + 1      ); }

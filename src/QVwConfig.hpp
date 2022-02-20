@@ -20,6 +20,8 @@
 #ifndef __QVwCONFIG_HPP__
 #define __QVwCONFIG_HPP__
 
+#include "DrvIf.hpp"
+
 #include <QtWidgets/QCheckBox>
 #include <QtWidgets/QComboBox>
 #include <QtWidgets/QPushButton>
@@ -30,9 +32,9 @@ class QVwConfig: public QVwDesgn {
   Q_OBJECT
 
 public:
-  explicit          QVwConfig(QObject *parent=0);
+  explicit          QVwConfig(DrvIf *i_theDrvIf, QObject *parent=0);
                    ~QVwConfig();
-
+           void    Build     (void);
 public slots:
            void    OnMidiDrvAdd        (int  i_dex, const QString &i_name);
            void    OnPortInpAdd        (int  i_dex, const QString &i_name);
@@ -68,6 +70,13 @@ private:
            QCheckBox   *QChModeIgnActSn;
            QCheckBox   *QChModeIgnSysEx;
            QCheckBox   *QChModeIgnMiTim;
+
+           DrvIf       *theDrvIf;
+  int      drvCnt;
+  int      drvNo;
+
+  int      portInpNo;
+  int      portOutNo;
 
 };
 

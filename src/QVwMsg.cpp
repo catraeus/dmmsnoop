@@ -29,7 +29,7 @@
   QPt_Messages = getChild<QPlainTextEdit>(rootWidget, "QPt_Messages");
   QPb_Send     = getChild<QPushButton>   (rootWidget, "QPb_Send");
 
-  connect(QPb_Close, SIGNAL(clicked()), SIGNAL(closeRequest()));
+  connect(QPb_Close, SIGNAL(clicked()), SLOT(hide()));
   connect(QPb_Send,  SIGNAL(clicked()), SLOT  (OnSend      ()));
 }
      QVwMsg::~QVwMsg() {}

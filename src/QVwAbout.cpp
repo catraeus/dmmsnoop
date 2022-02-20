@@ -26,7 +26,7 @@
 
 QVwAbout::QVwAbout(QObject *parent) : QVwDlg(":/dmmsnoop/QVwAbout.ui", parent) {
     closeButton = getChild<QPushButton>(dialog, "closeButton");
-    connect(closeButton, SIGNAL(clicked()), SIGNAL(closeRequest()));
+    connect(closeButton, SIGNAL(clicked()), SLOT(hide()));
 
     majorVersion = 0;
     minorVersion = 0;

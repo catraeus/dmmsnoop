@@ -44,10 +44,8 @@ public:
 
   void     BuildDrvIf      (void);
   void     BuildWinAbout   (void);
-  void     BuildWinConfig  (void);
   void     BuildWinMain    (void);
 
-  void     ConnSigWinAbout (void);
   void     ConnSigWinConfig(void);
   void     ConnSigWinMain  (void);
   void     ConnSigWinMsg   (void);
@@ -76,9 +74,6 @@ private:
        TrMsg         *theTrMsg;
        Midi          *theMidi;
 
-  int      driverCount;
-  int      driver;
-  int      outputPort;
 
 
        bool           valid;

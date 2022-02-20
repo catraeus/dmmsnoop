@@ -48,10 +48,10 @@ DrvIf:: DrvIf(QObject *parent) : QObject(parent) {
   for(int i=0; i<numAPIs; i++) {
     theMidiAPI = midiAPIlist[i];
     switch (theMidiAPI) {
-      case RtMidi::LINUX_ALSA : miDrvNames.append(tr("ALSA Seq"     )); break;
-      case RtMidi::MACOSX_CORE: miDrvNames.append(tr("CoreMidi"     )); break;
-      case RtMidi::UNIX_JACK  : miDrvNames.append(tr("JACK"         )); break;
-      case RtMidi::WINDOWS_MM : miDrvNames.append(tr("Win MM MIDI"  )); break;
+      case RtMidi::LINUX_ALSA : miDrvNames.push_back("ALSA Seq"     ); break;
+      case RtMidi::MACOSX_CORE: miDrvNames.push_back("CoreMidi"     ); break;
+      case RtMidi::UNIX_JACK  : miDrvNames.push_back("JACK"         ); break;
+      case RtMidi::WINDOWS_MM : miDrvNames.push_back("Win MM MIDI"  ); break;
       default                 : sprintf(tStr, "Bad MIDI API enum: %d",static_cast<int>(theMidiAPI)) ;
           // Fallthrough on purpose, unknown, RTMIDI_DUMMY and UNSPECIFIED all get out of the for loop
       case RtMidi::RTMIDI_DUMMY:
@@ -76,16 +76,16 @@ DrvIf::~DrvIf(               )                   {
 
 int          DrvIf::DrvNumGet       (         ) const { return miDrvNo                  ; }
 int          DrvIf::DrvCntGet       (         ) const { return miDrvApis.size()        ; }
-std::string  DrvIf::getDriverName   (int i_dex) const { return (miDrvNames[i_dex]).toStdString()        ; }
+std::string  DrvIf::getDriverName   (int i_dex) const { return miDrvNames[i_dex]      ; }
 bool         DrvIf::ModeIgnActSnGet (         ) const { return modeIgnActSn             ; }
 bool         DrvIf::ModeIgnSysExGet (         ) const { return modeIgnSysEx             ; }
 bool         DrvIf::ModeIgnMiTimGet (         ) const { return modeIgnMiTim             ; }
 int          DrvIf::PortInNoGet     (         ) const { return miPortInpNum             ; }
-int          DrvIf::PortInCntGet    (         ) const { return miPortInpNames.count()   ; }
-std::string  DrvIf::PortInNameGet   (int i_dex) const { return (miPortInpNames[i_dex]).toStdString()    ; }
+int          DrvIf::PortInCntGet    (         ) const { return miPortInpNames.size()   ; }
+std::string  DrvIf::PortInNameGet   (int i_dex) const { return miPortInpNames[i_dex]    ; }
 int          DrvIf::PortOutNoGet    (         ) const { return miPortOutNum             ; }
-int          DrvIf::PortOutCntGet   (         ) const { return miPortOutNames.count()   ; }
-std::string  DrvIf::PortOutNameGet  (int i_dex) const { return (miPortOutNames[i_dex]).toStdString()    ; }
+int          DrvIf::PortOutCntGet   (         ) const { return miPortOutNames.size()   ; }
+std::string  DrvIf::PortOutNameGet  (int i_dex) const { return miPortOutNames[i_dex]   ; }
 
 void    DrvIf::DoMiMsgRxPrep       (double i_TS,       std::vector<uint8_t> *i_vbMsg, void *i_aDrvIf) {
   DrvIf *aDrvIf;
@@ -135,12 +135,12 @@ void    DrvIf::DoMiMsgRxPrep       (double i_TS, const std::vector<uint8_t> &i_v
 void    DrvIf::DoPortAllDel    () {
   OnPortInpChg(-1);
   OnPortOutChg(-1);
-  for(int i = miPortInpNames.count() - 1; i >= 0; i--) {
-    miPortInpNames.removeAt(i);
+  for(int i = miPortInpNames.size() - 1; i >= 0; i--) {
+    miPortInpNames.erase(miPortInpNames.begin() + i);
     emit EmPortInpDel(i);
   }
-  for(int i = miPortOutNames.count() - 1; i >= 0; i--) {
-    miPortOutNames.removeAt(i);
+  for(int i = miPortOutNames.size() - 1; i >= 0; i--) {
+    miPortOutNames.erase(miPortOutNames.begin() + i);
     emit EmPortOutDel(i);
   }
 }
@@ -175,13 +175,13 @@ void DrvIf::OnDrvChg    (int i_dex) {
       count = miPortInpInst->getPortCount();
       for(uint i = 0; i < count; i++) {
         name = miPortInpInst->getPortName(i);
-        miPortInpNames.append(QString::fromStdString(name));
+        miPortInpNames.push_back(name);
         emit EmPortInpAdd(i, QString::fromStdString(name));
       }
       count = miPortOutInst->getPortCount();
       for(uint i = 0; i < count; i++) {
         name = miPortOutInst->getPortName(i);
-        miPortOutNames.append(QString::fromStdString(name));
+        miPortOutNames.push_back(name);
         emit EmPortOutAdd(i, QString::fromStdString(name));
       }
       // Add a virtual port to drivers that support virtual ports.
@@ -190,11 +190,11 @@ void DrvIf::OnDrvChg    (int i_dex) {
         case RtMidi::MACOSX_CORE:
         case RtMidi::UNIX_JACK:
           name = "[virtual input]";
-          miPortInpNames.append(QString::fromStdString(name));
-          emit EmPortInpAdd(miPortInpNames.count() - 1, QString::fromStdString(name));
+          miPortInpNames.push_back(name);
+          emit EmPortInpAdd(miPortInpNames.size() - 1, QString::fromStdString(name));
           name = "[virtual output]";
-          miPortOutNames.append(QString::fromStdString(name));
-          emit EmPortOutAdd(miPortOutNames.count() - 1, QString::fromStdString(name));
+          miPortOutNames.push_back(name);
+          emit EmPortOutAdd(miPortOutNames.size() - 1, QString::fromStdString(name));
           hasPortsVirtual = true;
           break;
         default:
@@ -216,7 +216,7 @@ void DrvIf::OnPortInpChg(int i_dex) {
       emit EmPortInpChg(-1);
     }
     if(i_dex != -1) {   // Open the new input port.
-      if(hasPortsVirtual && (i_dex == (miPortInpNames.count() - 1)))     miPortInpInst->openVirtualPort("MIDI Input");
+      if(hasPortsVirtual && (i_dex == ((int)(miPortInpNames.size()) - 1)))     miPortInpInst->openVirtualPort("MIDI Input");
       else                                                               miPortInpInst->openPort(i_dex, "MIDI Input");
       miPortInpNum = i_dex;
       DoModeIgnChg();
@@ -232,7 +232,7 @@ void DrvIf::OnPortOutChg(int i_dex) {
       emit EmPortOutChg(-1);
     }
     if(i_dex != -1) {  // Open the new output port.
-      if(hasPortsVirtual && (i_dex == (miPortOutNames.count() - 1)))  miPortOutInst->openVirtualPort("MIDI Output");
+      if(hasPortsVirtual && (i_dex == ((int)(miPortOutNames.size()) - 1)))  miPortOutInst->openVirtualPort("MIDI Output");
       else                                                            miPortOutInst->openPort(i_dex, "MIDI Output");
       miPortOutNum = i_dex;
       emit EmPortOutChg(i_dex);

@@ -82,7 +82,7 @@ class QVwMain: public QVwDesgn {
     void  setModelData   (int     i_R,  int   i_C, const QVariant &value, int role=Qt::DisplayRole);
 
   public:
-    CbV               *MSU_WinMain; // Hope This Works.
+    CbV               *MSU_WinMain; // This Works.
   private:
     qint64                TZ;
 

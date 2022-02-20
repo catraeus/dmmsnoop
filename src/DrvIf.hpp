@@ -37,43 +37,44 @@ class DrvIf: public QObject {
     Q_OBJECT
 public:
 public:
-  explicit  DrvIf(QObject *parent=0);
-           ~DrvIf();
-  void      SetMidi           (Midi *i_theMidi) {theMidi = i_theMidi;}; // IMPORTANT, This MUST be done ASAP after the constructor.
-  int       DrvNumGet       () const;
-  int       DrvCntGet    () const;
-  std::string   getDriverName     (int i_dex) const;
-  bool      ModeIgnActSnGet   () const;
-  bool      ModeIgnSysExGet   () const;
-  bool      ModeIgnMiTimGet   () const;
-  int       PortInNoGet      () const;
-  int       PortInCntGet () const;
-  std::string   PortInNameGet  (int i_dex) const;
-  int       PortOutNoGet     (           ) const;
-  int       PortOutCntGet() const;
-  std::string   PortOutNameGet (int i_dex) const;
+  explicit      DrvIf(QObject *parent=0);
+               ~DrvIf(                 );
+
+  void          SetMidi         (Midi *i_theMidi) {theMidi = i_theMidi;}; // IMPORTANT, This MUST be done ASAP after the constructor.
+  int           DrvNumGet       (         ) const;
+  int           DrvCntGet       (         ) const;
+  std::string   getDriverName   (int i_dex) const;
+  bool          ModeIgnActSnGet (         ) const;
+  bool          ModeIgnSysExGet (         ) const;
+  bool          ModeIgnMiTimGet (         ) const;
+  int           PortInNoGet     (         ) const;
+  int           PortInCntGet    (         ) const;
+  std::string   PortInNameGet   (int i_dex) const;
+  int           PortOutNoGet    (         ) const;
+  int           PortOutCntGet   (         ) const;
+  std::string   PortOutNameGet  (int i_dex) const;
 
 public slots:
-  void      OnDrvChg          (int i_dex);
-  void      OnModeIgnActSnChg (bool i_ign);
-  void      OnModeIgnSysExChg (bool i_ign);
-  void      OnModeIgnMiTimChg (bool i_ign);
-  void      OnPortInpChg      (int i_dex);
-  void      OnPortOutChg      (int i_dex);
-  quint64   OnMiMsgTx         (const QByteArray &i_qbMsg);
+  void      OnDrvChg            (int     i_dex);
+  void      OnModeIgnActSnChg   (bool    i_ign);
+  void      OnModeIgnSysExChg   (bool    i_ign);
+  void      OnModeIgnMiTimChg   (bool    i_ign);
+  void      OnPortInpChg        (int     i_dex);
+  void      OnPortOutChg        (int     i_dex);
+  quint64   OnMiMsgTx           (const   QByteArray &i_qbMsg);
 
 signals:
-  void      EmDrvChange       (int i_dex);
-  void      EmPortInpAdd      (int i_dex, const QString &name);
-  void      EmPortInpChg      (int i_dex);
-  void      EmPortInpDel      (int i_dex);
-  void      EmPortOutAdd      (int i_dex, const QString &name);
-  void      EmPortOutChg      (int i_dex);
-  void      EmPortOutDel      (int i_dex);
-  void      EmModeIgnActSnChg (bool i_ign);
-  void      EmModeIgnSysExChg (bool i_ign);
-  void      EmModeIgnMiTimChg (bool i_ign);
-  void      EmMiMsgRx         (quint64 i_TS, const QByteArray &i_qbMsg);
+  void      EmDrvChange         (int     i_dex);
+  void      EmPortInpAdd        (int     i_dex, const QString &name);
+  void      EmPortInpChg        (int     i_dex);
+  void      EmPortInpDel        (int     i_dex);
+  void      EmPortOutAdd        (int     i_dex, const QString &name);
+  void      EmPortOutChg        (int     i_dex);
+  void      EmPortOutDel        (int     i_dex);
+  void      EmModeIgnActSnChg   (bool    i_ign);
+  void      EmModeIgnSysExChg   (bool    i_ign);
+  void      EmModeIgnMiTimChg   (bool    i_ign);
+  void      EmMiMsgRx           (quint64 i_TS,  const QByteArray &i_qbMsg);
 
 public:
 private:
@@ -100,19 +101,19 @@ private:
     int                  miMsgChChNo;     // iff is 0xA0
     char                *miMsgChChStr;    // iff is 0xA0
 
-    int                  miDrvNo;
+    int                        miDrvNo;
     std::vector<RtMidi::Api>   miDrvApis;
-    QStringList          miDrvNames;
+    std::vector<std::string>   miDrvNames;
 
     bool                 modeIgnActSn;
     bool                 modeIgnSysEx;
     bool                 modeIgnMiTim;
     RtMidiIn            *miPortInpInst;
     int                  miPortInpNum;
-    QStringList          miPortInpNames;
+    std::vector<std::string>   miPortInpNames;
     RtMidiOut           *miPortOutInst;
     int                  miPortOutNum;
-    QStringList          miPortOutNames;
+    std::vector<std::string>   miPortOutNames;
     bool                 hasPortsVirtual;
 };
 

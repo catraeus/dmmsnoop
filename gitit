@@ -1,6 +1,6 @@
 git add   gitit
 git add   dmmsnoop.geany
-git add   src/Ctrl.cpp
 git add   src/DrvIf.cpp
 git add   src/DrvIf.hpp
+git add   src/QVwMain.hpp
 

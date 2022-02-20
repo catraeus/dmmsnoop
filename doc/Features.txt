@@ -1,0 +1,22 @@
+Is    A  - MIDI tool for MIDI developers like Synth, Sequencer and Controller people.
+Is    A  - MIDI Message Receiver.
+Is    A  - MIDI Message Generator.
+Is    A  - MIDI Signal Patchbay.
+Isn't A  - Synth
+Isn't A  - Controller
+Isn't A  - Sequencer
+Has   A  - Beautiful display to instantly highlight what kind of message went by.
+Has   A  - Presentation of the data that doesn't hide the MIDI command format.
+Has   A  - Forgiving error parser giving clues as to what went wrong.
+Has   A  - MIDI Notes Cross-connect to morph input messages from one channel to another channel.
+Has   A  - MIDI CC    Cross-Connect to morph input CC Channels to outputs on a different controller.
+Has   A  - Human MIDI Message Builder so the user doesn't have to memorize codes.
+Has   A  - Code MIDI Message Builder so the user can run with scissors.
+Can      - Pace outbound MIDI messages created by the user.
+Can      - Merge multiple MIDI Input Devices     to a single output MIDI device.
+Can      - Merge multiple MIDI Input Channels    to a single output MIDI Channel.
+Can      - Merge multiple MIDI Input CC Controls to a single output MIDI CC Control.
+Can      - Replicate a single MIDI Input Device     to several MIDI Output Devices.
+Can      - Replicate a single MIDI Input Channel    to several MIDI Output Channels.
+Can      - Replicate a single MIDI Input CC Control to several MIDI Output CC Controls.
+

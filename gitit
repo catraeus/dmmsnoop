@@ -1,12 +1,7 @@
 git add   gitit
-git add   dmmsnoop.geany
+git add   doc/Architecture.txt
+git add   doc/Features.txt
 git add   src/Ctrl.cpp
 git add   src/Ctrl.hpp
-git add   src/DrvIf.cpp
-git add   src/DrvIf.hpp
-git add   src/QVwAbout.cpp
-git add   src/QVwConfig.cpp
-git add   src/QVwConfig.hpp
-git add   src/QVwMain.ui
-git add   src/QVwMsg.cpp
+git add   src/_main.cpp
 

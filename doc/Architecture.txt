@@ -1,0 +1,33 @@
+main() has to exist.
+theApp has to exist (Currently Qt, but could be gtk too.)
+Where do the windows go?
+Where do the engines go?
+How do we decide on signals/slots/calls/callbacks?
+Who has blocking problems?
+Who has threading problems?
+
+main() fires up translations and the WinMain window.
+After everyone reports happiness, main() runs theApp and shows the main window.
+  Of course, show WinMain has to be immediately before running theApp since
+    theApp blocks the whole world.
+
+Now for philosophy.  I am allergic to signals/slots.  They sure do make you
+  not have to worry about order of execution, but they make it so you don't
+  really know order of execution.
+If a module can call a public function of it's member's included classes,
+   that is favorite number 1
+If a module can run a callback to the one up the chain who can inject a callback,
+   that's favorite number 2
+Once you do get to multi-threading then you have to start thinking signals are good.
+
+Thread 1 is the user.  They can push out MIDI messages from the GUI.
+Thread 2 is the MIDI Input.  This can chunk a message into the GUI while the user is sending things.
+  Perhaps a marshalling system should watch for these crashes.
+
+There have to be two queues.  One for GUI writing, one for MIDI TX output via the RtMidi device.
+
+For GUI Writing,
+So we have a Mutex'd variable that the MIDI RX sets and the GUI TX waits on and vice versa.
+The MIDI message parser should have a readable variable that says it is busy.
+
+For MIDI Message TXing, actually, exactly the same deal.

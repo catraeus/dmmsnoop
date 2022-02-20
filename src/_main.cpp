@@ -68,6 +68,15 @@ int main(int argc, char **argv) {
   theTrApp->load("dmmsnoop_" + language);
   theApp->installTranslator(theTrApp);
   theCtrl = new Ctrl(theApp); // Has to wait for theApp to be translate-stuffed
+  theCtrl->BuildDrvIf       ();
+  theCtrl->BuildWinAbout    ();
+  theCtrl->BuildWinConfig   ();
+  theCtrl->ConnSigWinConfig ();
+  theCtrl->BuildWinMain     ();
+  theCtrl->ConnSigWinMain   ();
+  theCtrl->ConnSigWinMsg    ();
+  theCtrl->ConnSigDrvIf     ();
+  theCtrl->ConnSigApp       ();
 
   theQVwMain = theCtrl->GetWinMain();
   theQVwMain->show();

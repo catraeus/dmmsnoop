@@ -50,15 +50,15 @@ Ctrl:: Ctrl(App *i_theApp, QObject *i_parent) : QObject(i_parent),  theApp(i_the
 
 
 //==== Setup About
-  BuildDrvIf       ();
-  BuildWinAbout    ();
-  theQVwConfig->Build();
-  ConnSigWinConfig ();
-  BuildWinMain     ();
-  ConnSigWinMain   ();
-  ConnSigWinMsg    ();
-  ConnSigDrvIf     ();
-  ConnSigApp       ();
+//  BuildDrvIf       ();
+//  BuildWinAbout    ();
+//  theQVwConfig->Build();
+//  ConnSigWinConfig ();
+//  BuildWinMain     ();
+//  ConnSigWinMain   ();
+//  ConnSigWinMsg    ();
+//  ConnSigDrvIf     ();
+//  ConnSigApp       ();
 }
 Ctrl::~Ctrl() {
 // Disconnect theDrvIf signals handled by the controller before the theDrvIf is deleted.

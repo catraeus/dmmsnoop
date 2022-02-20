@@ -44,6 +44,7 @@ public:
 
   void     BuildDrvIf      (void);
   void     BuildWinAbout   (void);
+  void     BuildWinConfig  (void) {theQVwConfig->Build(); return;};
   void     BuildWinMain    (void);
 
   void     ConnSigWinConfig(void);

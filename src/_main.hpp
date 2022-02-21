@@ -32,6 +32,7 @@
 #include "QVwMain.hpp"
 #include "error.h"
 #include "util/TrMsg.hpp"
+#include "AppVersion.hpp"
 #include "BuildNo.hpp"
 
 #endif

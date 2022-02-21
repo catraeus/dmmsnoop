@@ -19,16 +19,6 @@ isEmpty(MAKEDIR) {
     MAKEDIR = ../make
 }
 
-isEmpty(MAJOR_VERSION) {
-    MAJOR_VERSION = 9
-}
-isEmpty(MINOR_VERSION) {
-    MINOR_VERSION = 9
-}
-isEmpty(REVISION) {
-    REVISION = 9
-}
-DMMSNOOP_VERSION = $${MAJOR_VERSION}.$${MINOR_VERSION}.$${REVISION}
 
 macx {
     CONFIG += x86_64
@@ -65,12 +55,10 @@ isEmpty(DATADIR) {
     DMMSNOOP_DATA_INSTALL_PATH = $${DATADIR}
 }
 
-DEFINES += DMMSNOOP_MAJOR_VERSION=$${MAJOR_VERSION} \
-    DMMSNOOP_MINOR_VERSION=$${MINOR_VERSION} \
-    DMMSNOOP_REVISION=$${REVISION}
 DESTDIR = $${BUILDDIR}/$${DMMSNOOP_APP_SUFFIX}
 HEADERS +=          \
     BuildNo.hpp     \
+    AppVersion.hpp  \
     _main.hpp       \
     App.hpp         \
     Ctrl.hpp        \
@@ -122,7 +110,6 @@ SOURCES +=          \
     util/DmmStr.cpp
 TARGET = dmmsnoop
 TEMPLATE = app
-VERSION = $${DMMSNOOP_VERSION}
 QMAKE_POST_LINK += ./BuildInc
 
 ################################################################################

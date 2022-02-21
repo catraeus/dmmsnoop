@@ -6,12 +6,9 @@ from subprocess import call
 from sys import argv, stderr, stdout
 
 from install.util import (
-    MAJOR_VERSION,
-    MINOR_VERSION,
     PLATFORM_MACX,
     PLATFORM_UNIX,
     PLATFORM_WIN32,
-    REVISION,
     findExecutable,
     getPlatform
 )
@@ -109,8 +106,7 @@ def main():
     stdout.write("Locations and parameters done.   Going on to qmake\n")
     # Run `qmake`
     qmakeArgs = [qmakePath, "-recursive"] + platformArgs + args + \
-        ["MAJOR_VERSION=%d" % MAJOR_VERSION, "MINOR_VERSION=%d" % MINOR_VERSION,
-         "REVISION=%d" % REVISION, "BUILDDIR=%s" % buildDir,
+        ["BUILDDIR=%s" % buildDir,
          "MAKEDIR=%s" % makeDir, "PREFIX=%s" % prefix,
          "DATAROOTDIR=%s" % dataRootDir, "EXECPREFIX=%s" % execPrefix,
          "BINDIR=%s" % binDir, "DATADIR=%s" % dataDir]

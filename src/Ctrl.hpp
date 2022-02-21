@@ -33,6 +33,9 @@
 #include "libs/CaesCallBack.hpp"
 #include "util/TrMsg.hpp"
 
+#include "AppVersion.hpp"
+#include "BuildNo.hpp"
+
 class Ctrl: public QObject {
   Q_OBJECT
 

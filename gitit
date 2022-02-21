@@ -1,9 +1,8 @@
 git add   gitit
-git add   dmmsnoop.geany
-git add   doc/Architecture.txt
-git add   src/_main.cpp
+git add   configure
+git add   install/util.py
+git add   src/BuildNo.hpp
+git add   src/Ctrl.hpp
 git add   src/_main.hpp
 git add   src/src.pro
-git add   src/BuildInc
-git add   src/BuildNo.hpp
 

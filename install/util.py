@@ -15,10 +15,6 @@ from platform import mac_ver, win32_ver
 from string import Template
 from subprocess import PIPE, Popen
 
-MAJOR_VERSION = 0
-MINOR_VERSION = 1
-REVISION = 32
-VERSION = "%d.%d.%d" % (MAJOR_VERSION, MINOR_VERSION, REVISION)
 
 PLATFORM_MACX = 1
 PLATFORM_UNIX = 2

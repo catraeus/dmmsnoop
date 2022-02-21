@@ -31,3 +31,12 @@ So we have a Mutex'd variable that the MIDI RX sets and the GUI TX waits on and 
 The MIDI message parser should have a readable variable that says it is busy.
 
 For MIDI Message TXing, actually, exactly the same deal.
+
+//========================================================================
+now as far as structure is concerned.
+The Driver Config window needs to know about a MiDrv class.
+The Main Message window needs to know about ... well ... a lot of things.
+
+"abstraction to distraction" is what happens when you make a "Controller" that
+  links way too many needless signals that could have more easily been done as
+  either calls or callbacks.

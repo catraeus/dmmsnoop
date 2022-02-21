@@ -1,0 +1,25 @@
+#!/usr/bin/env python3
+
+
+def main():
+# Python code to
+# demonstrate readlines()
+
+  file1 = open('BuildNo.hpp', 'r')
+  Lines = file1.readlines()
+  file1.close()
+
+  L = Lines[0]
+  LS = L.split();
+  N = int(LS[2])
+  N = N + 1
+  L = "#define BUILD_NO " + "{}".format(N);
+
+  file1 = open('BuildNo.hpp', 'w')
+  file1.writelines("{}".format(L))
+  file1.close()
+
+  print("{}".format(L))
+
+if __name__ == "__main__":
+    main()

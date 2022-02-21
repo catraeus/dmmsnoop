@@ -21,24 +21,26 @@ indent_mode=2
 name=dmmsnoop
 base_path=/way/dev/SW/foreign/music/dmmsnoop
 description=
-file_patterns=*.cpp\;*.hpp\;*.ui\;*.pro\;*.py;
+file_patterns=*.cpp\;*.hpp\;*.ui\;*.pro\;*.py\;MyTest;
 
 [long line marker]
 long_line_behaviour=1
 long_line_column=72
 
 [files]
-current_page=3
-FILE_NAME_0=0;C++;0;EUTF-8;0;1;0;%2Fway%2Fdev%2FSW%2Fforeign%2Fmusic%2Fdmmsnoop%2Fsrc%2F_main.hpp;0;2
-FILE_NAME_1=736;C++;0;EUTF-8;0;1;0;%2Fway%2Fdev%2FSW%2Fforeign%2Fmusic%2Fdmmsnoop%2Fsrc%2F_main.cpp;0;2
-FILE_NAME_2=1380;C++;0;EUTF-8;0;1;0;%2Fway%2Fdev%2FSW%2Fforeign%2Fmusic%2Fdmmsnoop%2Fsrc%2FCtrl.hpp;0;2
-FILE_NAME_3=2826;C++;0;EUTF-8;0;1;0;%2Fway%2Fdev%2FSW%2Fforeign%2Fmusic%2Fdmmsnoop%2Fsrc%2FCtrl.cpp;0;2
+current_page=0
+FILE_NAME_0=1082;C++;0;EUTF-8;0;1;0;%2Fway%2Fdev%2FSW%2Fforeign%2Fmusic%2Fdmmsnoop%2Fsrc%2F_main.hpp;0;2
+FILE_NAME_1=2781;C++;0;EUTF-8;0;1;0;%2Fway%2Fdev%2FSW%2Fforeign%2Fmusic%2Fdmmsnoop%2Fsrc%2F_main.cpp;0;2
+FILE_NAME_2=1405;C++;0;EUTF-8;0;1;0;%2Fway%2Fdev%2FSW%2Fforeign%2Fmusic%2Fdmmsnoop%2Fsrc%2FCtrl.hpp;0;2
+FILE_NAME_3=0;C++;0;EUTF-8;0;1;0;%2Fway%2Fdev%2FSW%2Fforeign%2Fmusic%2Fdmmsnoop%2Fsrc%2FCtrl.cpp;0;2
 FILE_NAME_4=1027;C++;0;EUTF-8;0;1;0;%2Fway%2Fdev%2FSW%2Fforeign%2Fmusic%2Fdmmsnoop%2Fsrc%2FQVwAbout.cpp;0;2
 FILE_NAME_5=584;C++;0;EUTF-8;0;1;0;%2Fway%2Fdev%2FSW%2Fforeign%2Fmusic%2Fdmmsnoop%2Fsrc%2Futil%2FDmmStr.hpp;0;2
 FILE_NAME_6=2735;C++;0;EUTF-8;0;1;0;%2Fway%2Fdev%2FSW%2Fforeign%2Fmusic%2Fdmmsnoop%2Fsrc%2FQVwConfig.hpp;0;2
 FILE_NAME_7=2406;C++;0;EUTF-8;0;1;0;%2Fway%2Fdev%2FSW%2Fforeign%2Fmusic%2Fdmmsnoop%2Fsrc%2FQVwConfig.cpp;0;2
 FILE_NAME_8=1407;C++;0;EUTF-8;0;1;0;%2Fway%2Fdev%2FSW%2Fforeign%2Fmusic%2Fdmmsnoop%2Fsrc%2FDrvIf.hpp;0;2
 FILE_NAME_9=2533;C++;0;EUTF-8;0;1;0;%2Fway%2Fdev%2FSW%2Fforeign%2Fmusic%2Fdmmsnoop%2Fsrc%2FDrvIf.cpp;0;2
+FILE_NAME_10=2816;None;0;EUTF-8;0;1;0;%2Fway%2Fdev%2FSW%2Fforeign%2Fmusic%2Fdmmsnoop%2Fsrc%2Fsrc.pro;0;2
+FILE_NAME_11=24161;Make;0;EUTF-8;1;1;0;%2Fway%2Fdev%2FSW%2Fforeign%2Fmusic%2Fdmmsnoop%2Fsrc%2FMakefile;0;2
 
 [VTE]
 last_dir=/home/duncang

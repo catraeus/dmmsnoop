@@ -38,7 +38,6 @@
 
 int main(int argc, char **argv) {
   App          *theApp;
-  QString       errorMessage; // MAGICK, this is templated somehow, it gets filled in ghostland of Qt.
   QString       directory;
   QString       language;
   QTranslator  *theTrQtf;
@@ -47,7 +46,10 @@ int main(int argc, char **argv) {
   Ctrl         *theCtrl;
   int           result;
 
+
   QVwMain *theQVwMain;
+
+  fprintf(stdout, "Build No.:  %d\n", BUILD_NO);fflush(stdout);
 
   theApp   = new App(argc, argv);
   theTrQtf = new QTranslator();
@@ -80,20 +82,12 @@ int main(int argc, char **argv) {
 
   theQVwMain = theCtrl->GetWinMain();
   theQVwMain->show();
-  theApp->exec();
+  result = QApplication::exec();
 
-
-  if(errorMessage.isEmpty()) {
-    fprintf(stdout, "Exiting without errors ...\n");  fflush(stdout);
-    result = EXIT_SUCCESS;
-  }
-  else {
-    fprintf(stdout, "Error: %s\n", errorMessage.toStdString().c_str());
-    result = EXIT_FAILURE;
-  }
 
   theApp->removeTranslator(theTrApp);
   theApp->removeTranslator(theTrQtf);
+  delete  theCtrl;
   delete  theTrMsg;
 
   return result;

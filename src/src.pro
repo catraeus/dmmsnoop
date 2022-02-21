@@ -70,6 +70,8 @@ DEFINES += DMMSNOOP_MAJOR_VERSION=$${MAJOR_VERSION} \
     DMMSNOOP_REVISION=$${REVISION}
 DESTDIR = $${BUILDDIR}/$${DMMSNOOP_APP_SUFFIX}
 HEADERS +=          \
+    BuildNo.hpp     \
+    _main.hpp       \
     App.hpp         \
     Ctrl.hpp        \
     Midi.hpp        \
@@ -121,6 +123,7 @@ SOURCES +=          \
 TARGET = dmmsnoop
 TEMPLATE = app
 VERSION = $${DMMSNOOP_VERSION}
+QMAKE_POST_LINK += ./BuildInc
 
 ################################################################################
 # Install

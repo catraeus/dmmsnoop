@@ -32,5 +32,6 @@
 #include "QVwMain.hpp"
 #include "error.h"
 #include "util/TrMsg.hpp"
+#include "BuildNo.hpp"
 
 #endif

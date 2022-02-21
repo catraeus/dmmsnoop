@@ -10,14 +10,14 @@
     <x>0</x>
     <y>0</y>
     <width>555</width>
-    <height>241</height>
+    <height>248</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>About dmmsnoop</string>
   </property>
   <property name="windowIcon">
-   <iconset>
+   <iconset resource="resources.qrc">
     <normaloff>:/dmmsnoop/images/16x16/information.png</normaloff>:/dmmsnoop/images/16x16/information.png</iconset>
   </property>
   <property name="modal">
@@ -40,7 +40,10 @@
           <string/>
          </property>
          <property name="pixmap">
-          <pixmap>:/dmmsnoop/images/32x32/information.png</pixmap>
+          <pixmap resource="resources.qrc">:/dmmsnoop/images/32x32/information.png</pixmap>
+         </property>
+         <property name="textInteractionFlags">
+          <set>Qt::NoTextInteraction</set>
          </property>
         </widget>
        </item>
@@ -62,7 +65,7 @@
      <item>
       <layout class="QVBoxLayout" stretch="0,1">
        <item>
-        <widget class="QLabel" name="label">
+        <widget class="QLabel" name="QLbAppName">
          <property name="font">
           <font>
            <pointsize>18</pointsize>
@@ -76,6 +79,9 @@
          </property>
          <property name="alignment">
           <set>Qt::AlignCenter</set>
+         </property>
+         <property name="textInteractionFlags">
+          <set>Qt::TextSelectableByMouse</set>
          </property>
         </widget>
        </item>
@@ -91,21 +97,27 @@
          <item row="0" column="1">
           <widget class="QLabel" name="QLbAppVer">
            <property name="text">
-            <string>0.2.1</string>
+            <string>0.0.0 b000</string>
+           </property>
+           <property name="textInteractionFlags">
+            <set>Qt::TextSelectableByMouse</set>
            </property>
           </widget>
          </item>
          <item row="1" column="0">
           <widget class="QLabel" name="label">
            <property name="text">
-            <string>Written By:</string>
+            <string>Author:</string>
            </property>
           </widget>
          </item>
          <item row="1" column="1">
-          <widget class="QLabel" name="label">
+          <widget class="QLabel" name="QLbContact">
            <property name="text">
-            <string>Devin Anderson &lt;surfacepatterns (at) gmail (dot) com&gt;</string>
+            <string>Catraeus / Duncan Gray &lt;catraeus (at) gmail (dot) com&gt;</string>
+           </property>
+           <property name="textInteractionFlags">
+            <set>Qt::TextSelectableByMouse</set>
            </property>
           </widget>
          </item>
@@ -117,9 +129,12 @@
           </widget>
          </item>
          <item row="2" column="1">
-          <widget class="QLabel" name="label">
+          <widget class="QLabel" name="QlbLic">
            <property name="text">
-            <string>GNU General Public License</string>
+            <string>GNU Lesser General Public License</string>
+           </property>
+           <property name="textInteractionFlags">
+            <set>Qt::TextSelectableByMouse</set>
            </property>
           </widget>
          </item>
@@ -131,7 +146,7 @@
           </widget>
          </item>
          <item row="3" column="1">
-          <widget class="QLabel" name="url_home">
+          <widget class="QLabel" name="QLbHome">
            <property name="text">
             <string>&lt;a href=&quot;https://github.com/catraeus/dmmsnoop&quot;&gt;https://github.com/catraeus/dmmsnoop&lt;/a&gt;</string>
            </property>
@@ -142,76 +157,7 @@
             <bool>true</bool>
            </property>
            <property name="textInteractionFlags">
-            <set>Qt::LinksAccessibleByKeyboard|Qt::LinksAccessibleByMouse</set>
-           </property>
-          </widget>
-         </item>
-         <item row="4" column="0">
-          <widget class="QLabel" name="label">
-           <property name="text">
-            <string>Issue Tracker:</string>
-           </property>
-          </widget>
-         </item>
-         <item row="4" column="1">
-          <widget class="QLabel" name="QLbAppUrl">
-           <property name="text">
-            <string>&lt;a href=&quot;https://github.com/catraeus/dmmsnoop&quot;&gt;https://github.com/catraeus/dmmsnoop&lt;/a&gt;</string>
-           </property>
-           <property name="textFormat">
-            <enum>Qt::RichText</enum>
-           </property>
-           <property name="openExternalLinks">
-            <bool>true</bool>
-           </property>
-           <property name="textInteractionFlags">
-            <set>Qt::LinksAccessibleByKeyboard|Qt::LinksAccessibleByMouse</set>
-           </property>
-          </widget>
-         </item>
-         <item row="5" column="0">
-          <widget class="QLabel" name="label">
-           <property name="text">
-            <string>User Group:</string>
-           </property>
-          </widget>
-         </item>
-         <item row="5" column="1">
-          <widget class="QLabel" name="label">
-           <property name="text">
-            <string>&lt;a href=&quot;https://github.com/catraeus/dmmsnoop&quot;&gt;https://github.com/catraeus/dmmsnoop&lt;/a&gt;</string>
-           </property>
-           <property name="textFormat">
-            <enum>Qt::RichText</enum>
-           </property>
-           <property name="openExternalLinks">
-            <bool>true</bool>
-           </property>
-           <property name="textInteractionFlags">
-            <set>Qt::LinksAccessibleByKeyboard|Qt::LinksAccessibleByMouse</set>
-           </property>
-          </widget>
-         </item>
-         <item row="6" column="0">
-          <widget class="QLabel" name="label">
-           <property name="text">
-            <string>Development Group:</string>
-           </property>
-          </widget>
-         </item>
-         <item row="6" column="1">
-          <widget class="QLabel" name="label">
-           <property name="text">
-            <string>&lt;a href=&quot;https://github.com/catraeus/dmmsnoop&quot;&gt;https://github.com/catraeus/dmmsnoop&lt;/a&gt;</string>
-           </property>
-           <property name="textFormat">
-            <enum>Qt::RichText</enum>
-           </property>
-           <property name="openExternalLinks">
-            <bool>true</bool>
-           </property>
-           <property name="textInteractionFlags">
-            <set>Qt::LinksAccessibleByKeyboard|Qt::LinksAccessibleByMouse</set>
+            <set>Qt::TextBrowserInteraction</set>
            </property>
           </widget>
          </item>
@@ -237,12 +183,12 @@
       </spacer>
      </item>
      <item>
-      <widget class="QPushButton" name="closeButton">
+      <widget class="QPushButton" name="QPbClose">
        <property name="text">
         <string>Close</string>
        </property>
        <property name="icon">
-        <iconset>
+        <iconset resource="resources.qrc">
          <normaloff>:/dmmsnoop/images/16x16/close.png</normaloff>:/dmmsnoop/images/16x16/close.png</iconset>
        </property>
       </widget>

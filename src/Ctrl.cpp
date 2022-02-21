@@ -41,24 +41,12 @@ Ctrl:: Ctrl(App *i_theApp, QObject *i_parent) : QObject(i_parent),  theApp(i_the
 
   theDrvIf     = new DrvIf();
   theMidi      = new Midi();
-  theQVwMain   = new QVwMain();
+  theQVwMain   = new QVwMain(theApp);
   theQVwConfig = new QVwConfig(theDrvIf);
-  theQVwAbout  = new QVwAbout();
   theQVwMsg    = new QVwMsg();
   theQVwErr    = new QVwErr();
   theTrMsg     = TrMsg::GetInstance();
 
-
-//==== Setup About
-//  BuildDrvIf       ();
-//  BuildWinAbout    ();
-//  theQVwConfig->Build();
-//  ConnSigWinConfig ();
-//  BuildWinMain     ();
-//  ConnSigWinMain   ();
-//  ConnSigWinMsg    ();
-//  ConnSigDrvIf     ();
-//  ConnSigApp       ();
 }
 Ctrl::~Ctrl() {
 // Disconnect theDrvIf signals handled by the controller before the theDrvIf is deleted.
@@ -70,12 +58,6 @@ Ctrl::~Ctrl() {
 
 void Ctrl::BuildDrvIf      (void) {
   theDrvIf->SetMidi(theMidi);
-  return;
-}
-void Ctrl::BuildWinAbout   (void) {
-  theQVwAbout->setMajorVersion(DMMSNOOP_MAJOR_VERSION);
-  theQVwAbout->setMinorVersion(DMMSNOOP_MINOR_VERSION);
-  theQVwAbout->setRevision(DMMSNOOP_REVISION);
   return;
 }
 void Ctrl::BuildWinMain    (void) {
@@ -107,11 +89,8 @@ void Ctrl::ConnSigWinConfig(void) {
   return;
 }
 void Ctrl::ConnSigWinMain  (void) {
-  connect(theQVwMain, SIGNAL(EmAppAbout          (                           )),  theQVwAbout,  SLOT(show()));
   connect(theQVwMain, SIGNAL(EmMiMsgTXAdd        (                           )),  theQVwMsg,    SLOT(show()));
-  connect(theQVwMain, SIGNAL(EmMiMsgTabClr       (                           )),  theQVwMain,   SLOT(OnMiMsgTabClr()));
   connect(theQVwMain, SIGNAL(EmAppConfig         (                           )),  theQVwConfig, SLOT(show()));
-  connect(theQVwMain, SIGNAL(closeRequest        (                           )),  theApp,       SLOT(quit()));
   return;
 }
 void Ctrl::ConnSigWinMsg   (void) {

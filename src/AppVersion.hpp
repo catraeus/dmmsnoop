@@ -1,3 +1,4 @@
-#define DMMSNOOP_MAJOR_VERSION 1
-#define DMMSNOOP_MINOR_VERSION 0
-#define DMMSNOOP_REVISION 11
+#define APP_NAME "dmmsnoop"
+#define VER_MAJ    1
+#define VER_MIN    0
+#define VER_REV   11

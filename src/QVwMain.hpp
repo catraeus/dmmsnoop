@@ -29,6 +29,8 @@
 #include <QtWidgets/QMainWindow>
 #include <QtWidgets/QTableView>
 
+#include "QVwAbout.hpp"
+
 #include "QVwDesgn.hpp"
 #include "DelgMsgTbl.hpp"
 
@@ -58,7 +60,7 @@ class QVwMain: public QVwDesgn {
       MTC_BIG   = 0xFFFFFFFFU
     };
   public:
-          QVwMain        (QObject *parent=0);
+          QVwMain        (QApplication *i_theApp, QObject *parent=0);
          ~QVwMain        (                 );
 
   public slots:
@@ -67,9 +69,10 @@ class QVwMain: public QVwDesgn {
     void  OnMiMsgTX      (quint64 i_TS, Midi *i_tMidi, bool i_val);
     void  OnMiMsgTabClr  (void      );
     void  OnMiMsgTxEn    (bool i_en );
+    void  OnAppAbout     (void) {theQVwAbout->show();};
 
          signals:
-    void  EmAppAbout     (void      );
+  //  void  EmAppAbout     (void      );
     void  EmMiMsgTXAdd   (void      );
     void  EmMiMsgTabClr  (void      );
     void  EmAppConfig    (void      );
@@ -78,12 +81,16 @@ class QVwMain: public QVwDesgn {
     void  SetTimeZero    (quint64 i_TZ);
 
   private:
+    void  BuildActions   (void);
+    void  BuildGrid      (void);
     int   MsgAdd         (quint64 i_TS, Midi *i_tMidi, bool i_val);
     void  setModelData   (int     i_R,  int   i_C, const QVariant &value, int role=Qt::DisplayRole);
 
   public:
     CbV               *MSU_WinMain; // This Works.
   private:
+    QApplication         *theApp;
+    QWidget              *QWd_root;
     qint64                TZ;
 
     QAction              *QAc_AppAbout;
@@ -95,6 +102,10 @@ class QVwMain: public QVwDesgn {
     DelgMsgTbl            QDg_MiMsgGrid;
     QStandardItemModel    QMd_MiMsgGrid;
     QTableView           *QTb_MiMsgGrid;
+
+
+    QVwAbout      *theQVwAbout;
+
 
   char  i_miRaw     [64];
   char  i_miSta     [64];

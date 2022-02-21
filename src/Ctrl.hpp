@@ -33,9 +33,6 @@
 #include "libs/CaesCallBack.hpp"
 #include "util/TrMsg.hpp"
 
-#include "AppVersion.hpp"
-#include "BuildNo.hpp"
-
 class Ctrl: public QObject {
   Q_OBJECT
 
@@ -46,7 +43,6 @@ public:
   QVwMain *GetWinMain() {return theQVwMain;};
 
   void     BuildDrvIf      (void);
-  void     BuildWinAbout   (void);
   void     BuildWinConfig  (void) {theQVwConfig->Build(); return;};
   void     BuildWinMain    (void);
 
@@ -71,7 +67,6 @@ private:
 
        QVwMain       *theQVwMain;
        QVwConfig     *theQVwConfig;
-       QVwAbout      *theQVwAbout;
        QVwMsg        *theQVwMsg;
        QVwErr        *theQVwErr;
 

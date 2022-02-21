@@ -21,48 +21,30 @@
 
 #include <QtCore/QLocale>
 
+#include "AppVersion.hpp"
+#include "BuildNo.hpp"
+
 #include "QVwAbout.hpp"
 #include "util/DmmStr.hpp"
 
 QVwAbout::QVwAbout(QObject *parent) : QVwDlg(":/dmmsnoop/QVwAbout.ui", parent) {
-    closeButton = getChild<QPushButton>(dialog, "closeButton");
-    connect(closeButton, SIGNAL(clicked()), SLOT(hide()));
+    theTrMsg  = TrMsg::GetInstance(TrMsg::DEL_ENGLISH);
+    QPbClose  = getChild<QPushButton> (dialog, "QPbClose"   );
 
-    majorVersion = 0;
-    minorVersion = 0;
-    revision = 0;
+    QLbAppName = getChild<QLabel>     (dialog, "QLbAppName" );
+    QLbAppVer  = getChild<QLabel>     (dialog, "QLbAppVer"  );
+    QLbHome    = getChild<QLabel>     (dialog, "QLbHome"    );
+    QLbContact = getChild<QLabel>     (dialog, "QLbContact" );
+    QlbLic     = getChild<QLabel>     (dialog, "QlbLic" );
 
-    theTrMsg = TrMsg::GetInstance(TrMsg::DEL_ENGLISH);
+    connect(QPbClose, SIGNAL(clicked()), SLOT(hide()));
 
-    QLbAppVer = getChild<QLabel>(dialog, "QLbAppVer");
-    updateVersion();
+    QLbAppName->setText(APP_NAME);
 
-    QLbAppUrl = getChild<QLabel>(dialog, "QLbAppUrl");
-    QLbAppUrl->setText(theTrMsg->MsgAppGet(TrMsg::DAT_APP_URL_CODE));
+    sprintf(verStr, "%d.%d.%d b%d", VER_MAJ, VER_MIN, VER_REV, BUILD_NO);
+    QLbAppVer->setText(verStr);
+    QLbHome->setText(theTrMsg->MsgAppGet(TrMsg::DAT_APP_URL_CODE));
+
 }
 
 QVwAbout::~QVwAbout() {}
-
-void QVwAbout::setMajorVersion(int majorVersion) {
-    this->majorVersion = majorVersion;
-    updateVersion();
-}
-
-void QVwAbout::setMinorVersion(int minorVersion) {
-    this->minorVersion = minorVersion;
-    updateVersion();
-}
-
-void QVwAbout::setRevision(int revision) {
-    this->revision = revision;
-    updateVersion();
-}
-
-void QVwAbout::updateVersion() {
-    QLocale locale = QLocale::system();
-    QLbAppVer->setText(tr("%1.%2.%3", "versionFormat").
-                     arg(locale.toString(majorVersion)).
-                     arg(locale.toString(minorVersion)).
-                     arg(locale.toString(revision)));
-}
-

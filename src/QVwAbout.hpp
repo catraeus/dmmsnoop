@@ -25,6 +25,7 @@
 
 #include "QVwDlg.hpp"
 
+
 #include "util/TrMsg.hpp"
 
 class QVwAbout: public QVwDlg {
@@ -34,22 +35,18 @@ public:
   explicit  QVwAbout(QObject *parent=0);
            ~QVwAbout();
 
-public slots:
-  void setMajorVersion(int majorVersion);
-  void setMinorVersion(int minorVersion);
-  void setRevision    (int revision);
-
+public:
 private:
-  void updateVersion();
 
-  QPushButton *closeButton;
-  int        majorVersion;
-  int        minorVersion;
-  int        revision;
-  QLabel    *QLbAppVer;
-  QLabel    *QLbAppUrl;
+  QPushButton *QPbClose;
+  QLabel      *QLbAppName;
+  QLabel      *QLbContact;
+  QLabel      *QLbAppVer;
+  QLabel      *QLbHome;
+  QLabel      *QlbLic;
 
-  TrMsg     *theTrMsg;
+  TrMsg       *theTrMsg;
+  char         verStr[256];
 
 };
 

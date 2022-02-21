@@ -22,60 +22,88 @@
 #include <QtWidgets/QApplication>
 #include <QtCore/QMetaType>
 
+#include "AppVersion.hpp"
+#include "BuildNo.hpp"
+
 #include "QVwMain.hpp"
 #include "util/DmmStr.hpp"
 
-     QVwMain::QVwMain(QObject *i_parent) : QVwDesgn(":/dmmsnoop/QVwMain.ui", i_parent) {
-    QWidget *QWd_root  = getRootWidget();
+QVwMain::QVwMain(QApplication *i_theApp, QObject *i_parent) : QVwDesgn(":/dmmsnoop/QVwMain.ui", i_parent), theApp(i_theApp) {
+  QWd_root    = getRootWidget();
+  theQVwAbout = new QVwAbout();
 
-    MSU_WinMain         = NULL;
+  MSU_WinMain         = NULL;
 
-    QAc_AppAbout       = getChild<QAction>(QWd_root, "QAc_AppAbout"       );  connect(QAc_AppAbout,       SIGNAL(triggered()), SIGNAL(EmAppAbout           ()));
-    QAc_MiMsgOutAdd    = getChild<QAction>(QWd_root, "QAc_MiMsgOutAdd"    );  connect(QAc_MiMsgOutAdd,    SIGNAL(triggered()), SIGNAL(EmMiMsgTXAdd         ()));
-    QAc_MiMsgListClear = getChild<QAction>(QWd_root, "QAc_MiMsgListClear" );  connect(QAc_MiMsgListClear, SIGNAL(triggered()), SIGNAL(EmMiMsgTabClr        ()));
-    QAc_AppConfig      = getChild<QAction>(QWd_root, "QAc_AppConfig"      );  connect(QAc_AppConfig,      SIGNAL(triggered()), SIGNAL(EmAppConfig          ()));
-    QAc_AppQuit        = getChild<QAction>(QWd_root, "QAc_AppQuit"        );  connect(QAc_AppQuit,        SIGNAL(triggered()), SIGNAL(closeRequest         ()));
+  BuildActions();
+  BuildGrid();
 
-    QMd_MiMsgGrid.setColumnCount(MTC_NUM);
-    QMd_MiMsgGrid.setRowCount   (0);
-    QMd_MiMsgGrid.setHeaderData (MTC_TS,   Qt::Horizontal,  tr("TS"       ), Qt::DisplayRole);
-    QMd_MiMsgGrid.setHeaderData (MTC_RAW,  Qt::Horizontal,  tr("Raw"      ), Qt::DisplayRole);
-    QMd_MiMsgGrid.setHeaderData (MTC_STA,  Qt::Horizontal,  tr("Stat"     ), Qt::DisplayRole);
-    QMd_MiMsgGrid.setHeaderData (MTC_CHAN, Qt::Horizontal,  tr("Ch"       ), Qt::DisplayRole);
-    QMd_MiMsgGrid.setHeaderData (MTC_NOTE, Qt::Horizontal,  tr("Note"     ), Qt::DisplayRole);
-    QMd_MiMsgGrid.setHeaderData (MTC_CC,   Qt::Horizontal,  tr("CC"       ), Qt::DisplayRole);
-    QMd_MiMsgGrid.setHeaderData (MTC_VELO, Qt::Horizontal,  tr("Vel"      ), Qt::DisplayRole);
-    QMd_MiMsgGrid.setHeaderData (MTC_BEND, Qt::Horizontal,  tr("Bend"     ), Qt::DisplayRole);
-    QMd_MiMsgGrid.setHeaderData (MTC_POS,  Qt::Horizontal,  tr("Pos"      ), Qt::DisplayRole);
-    QMd_MiMsgGrid.setHeaderData (MTC_SONG, Qt::Horizontal,  tr("Song"     ), Qt::DisplayRole);
-    QMd_MiMsgGrid.setHeaderData (MTC_PROG, Qt::Horizontal,  tr("Prog"     ), Qt::DisplayRole);
-    QMd_MiMsgGrid.setHeaderData (MTC_MTC,  Qt::Horizontal,  tr("MTC"      ), Qt::DisplayRole);
-    QMd_MiMsgGrid.setHeaderData (MTC_SYS,  Qt::Horizontal,  tr("Sys"      ), Qt::DisplayRole);
-    QMd_MiMsgGrid.setHeaderData (MTC_ERR,  Qt::Horizontal,  tr("Error"    ), Qt::DisplayRole);
-    QMd_MiMsgGrid.setHeaderData (MTC_PAD,  Qt::Horizontal,  tr(""         ), Qt::DisplayRole);
-    QTb_MiMsgGrid = getChild<QTableView>(QWd_root, "QTb_MiMsgGrid");
-    QTb_MiMsgGrid->setItemDelegate(&QDg_MiMsgGrid); // The delegate to pick up after the visitors
-    QTb_MiMsgGrid->setModel(&QMd_MiMsgGrid);        // The model that actually knows what's what.
-
-  // OK, so the TableView has to actually exist first
-    QTb_MiMsgGrid->setColumnWidth(MTC_TS,   108);
-    QTb_MiMsgGrid->setColumnWidth(MTC_RAW,   72);
-    QTb_MiMsgGrid->setColumnWidth(MTC_STA,   88);
-    QTb_MiMsgGrid->setColumnWidth(MTC_CHAN,  32);
-    QTb_MiMsgGrid->setColumnWidth(MTC_NOTE,  40);
-    QTb_MiMsgGrid->setColumnWidth(MTC_CC,    32);
-    QTb_MiMsgGrid->setColumnWidth(MTC_VELO,  40);
-    QTb_MiMsgGrid->setColumnWidth(MTC_BEND,  72);
-    QTb_MiMsgGrid->setColumnWidth(MTC_POS,   64);
-    QTb_MiMsgGrid->setColumnWidth(MTC_SONG,  40);
-    QTb_MiMsgGrid->setColumnWidth(MTC_PROG,  40);
-    QTb_MiMsgGrid->setColumnWidth(MTC_MTC,  120);
-    QTb_MiMsgGrid->setColumnWidth(MTC_SYS,  108);
-    QTb_MiMsgGrid->setColumnWidth(MTC_ERR,  120);
-    QTb_MiMsgGrid->setColumnWidth(MTC_PAD,   64);
-    TZ = 0;
+  TZ = 0;
 }
-     QVwMain::~QVwMain() {}
+QVwMain::~QVwMain() {}
+
+
+
+
+
+void  QVwMain::BuildActions        (void      ) {
+  QAc_AppAbout       = getChild<QAction>(QWd_root, "QAc_AppAbout"       );  connect(QAc_AppAbout,       SIGNAL(triggered   ()), this,   SLOT  (OnAppAbout     ()));
+  QAc_MiMsgOutAdd    = getChild<QAction>(QWd_root, "QAc_MiMsgOutAdd"    );  connect(QAc_MiMsgOutAdd,    SIGNAL(triggered   ()), this,   SIGNAL(EmMiMsgTXAdd   ()));
+  QAc_MiMsgListClear = getChild<QAction>(QWd_root, "QAc_MiMsgListClear" );  connect(QAc_MiMsgListClear, SIGNAL(triggered   ()), this,   SLOT  (OnMiMsgTabClr  ()));
+  QAc_AppConfig      = getChild<QAction>(QWd_root, "QAc_AppConfig"      );  connect(QAc_AppConfig,      SIGNAL(triggered   ()), this,   SIGNAL(EmAppConfig    ()));
+  QAc_AppQuit        = getChild<QAction>(QWd_root, "QAc_AppQuit"        );  connect(QAc_AppQuit,        SIGNAL(triggered   ()), theApp, SLOT  (quit           ()));
+                                                                            connect(this,               SIGNAL(closeRequest()), theApp, SLOT  (quit           ()));
+  return;
+}
+void  QVwMain::BuildGrid           (void     ) {
+  QMd_MiMsgGrid.setColumnCount(MTC_NUM);
+  QMd_MiMsgGrid.setRowCount   (0);
+
+  QMd_MiMsgGrid.setHeaderData (MTC_TS,   Qt::Horizontal,  tr("TS"       ), Qt::DisplayRole);
+  QMd_MiMsgGrid.setHeaderData (MTC_RAW,  Qt::Horizontal,  tr("Raw"      ), Qt::DisplayRole);
+  QMd_MiMsgGrid.setHeaderData (MTC_STA,  Qt::Horizontal,  tr("Stat"     ), Qt::DisplayRole);
+  QMd_MiMsgGrid.setHeaderData (MTC_CHAN, Qt::Horizontal,  tr("Ch"       ), Qt::DisplayRole);
+  QMd_MiMsgGrid.setHeaderData (MTC_NOTE, Qt::Horizontal,  tr("Note"     ), Qt::DisplayRole);
+  QMd_MiMsgGrid.setHeaderData (MTC_CC,   Qt::Horizontal,  tr("CC"       ), Qt::DisplayRole);
+  QMd_MiMsgGrid.setHeaderData (MTC_VELO, Qt::Horizontal,  tr("Vel"      ), Qt::DisplayRole);
+  QMd_MiMsgGrid.setHeaderData (MTC_BEND, Qt::Horizontal,  tr("Bend"     ), Qt::DisplayRole);
+  QMd_MiMsgGrid.setHeaderData (MTC_POS,  Qt::Horizontal,  tr("Pos"      ), Qt::DisplayRole);
+  QMd_MiMsgGrid.setHeaderData (MTC_SONG, Qt::Horizontal,  tr("Song"     ), Qt::DisplayRole);
+  QMd_MiMsgGrid.setHeaderData (MTC_PROG, Qt::Horizontal,  tr("Prog"     ), Qt::DisplayRole);
+  QMd_MiMsgGrid.setHeaderData (MTC_MTC,  Qt::Horizontal,  tr("MTC"      ), Qt::DisplayRole);
+  QMd_MiMsgGrid.setHeaderData (MTC_SYS,  Qt::Horizontal,  tr("Sys"      ), Qt::DisplayRole);
+  QMd_MiMsgGrid.setHeaderData (MTC_ERR,  Qt::Horizontal,  tr("Error"    ), Qt::DisplayRole);
+  QMd_MiMsgGrid.setHeaderData (MTC_PAD,  Qt::Horizontal,  tr(""         ), Qt::DisplayRole);
+
+  QTb_MiMsgGrid = getChild<QTableView>(QWd_root, "QTb_MiMsgGrid");
+  QTb_MiMsgGrid->setItemDelegate(&QDg_MiMsgGrid); // The delegate to pick up after the visitors
+  QTb_MiMsgGrid->setModel(&QMd_MiMsgGrid);        // The model that actually knows what's what.
+
+// OK, so the TableView had to actually exist first
+  QTb_MiMsgGrid->setColumnWidth(MTC_TS,   108);
+  QTb_MiMsgGrid->setColumnWidth(MTC_RAW,   72);
+  QTb_MiMsgGrid->setColumnWidth(MTC_STA,   88);
+  QTb_MiMsgGrid->setColumnWidth(MTC_CHAN,  32);
+  QTb_MiMsgGrid->setColumnWidth(MTC_NOTE,  40);
+  QTb_MiMsgGrid->setColumnWidth(MTC_CC,    32);
+  QTb_MiMsgGrid->setColumnWidth(MTC_VELO,  40);
+  QTb_MiMsgGrid->setColumnWidth(MTC_BEND,  72);
+  QTb_MiMsgGrid->setColumnWidth(MTC_POS,   64);
+  QTb_MiMsgGrid->setColumnWidth(MTC_SONG,  40);
+  QTb_MiMsgGrid->setColumnWidth(MTC_PROG,  40);
+  QTb_MiMsgGrid->setColumnWidth(MTC_MTC,  120);
+  QTb_MiMsgGrid->setColumnWidth(MTC_SYS,  108);
+  QTb_MiMsgGrid->setColumnWidth(MTC_ERR,  120);
+  QTb_MiMsgGrid->setColumnWidth(MTC_PAD,   64);
+  return;
+}
+
+
+
+
+
+
+
+
 
 void QVwMain::SetTimeZero(quint64 i_TZ) {  TZ = i_TZ;  return;}
 int  QVwMain::MsgAdd(quint64 i_TS, Midi *i_tMidi, bool i_val) {

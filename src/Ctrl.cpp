@@ -41,7 +41,8 @@ Ctrl:: Ctrl(App *i_theApp, QObject *i_parent) : QObject(i_parent),  theApp(i_the
 
   theDrvIf     = new DrvIf();
   theMidi      = new Midi();
-  theQVwMain   = new QVwMain(theApp);
+
+//  theQVwMain   = new QVwMain(theApp);
   theQVwConfig = new QVwConfig(theDrvIf);
   theQVwMsg    = new QVwMsg();
   theQVwErr    = new QVwErr();

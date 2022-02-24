@@ -47,7 +47,7 @@ int main(int argc, char **argv) {
   int           result;
 
 
-  QVwMain *theQVwMain;
+  QVwMain      *theQVwMain;
 
   fprintf(stdout, "Build No.:  %d\n", BUILD_NO);fflush(stdout);
 
@@ -69,7 +69,11 @@ int main(int argc, char **argv) {
 
   theTrApp->load("dmmsnoop_" + language);
   theApp->installTranslator(theTrApp);
+
+  theQVwMain   = new QVwMain(theApp);
+
   theCtrl = new Ctrl(theApp); // Has to wait for theApp to be translate-stuffed
+  theCtrl->SetWinMain(theQVwMain);
   theCtrl->BuildDrvIf       ();
   theCtrl->BuildWinConfig   ();
   theCtrl->ConnSigWinConfig ();
@@ -79,7 +83,6 @@ int main(int argc, char **argv) {
   theCtrl->ConnSigDrvIf     ();
   theCtrl->ConnSigApp       ();
 
-  theQVwMain = theCtrl->GetWinMain();
   theQVwMain->show();
   result = QApplication::exec();
 

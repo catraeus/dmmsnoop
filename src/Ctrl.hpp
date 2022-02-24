@@ -40,7 +40,7 @@ public:
   explicit  Ctrl(App *i_theApp, QObject *parent=0);
            ~Ctrl();
 //  void      run();  // RESEARCH Might be Inherited via QThread::run
-  QVwMain *GetWinMain() {return theQVwMain;};
+  void     SetWinMain(QVwMain *i_theQVwMain) {theQVwMain = i_theQVwMain;};
 
   void     BuildDrvIf      (void);
   void     BuildWinConfig  (void) {theQVwConfig->Build(); return;};

@@ -49,12 +49,9 @@ public slots:
            void    OnPortOutChg        (int  i_dex);
 
 signals:
-           void    EmMidiDrvChg        (int  i_dex);
            void    EmModeIgnActSnChg   (bool i_ign);
            void    EmModeIgnSysExChg   (bool i_ign);
            void    EmModeIgnMiTimChg   (bool i_ign);
-           void    EmPortInpChg        (int  i_dex);
-           void    EmPortOutChg        (int  i_dex);
 
 private slots:
            void    DoMidiDrvChg        (int i_dex);

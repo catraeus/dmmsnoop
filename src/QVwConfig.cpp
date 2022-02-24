@@ -22,17 +22,27 @@
 
   QVwConfig::QVwConfig(DrvIf *i_theDrvIf, QObject *parent) : QVwDesgn(":/dmmsnoop/QVwConfig.ui", parent), theDrvIf(i_theDrvIf) {
   QWidget *rootWidget = getRootWidget();
+  QCoMidiDrv      = getChild<QComboBox>  (rootWidget, "QCoMidiDrv"     );
+  QCoPortInp      = getChild<QComboBox>  (rootWidget, "QCoPortInp"     );
+  QCoPortOut      = getChild<QComboBox>  (rootWidget, "QCoPortOut"     );
+  QPbDlgClose     = getChild<QPushButton>(rootWidget, "QPbDlgClose"    );
+  QChModeIgnActSn = getChild<QCheckBox>  (rootWidget, "QChModeIgnActSn");
+  QChModeIgnSysEx = getChild<QCheckBox>  (rootWidget, "QChModeIgnSysEx");
+  QChModeIgnMiTim = getChild<QCheckBox>  (rootWidget, "QChModeIgnMiTim");
 
-  QCoMidiDrv      = getChild<QComboBox>  (rootWidget, "QCoMidiDrv"     ); connect(QCoMidiDrv,      SIGNAL(activated(int )), SLOT(DoMidiDrvChg(int)));
+  connect(QPbDlgClose,     SIGNAL(clicked  (    )), SLOT(hide()));
+  connect(QCoMidiDrv,      SIGNAL(activated(int )), SLOT(DoMidiDrvChg(int)));
+  connect(QCoPortInp,      SIGNAL(activated(int )), SLOT(DoPortInpChg(int)));
+  connect(QCoPortOut,      SIGNAL(activated(int )), SLOT(DoPortOutChg(int)));
+  connect(QChModeIgnActSn, SIGNAL(clicked  (bool)), SIGNAL(EmModeIgnActSnChg(bool)));
+  connect(QChModeIgnSysEx, SIGNAL(clicked  (bool)), SIGNAL(EmModeIgnSysExChg(bool)));
+  connect(QChModeIgnMiTim, SIGNAL(clicked  (bool)), SIGNAL(EmModeIgnMiTimChg(bool)));
 
-  QCoPortInp      = getChild<QComboBox>  (rootWidget, "QCoPortInp"     ); connect(QCoPortInp,      SIGNAL(activated(int )), SLOT(DoPortInpChg(int)));
-  QCoPortOut      = getChild<QComboBox>  (rootWidget, "QCoPortOut"     ); connect(QCoPortOut,      SIGNAL(activated(int )), SLOT(DoPortOutChg(int)));
-//  QPbDlgClose     = getChild<QPushButton>(rootWidget, "QPbDlgClose"    ); connect(QPbDlgClose,     SIGNAL(clicked  (    )), SIGNAL(closeRequest()));
-  QPbDlgClose     = getChild<QPushButton>(rootWidget, "QPbDlgClose"    ); connect(QPbDlgClose,     SIGNAL(clicked  (    )), SLOT(hide()));
 
-  QChModeIgnActSn = getChild<QCheckBox>  (rootWidget, "QChModeIgnActSn"); connect(QChModeIgnActSn, SIGNAL(clicked  (bool)), SIGNAL(EmModeIgnActSnChg(bool)));
-  QChModeIgnSysEx = getChild<QCheckBox>  (rootWidget, "QChModeIgnSysEx"); connect(QChModeIgnSysEx, SIGNAL(clicked  (bool)), SIGNAL(EmModeIgnSysExChg(bool)));
-  QChModeIgnMiTim = getChild<QCheckBox>  (rootWidget, "QChModeIgnMiTim"); connect(QChModeIgnMiTim, SIGNAL(clicked  (bool)), SIGNAL(EmModeIgnMiTimChg(bool)));
+  connect(this, SIGNAL(EmModeIgnActSnChg (bool                       )),  theDrvIf,      SLOT(OnModeIgnActSnChg(bool)));
+  connect(this, SIGNAL(EmModeIgnSysExChg (bool                       )),  theDrvIf,      SLOT(OnModeIgnSysExChg(bool)));
+  connect(this, SIGNAL(EmModeIgnMiTimChg (bool                       )),  theDrvIf,      SLOT(OnModeIgnMiTimChg(bool)));
+
 }
      QVwConfig::~QVwConfig() {}
 
@@ -65,9 +75,9 @@ void QVwConfig::OnPortOutAdd      (int  i_dex, const QString &i_name) {  QCoPort
 void QVwConfig::OnPortOutChg      (int  i_dex                       ) {  QCoPortOut->setCurrentIndex         (i_dex + 1      ); }
 void QVwConfig::OnPortOutDel      (int  i_dex                       ) {  QCoPortOut->removeItem              (i_dex + 1      ); }
 
-void QVwConfig::DoMidiDrvChg      (int  i_dex ) { emit EmMidiDrvChg (i_dex - 1 ); }
-void QVwConfig::DoPortInpChg      (int  i_dex ) { emit EmPortInpChg (i_dex - 1 ); }
-void QVwConfig::DoPortOutChg      (int  i_dex ) { emit EmPortOutChg (i_dex - 1 ); }
+void QVwConfig::DoMidiDrvChg      (int  i_dex ) { theDrvIf->OnDrvChg     (i_dex - 1 ); }
+void QVwConfig::DoPortInpChg      (int  i_dex ) { theDrvIf->OnPortInpChg (i_dex - 1 ); }
+void QVwConfig::DoPortOutChg      (int  i_dex ) { theDrvIf->OnPortOutChg (i_dex - 1 ); }
 void QVwConfig::OnModeIgnActSnChg (bool i_ign ) {      QChModeIgnActSn->setChecked (i_ign); }
 void QVwConfig::OnModeIgnSysExChg (bool i_ign ) {      QChModeIgnSysEx->setChecked (i_ign); }
 void QVwConfig::OnModeIgnMiTimChg (bool i_ign ) {      QChModeIgnMiTim->setChecked (i_ign); }

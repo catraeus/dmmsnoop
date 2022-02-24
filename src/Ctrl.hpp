@@ -39,14 +39,13 @@ class Ctrl: public QObject {
 public:
   explicit  Ctrl(App *i_theApp, QObject *parent=0);
            ~Ctrl();
-//  void      run();  // RESEARCH Might be Inherited via QThread::run
+
   void     SetWinMain(QVwMain *i_theQVwMain) {theQVwMain = i_theQVwMain;};
 
   void     BuildDrvIf      (void);
   void     BuildWinConfig  (void) {theQVwConfig->Build(); return;};
   void     BuildWinMain    (void);
 
-  void     ConnSigWinConfig(void);
   void     ConnSigWinMain  (void);
   void     ConnSigWinMsg   (void);
   void     ConnSigDrvIf    (void);

@@ -76,7 +76,7 @@ int main(int argc, char **argv) {
   theCtrl->SetWinMain(theQVwMain);
   theCtrl->BuildDrvIf       ();
   theCtrl->BuildWinConfig   ();
-  theCtrl->ConnSigWinConfig ();
+
   theCtrl->BuildWinMain     ();
   theCtrl->ConnSigWinMain   ();
   theCtrl->ConnSigWinMsg    ();

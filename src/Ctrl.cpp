@@ -42,7 +42,6 @@ Ctrl:: Ctrl(App *i_theApp, QObject *i_parent) : QObject(i_parent),  theApp(i_the
   theDrvIf     = new DrvIf();
   theMidi      = new Midi();
 
-//  theQVwMain   = new QVwMain(theApp);
   theQVwConfig = new QVwConfig(theDrvIf);
   theQVwMsg    = new QVwMsg();
   theQVwErr    = new QVwErr();
@@ -80,15 +79,6 @@ void Ctrl::BuildWinMain    (void) {
 
 
 
-void Ctrl::ConnSigWinConfig(void) {
-  connect(theQVwConfig, SIGNAL(EmMidiDrvChg      (int                        )),  theDrvIf,      SLOT(OnDrvChg(int)));
-  connect(theQVwConfig, SIGNAL(EmModeIgnActSnChg (bool                       )),  theDrvIf,      SLOT(OnModeIgnActSnChg(bool)));
-  connect(theQVwConfig, SIGNAL(EmModeIgnSysExChg (bool                       )),  theDrvIf,      SLOT(OnModeIgnSysExChg(bool)));
-  connect(theQVwConfig, SIGNAL(EmModeIgnMiTimChg (bool                       )),  theDrvIf,      SLOT(OnModeIgnMiTimChg(bool)));
-  connect(theQVwConfig, SIGNAL(EmPortInpChg      (int                        )),  theDrvIf,      SLOT(OnPortInpChg(int)));
-  connect(theQVwConfig, SIGNAL(EmPortOutChg      (int                        )),  theDrvIf,      SLOT(OnPortOutChg(int)));
-  return;
-}
 void Ctrl::ConnSigWinMain  (void) {
   connect(theQVwMain, SIGNAL(EmMiMsgTXAdd        (                           )),  theQVwMsg,    SLOT(show()));
   connect(theQVwMain, SIGNAL(EmAppConfig         (                           )),  theQVwConfig, SLOT(show()));

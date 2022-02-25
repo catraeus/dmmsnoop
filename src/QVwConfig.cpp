@@ -23,6 +23,7 @@
 QVwConfig::QVwConfig(DrvIf *i_theDrvIf, QObject *parent) : QVwDesgn(":/dmmsnoop/QVwConfig.ui", parent), theDrvIf(i_theDrvIf) {
   Build();
   Connect();
+  MSU_WinMainCheckTxEn = NULL;
 
 }
      QVwConfig::~QVwConfig() {}
@@ -40,8 +41,8 @@ void QVwConfig::Build(void) {
 void QVwConfig::Connect (void) {
   connect(QPbDlgClose,     SIGNAL(clicked           (    )),                SLOT  (hide              (    )));
   connect(QCoMidiDrv,      SIGNAL(activated         (int )),                SLOT  (OnUiMidiDrvChg    (int )));
-  connect(QCoPortInp,      SIGNAL(activated         (int )),                SLOT  (DoPortInpChg      (int )));
-  connect(QCoPortOut,      SIGNAL(activated         (int )),                SLOT  (DoPortOutChg      (int )));
+  connect(QCoPortInp,      SIGNAL(activated         (int )),                SLOT  (OnUiPortInpChg      (int )));
+  connect(QCoPortOut,      SIGNAL(activated         (int )),                SLOT  (OnUiPortOutChg      (int )));
   connect(QChModeIgnActSn, SIGNAL(clicked           (bool)), theDrvIf,      SLOT  (OnModeIgnActSnChg (bool)));
   connect(QChModeIgnSysEx, SIGNAL(clicked           (bool)), theDrvIf,      SLOT  (OnModeIgnSysExChg (bool)));
   connect(QChModeIgnMiTim, SIGNAL(clicked           (bool)), theDrvIf,      SLOT  (OnModeIgnMiTimChg (bool)));
@@ -81,7 +82,19 @@ void QVwConfig::OnPortOutAdd      (int  i_dex, const QString &i_name) {  QCoPort
 void QVwConfig::OnPortOutChg      (int  i_dex                       ) {  QCoPortOut->setCurrentIndex         (i_dex + 1      ); }
 void QVwConfig::OnPortOutDel      (int  i_dex                       ) {  QCoPortOut->removeItem              (i_dex + 1      ); }
 
-void QVwConfig::OnUiMidiDrvChg    (int  i_dex ) { theDrvIf->OnDrvChg     (i_dex - 1 ); }
-void QVwConfig::DoPortInpChg      (int  i_dex ) { theDrvIf->OnPortInpChg (i_dex - 1 ); }
-void QVwConfig::DoPortOutChg      (int  i_dex ) { theDrvIf->OnPortOutChg (i_dex - 1 ); }
+void QVwConfig::OnUiMidiDrvChg    (int  i_dex ) {
+  theDrvIf->OnDrvChg     (i_dex - 1 );
+  if(MSU_WinMainCheckTxEn != 0)    MSU_WinMainCheckTxEn->Execute(NULL);
+  return;
+}
+void QVwConfig::OnUiPortInpChg      (int  i_dex ) {
+  theDrvIf->OnPortInpChg (i_dex - 1 );
+  if(MSU_WinMainCheckTxEn != 0)    MSU_WinMainCheckTxEn->Execute(NULL);
+  return;
+}
+void QVwConfig::OnUiPortOutChg      (int  i_dex ) {
+  theDrvIf->OnPortOutChg (i_dex - 1 );
+  if(MSU_WinMainCheckTxEn != 0)    MSU_WinMainCheckTxEn->Execute(NULL);
+  return;
+}
 

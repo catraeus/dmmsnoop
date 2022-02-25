@@ -20,6 +20,8 @@
 #ifndef __QVwCONFIG_HPP__
 #define __QVwCONFIG_HPP__
 
+#include "libs/CaesCallBack.hpp"
+
 #include "DrvIf.hpp"
 
 #include <QtWidgets/QCheckBox>
@@ -31,11 +33,11 @@
 class QVwConfig: public QVwDesgn {
   Q_OBJECT
 
-public:
-  explicit          QVwConfig(DrvIf *i_theDrvIf, QObject *parent=0);
+  public:
+    explicit          QVwConfig(DrvIf *i_theDrvIf, QObject *parent=0);
                    ~QVwConfig();
            void    Setup     (void);
-public slots:
+  public  slots:
            void    OnMidiDrvAdd        (int  i_dex, const QString &i_name);
            void    OnPortInpAdd        (int  i_dex, const QString &i_name);
            void    OnPortOutAdd        (int  i_dex, const QString &i_name);
@@ -45,19 +47,18 @@ public slots:
            void    OnPortInpChg        (int  i_dex);
            void    OnPortOutChg        (int  i_dex);
 
-        signals:
-           void    EmModeIgnActSnChg   (bool i_ign);
-           void    EmModeIgnSysExChg   (bool i_ign);
-           void    EmModeIgnMiTimChg   (bool i_ign);
 
-private slots:
+  private slots:
            void    OnUiMidiDrvChg        (int i_dex);
-           void    DoPortInpChg        (int i_dex);
-           void    DoPortOutChg        (int i_dex);
-public:
+           void    OnUiPortInpChg        (int i_dex);
+           void    OnUiPortOutChg        (int i_dex);
+  public:
            void    Build               (void     );
            void    Connect             (void     );
-private:
+  private:
+  public:
+           CbV         *MSU_WinMainCheckTxEn;
+  private:
 
            QPushButton *QPbDlgClose;
            QComboBox   *QCoMidiDrv;

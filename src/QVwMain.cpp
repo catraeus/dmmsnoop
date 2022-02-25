@@ -40,6 +40,9 @@ QVwMain::QVwMain(QApplication *i_theApp, QObject *i_parent) : QVwDesgn(":/dmmsno
   BuildActions();
   BuildGrid();
   Connect();
+  MRU_CheckTxEn = new CbT<QVwMain>();
+  MRU_CheckTxEn->SetCallback(this, &QVwMain::ChkTxEn);
+  theQVwConfig->MSU_WinMainCheckTxEn = MRU_CheckTxEn;
 
 
   TZ = 0;
@@ -101,9 +104,9 @@ void  QVwMain::BuildGrid           (void     ) {
   return;
 }
 void QVwMain::Connect(void) {
-  connect(QAc_AppAbout,       SIGNAL(triggered   ()), this,         SLOT  (OnAppAbout     ()));
+  connect(QAc_AppAbout,       SIGNAL(triggered   ()), this,         SLOT  (OnUiAppAbout   ()));
   connect(QAc_MiMsgOutAdd,    SIGNAL(triggered   ()), theQVwMsg,    SLOT  (show           ()));
-  connect(QAc_MiMsgListClear, SIGNAL(triggered   ()), this,         SLOT  (OnMiMsgTabClr  ()));
+  connect(QAc_MiMsgListClear, SIGNAL(triggered   ()), this,         SLOT  (OnUiMsgClr     ()));
   connect(QAc_AppConfig,      SIGNAL(triggered   ()), theQVwConfig, SLOT  (show           ()));
   connect(QAc_AppQuit,        SIGNAL(triggered   ()), theApp,       SLOT  (quit           ()));
   connect(this,               SIGNAL(closeRequest()), theApp,       SLOT  (quit           ()));
@@ -178,18 +181,23 @@ void QVwMain::OnMiMsgTX(quint64 i_TS, Midi *i_tMidi, bool valid) {
   for(uint i=0; i<MTC_NUM; i++ )
     setModelData(index, i,  brush, Qt::BackgroundRole);
 }
-void QVwMain::OnMiMsgTabClr() {
+void QVwMain::OnUiMsgClr() {
   int count = QMd_MiMsgGrid.rowCount();
   if(count > 0) {
     QMd_MiMsgGrid.removeRows(0, QMd_MiMsgGrid.rowCount()); // WARNING there is no check here for removal, removeRows returns a bool.
   }
 }
-void QVwMain::OnMiMsgTxEn(bool enabled) {
-  QAc_MiMsgOutAdd->setEnabled(enabled);
+void QVwMain::OnTxEn(bool enabled) {
+  (void) enabled;
 }
 void QVwMain::setModelData(int row, int column, const QVariant &value, int role) {
   QMd_MiMsgGrid.setData(QMd_MiMsgGrid.index(row, column), value, role);
 }
-
+bool QVwMain::ChkTxEn(void *) { // IS the callback after Config changes any Interface port
+  bool txEn = (theDrvIf->DrvNumGet() != -1) && (theDrvIf->PortOutNoGet() != -1);
+  fprintf(stdout, "TxEn%c\n", txEn ? '+' : '-'); fflush(stdout);
+  QAc_MiMsgOutAdd->setEnabled(txEn);
+  return true;
+}
 
 

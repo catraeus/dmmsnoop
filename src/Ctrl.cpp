@@ -67,7 +67,7 @@ void Ctrl::BuildWinMain    (void) {
   TimeUsToStrSec(TS, tStr);
   fprintf(stdout, "MICROSECONDS:  %s\n", tStr);
   drvReady = theDrvIf->DrvReadyGet();
-  theQVwMain->OnMiMsgTxEn(drvReady);
+  theQVwMain->OnTxEn(drvReady);
   theQVwMain->SetTimeZero(TS);
   MRU_WinMain = new CbT<Ctrl>();
   MRU_WinMain->SetCallback(this, &Ctrl::OnTestCb);
@@ -132,7 +132,7 @@ void    Ctrl::MiMsgDatBytesStr (const QByteArray &i_msgbb, char *o_dStr, int i_d
   return;
 }
 void    Ctrl::OnMidiDrvChg     (                      ) {
-  theQVwMain->OnMiMsgTxEn((theDrvIf->DrvNumGet() != -1) && (theDrvIf->PortOutNoGet() != -1));
+  theQVwMain->OnTxEn((theDrvIf->DrvNumGet() != -1) && (theDrvIf->PortOutNoGet() != -1));
 }
 void    Ctrl::OnMiMsgTx        (const QString &i_miMsgStr) {
   QStringList lines;

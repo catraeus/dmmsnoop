@@ -71,9 +71,9 @@ class QVwMain: public QVwDesgn {
 
     void  OnMiMsgRX      (quint64 i_TS, Midi *i_tMidi, bool i_val);
     void  OnMiMsgTX      (quint64 i_TS, Midi *i_tMidi, bool i_val);
-    void  OnMiMsgTabClr  (void      );
-    void  OnMiMsgTxEn    (bool i_en );
-    void  OnAppAbout     (void) {theQVwAbout->show();};
+    void  OnUiAppAbout   (void      ) {theQVwAbout->show();};
+    void  OnUiMsgClr     (void      );
+    void  OnTxEn         (bool i_en );
 
          signals:
     void  EmMiMsgTabClr  (void      );
@@ -87,7 +87,7 @@ class QVwMain: public QVwDesgn {
     void  Connect        (void);
     int   MsgAdd         (quint64 i_TS, Midi *i_tMidi, bool i_val);
     void  setModelData   (int     i_R,  int   i_C, const QVariant &value, int role=Qt::DisplayRole);
-
+    bool  ChkTxEn        (void *);
   public:
     CbV               *MSU_WinMain; // This Works.
   private:
@@ -105,6 +105,7 @@ class QVwMain: public QVwDesgn {
     QStandardItemModel    QMd_MiMsgGrid;
     QTableView           *QTb_MiMsgGrid;
 
+    CbT<QVwMain>  *MRU_CheckTxEn;
 
     QVwAbout      *theQVwAbout;
     QVwMsg        *theQVwMsg;

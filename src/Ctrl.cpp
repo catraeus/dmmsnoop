@@ -89,19 +89,17 @@ void Ctrl::ConnSigWinMsg   (void) {
   return;
 }
 void Ctrl::ConnSigDrvIf    (void) {
-  connect(theDrvIf, SIGNAL(EmMiMsgRx              (quint64, const QByteArray &)),  this,          SLOT(OnMiMsgRx(quint64, const QByteArray &)));
+  connect(theDrvIf, SIGNAL(EmMiMsgRx              (quint64, const QByteArray &)),  this,         SLOT(OnMiMsgRx(quint64, const QByteArray &)));
+  connect(theDrvIf, SIGNAL(EmDrvChange            (int                        )),  this,         SLOT(OnMidiDrvChg()));
+  connect(theDrvIf, SIGNAL(EmPortInpChg           (int                        )),  this,         SLOT(OnMidiDrvChg()));
+  connect(theDrvIf, SIGNAL(EmPortOutChg           (int                        )),  this,         SLOT(OnMidiDrvChg()));
+
   connect(theDrvIf, SIGNAL(EmDrvChange            (int                        )),  theQVwConfig, SLOT(OnMidiDrvChg(int)));
-  connect(theDrvIf, SIGNAL(EmDrvChange            (int                        )),  this,          SLOT(OnMidiDrvChg()));
-  connect(theDrvIf, SIGNAL(EmModeIgnActSnChg      (bool                       )),  theQVwConfig, SLOT(OnModeIgnActSnChg(bool)));
-  connect(theDrvIf, SIGNAL(EmModeIgnSysExChg      (bool                       )),  theQVwConfig, SLOT(OnModeIgnSysExChg(bool)));
-  connect(theDrvIf, SIGNAL(EmModeIgnMiTimChg      (bool                       )),  theQVwConfig, SLOT(OnModeIgnMiTimChg(bool)));
   connect(theDrvIf, SIGNAL(EmPortInpAdd           (int, QString               )),  theQVwConfig, SLOT(OnPortInpAdd(int, QString)));
   connect(theDrvIf, SIGNAL(EmPortInpChg           (int                        )),  theQVwConfig, SLOT(OnPortInpChg(int)));
-  connect(theDrvIf, SIGNAL(EmPortInpChg           (int                        )),  this,          SLOT(OnMidiDrvChg()));
   connect(theDrvIf, SIGNAL(EmPortInpDel           (int                        )),  theQVwConfig, SLOT(OnPortInpDel(int)));
   connect(theDrvIf, SIGNAL(EmPortOutAdd           (int, QString               )),  theQVwConfig, SLOT(OnPortOutAdd(int, QString)));
   connect(theDrvIf, SIGNAL(EmPortOutChg           (int                        )),  theQVwConfig, SLOT(OnPortOutChg(int)));
-  connect(theDrvIf, SIGNAL(EmPortOutChg           (int                        )),  this,          SLOT(OnMidiDrvChg()));
   connect(theDrvIf, SIGNAL(EmPortOutDel           (int                        )),  theQVwConfig, SLOT(OnPortOutDel(int)));
   return;
 }

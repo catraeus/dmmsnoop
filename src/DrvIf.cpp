@@ -187,10 +187,11 @@ void DrvIf::OnPortInpChg(int i_dex) {
     }
     if(i_dex != -1) {   // Open the new input port.
       if(hasPortsVirtual && (i_dex == ((int)(miPortInpNames.size()) - 1)))     miPortInpInst->openVirtualPort("MIDI Input");
-      else                                                               miPortInpInst->openPort(i_dex, "MIDI Input");
+      else                                                                     miPortInpInst->openPort(i_dex, "MIDI Input");
       miPortInpNum = i_dex;
       DoModeIgnChg();
       emit EmPortInpChg(i_dex);
+      miPortInpInst->ignoreTypes(modeIgnSysEx, modeIgnMiTim, modeIgnActSn);
     }
   }
 }
@@ -203,13 +204,26 @@ void DrvIf::OnPortOutChg(int i_dex) {
     }
     if(i_dex != -1) {  // Open the new output port.
       if(hasPortsVirtual && (i_dex == ((int)(miPortOutNames.size()) - 1)))  miPortOutInst->openVirtualPort("MIDI Output");
-      else                                                            miPortOutInst->openPort(i_dex, "MIDI Output");
+      else                                                                  miPortOutInst->openPort(i_dex, "MIDI Output");
       miPortOutNum = i_dex;
       emit EmPortOutChg(i_dex);
+      miPortInpInst->ignoreTypes(modeIgnSysEx, modeIgnMiTim, modeIgnActSn);
     }
   }
 }
-void DrvIf::OnModeIgnActSnChg(bool i_ign) { if(modeIgnActSn != i_ign) { modeIgnActSn = i_ign; DoModeIgnChg(); emit EmModeIgnActSnChg(i_ign); }}
-void DrvIf::OnModeIgnSysExChg(bool i_ign) { if(modeIgnSysEx != i_ign) { modeIgnSysEx = i_ign; DoModeIgnChg(); emit EmModeIgnSysExChg(i_ign); }}
-void DrvIf::OnModeIgnMiTimChg(bool i_ign) { if(modeIgnMiTim != i_ign) { modeIgnMiTim = i_ign; DoModeIgnChg(); emit EmModeIgnMiTimChg(i_ign); }}
-void DrvIf::DoModeIgnChg     (          ) { if(miPortInpNum != -1   ) { miPortInpInst->ignoreTypes(modeIgnSysEx, modeIgnMiTim, modeIgnActSn);}}
+void DrvIf::OnModeIgnActSnChg(bool i_ign) {
+  modeIgnActSn = i_ign;
+  DoModeIgnChg();
+}
+void DrvIf::OnModeIgnSysExChg(bool i_ign) {
+  modeIgnSysEx = i_ign;
+  DoModeIgnChg();
+}
+void DrvIf::OnModeIgnMiTimChg(bool i_ign) {
+  modeIgnMiTim = i_ign;
+  DoModeIgnChg();
+}
+void DrvIf::DoModeIgnChg     (void      ) {
+  if(miPortInpNum != -1   )
+    miPortInpInst->ignoreTypes(modeIgnSysEx, modeIgnMiTim, modeIgnActSn);
+}

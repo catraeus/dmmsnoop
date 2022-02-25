@@ -20,7 +20,13 @@
 #include "QVwConfig.hpp"
 #include "util/DmmStr.hpp"
 
-  QVwConfig::QVwConfig(DrvIf *i_theDrvIf, QObject *parent) : QVwDesgn(":/dmmsnoop/QVwConfig.ui", parent), theDrvIf(i_theDrvIf) {
+QVwConfig::QVwConfig(DrvIf *i_theDrvIf, QObject *parent) : QVwDesgn(":/dmmsnoop/QVwConfig.ui", parent), theDrvIf(i_theDrvIf) {
+  Build();
+  Connect();
+
+}
+     QVwConfig::~QVwConfig() {}
+void QVwConfig::Build(void) {
   QWidget *rootWidget = getRootWidget();
   QCoMidiDrv      = getChild<QComboBox>  (rootWidget, "QCoMidiDrv"     );
   QCoPortInp      = getChild<QComboBox>  (rootWidget, "QCoPortInp"     );
@@ -29,24 +35,24 @@
   QChModeIgnActSn = getChild<QCheckBox>  (rootWidget, "QChModeIgnActSn");
   QChModeIgnSysEx = getChild<QCheckBox>  (rootWidget, "QChModeIgnSysEx");
   QChModeIgnMiTim = getChild<QCheckBox>  (rootWidget, "QChModeIgnMiTim");
-
-  connect(QPbDlgClose,     SIGNAL(clicked  (    )), SLOT(hide()));
-  connect(QCoMidiDrv,      SIGNAL(activated(int )), SLOT(DoMidiDrvChg(int)));
-  connect(QCoPortInp,      SIGNAL(activated(int )), SLOT(DoPortInpChg(int)));
-  connect(QCoPortOut,      SIGNAL(activated(int )), SLOT(DoPortOutChg(int)));
-  connect(QChModeIgnActSn, SIGNAL(clicked  (bool)), SIGNAL(EmModeIgnActSnChg(bool)));
-  connect(QChModeIgnSysEx, SIGNAL(clicked  (bool)), SIGNAL(EmModeIgnSysExChg(bool)));
-  connect(QChModeIgnMiTim, SIGNAL(clicked  (bool)), SIGNAL(EmModeIgnMiTimChg(bool)));
-
-
-  connect(this, SIGNAL(EmModeIgnActSnChg (bool                       )),  theDrvIf,      SLOT(OnModeIgnActSnChg(bool)));
-  connect(this, SIGNAL(EmModeIgnSysExChg (bool                       )),  theDrvIf,      SLOT(OnModeIgnSysExChg(bool)));
-  connect(this, SIGNAL(EmModeIgnMiTimChg (bool                       )),  theDrvIf,      SLOT(OnModeIgnMiTimChg(bool)));
-
+  return;
 }
-     QVwConfig::~QVwConfig() {}
+void QVwConfig::Connect (void) {
+  connect(QPbDlgClose,     SIGNAL(clicked           (    )),                SLOT  (hide              (    )));
+  connect(QCoMidiDrv,      SIGNAL(activated         (int )),                SLOT  (OnUiMidiDrvChg    (int )));
+  connect(QCoPortInp,      SIGNAL(activated         (int )),                SLOT  (DoPortInpChg      (int )));
+  connect(QCoPortOut,      SIGNAL(activated         (int )),                SLOT  (DoPortOutChg      (int )));
+  connect(QChModeIgnActSn, SIGNAL(clicked           (bool)), theDrvIf,      SLOT  (OnModeIgnActSnChg (bool)));
+  connect(QChModeIgnSysEx, SIGNAL(clicked           (bool)), theDrvIf,      SLOT  (OnModeIgnSysExChg (bool)));
+  connect(QChModeIgnMiTim, SIGNAL(clicked           (bool)), theDrvIf,      SLOT  (OnModeIgnMiTimChg (bool)));
 
-void QVwConfig::Build(void) {
+
+  connect(this,            SIGNAL(EmModeIgnActSnChg (bool)), theDrvIf,      SLOT(OnModeIgnActSnChg   (bool)));
+  connect(this,            SIGNAL(EmModeIgnSysExChg (bool)), theDrvIf,      SLOT(OnModeIgnSysExChg   (bool)));
+  connect(this,            SIGNAL(EmModeIgnMiTimChg (bool)), theDrvIf,      SLOT(OnModeIgnMiTimChg   (bool)));
+  return;
+}
+void QVwConfig::Setup(void) {
   drvCnt = theDrvIf->DrvCntGet();
   if(drvCnt == 0)      {  fprintf(stderr, "no MIDI drivers found"); fflush(stderr);}
   for(int i = 0; i < drvCnt; i++)
@@ -60,9 +66,9 @@ void QVwConfig::Build(void) {
   portOutNo = theDrvIf->PortOutNoGet();
   OnPortOutChg(portOutNo);
 
-  OnModeIgnActSnChg   (theDrvIf->ModeIgnActSnGet());
-  OnModeIgnSysExChg   (theDrvIf->ModeIgnSysExGet());
-  OnModeIgnMiTimChg   (theDrvIf->ModeIgnMiTimGet());
+  theDrvIf->OnModeIgnActSnChg   (theDrvIf->ModeIgnActSnGet()); QChModeIgnActSn->setChecked (theDrvIf->ModeIgnActSnGet());
+  theDrvIf->OnModeIgnSysExChg   (theDrvIf->ModeIgnSysExGet()); QChModeIgnSysEx->setChecked (theDrvIf->ModeIgnSysExGet());
+  theDrvIf->OnModeIgnMiTimChg   (theDrvIf->ModeIgnMiTimGet()); QChModeIgnMiTim->setChecked (theDrvIf->ModeIgnMiTimGet());
   return;
 }
 
@@ -75,10 +81,7 @@ void QVwConfig::OnPortOutAdd      (int  i_dex, const QString &i_name) {  QCoPort
 void QVwConfig::OnPortOutChg      (int  i_dex                       ) {  QCoPortOut->setCurrentIndex         (i_dex + 1      ); }
 void QVwConfig::OnPortOutDel      (int  i_dex                       ) {  QCoPortOut->removeItem              (i_dex + 1      ); }
 
-void QVwConfig::DoMidiDrvChg      (int  i_dex ) { theDrvIf->OnDrvChg     (i_dex - 1 ); }
+void QVwConfig::OnUiMidiDrvChg    (int  i_dex ) { theDrvIf->OnDrvChg     (i_dex - 1 ); }
 void QVwConfig::DoPortInpChg      (int  i_dex ) { theDrvIf->OnPortInpChg (i_dex - 1 ); }
 void QVwConfig::DoPortOutChg      (int  i_dex ) { theDrvIf->OnPortOutChg (i_dex - 1 ); }
-void QVwConfig::OnModeIgnActSnChg (bool i_ign ) {      QChModeIgnActSn->setChecked (i_ign); }
-void QVwConfig::OnModeIgnSysExChg (bool i_ign ) {      QChModeIgnSysEx->setChecked (i_ign); }
-void QVwConfig::OnModeIgnMiTimChg (bool i_ign ) {      QChModeIgnMiTim->setChecked (i_ign); }
 

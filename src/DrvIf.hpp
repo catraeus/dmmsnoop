@@ -72,9 +72,6 @@ signals:
   void      EmPortOutAdd        (int     i_dex, const QString &name);
   void      EmPortOutChg        (int     i_dex);
   void      EmPortOutDel        (int     i_dex);
-  void      EmModeIgnActSnChg   (bool    i_ign);
-  void      EmModeIgnSysExChg   (bool    i_ign);
-  void      EmModeIgnMiTimChg   (bool    i_ign);
   void      EmMiMsgRx           (quint64 i_TS,  const QByteArray &i_qbMsg);
 
 public:
@@ -98,7 +95,7 @@ private:
     int                  miMsgNoteNo;     // iff is 0x8x 0x9x 0xA0
     char                *miMsgNoteStr;    // iff is 0x8x 0x9x 0xA0
     int                  miMsgVeloNo;     // iff is 0x8x 0x9x 0xA0 0xB0 0xD0
-    char                *miMsgVelo_str;    // iff is 0x8x 0x9x 0xA0 0xB0 0xD0
+    char                *miMsgVelo_str;   // iff is 0x8x 0x9x 0xA0 0xB0 0xD0
     int                  miMsgChChNo;     // iff is 0xA0
     char                *miMsgChChStr;    // iff is 0xA0
 

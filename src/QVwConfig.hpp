@@ -34,7 +34,7 @@ class QVwConfig: public QVwDesgn {
 public:
   explicit          QVwConfig(DrvIf *i_theDrvIf, QObject *parent=0);
                    ~QVwConfig();
-           void    Build     (void);
+           void    Setup     (void);
 public slots:
            void    OnMidiDrvAdd        (int  i_dex, const QString &i_name);
            void    OnPortInpAdd        (int  i_dex, const QString &i_name);
@@ -42,22 +42,21 @@ public slots:
            void    OnPortInpDel        (int  i_dex);
            void    OnPortOutDel        (int  i_dex);
            void    OnMidiDrvChg        (int  i_dex);
-           void    OnModeIgnActSnChg   (bool i_ign);
-           void    OnModeIgnSysExChg   (bool i_ign);
-           void    OnModeIgnMiTimChg   (bool i_ign);
            void    OnPortInpChg        (int  i_dex);
            void    OnPortOutChg        (int  i_dex);
 
-signals:
+        signals:
            void    EmModeIgnActSnChg   (bool i_ign);
            void    EmModeIgnSysExChg   (bool i_ign);
            void    EmModeIgnMiTimChg   (bool i_ign);
 
 private slots:
-           void    DoMidiDrvChg        (int i_dex);
+           void    OnUiMidiDrvChg        (int i_dex);
            void    DoPortInpChg        (int i_dex);
            void    DoPortOutChg        (int i_dex);
-
+public:
+           void    Build               (void     );
+           void    Connect             (void     );
 private:
 
            QPushButton *QPbDlgClose;

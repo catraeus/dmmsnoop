@@ -43,7 +43,7 @@ public:
   void     SetWinMain(QVwMain *i_theQVwMain) {theQVwMain = i_theQVwMain;};
 
   void     BuildDrvIf      (void);
-  void     BuildWinConfig  (void) {theQVwConfig->Build(); return;};
+  void     BuildWinConfig  (void) {theQVwConfig->Setup(); return;};
   void     BuildWinMain    (void);
 
   void     ConnSigWinMain  (void);

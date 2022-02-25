@@ -30,6 +30,8 @@
 #include <QtWidgets/QTableView>
 
 #include "QVwAbout.hpp"
+#include "QVwConfig.hpp"
+#include "QVwMsg.hpp"
 
 #include "QVwDesgn.hpp"
 #include "DelgMsgTbl.hpp"
@@ -60,9 +62,11 @@ class QVwMain: public QVwDesgn {
       MTC_BIG   = 0xFFFFFFFFU
     };
   public:
-          QVwMain        (QApplication *i_theApp, QObject *parent=0);
-         ~QVwMain        (                 );
-
+                 QVwMain        (QApplication *i_theApp, QObject *parent=0);
+                ~QVwMain        (                 );
+    QVwMsg      *WinMsgGet      (void) {return theQVwMsg;};
+    QVwConfig   *WinConfigGet   (void) {return theQVwConfig;};
+    DrvIf       *DrvIfGet       (void) {return theDrvIf;};
   public slots:
 
     void  OnMiMsgRX      (quint64 i_TS, Midi *i_tMidi, bool i_val);
@@ -72,10 +76,7 @@ class QVwMain: public QVwDesgn {
     void  OnAppAbout     (void) {theQVwAbout->show();};
 
          signals:
-  //  void  EmAppAbout     (void      );
-    void  EmMiMsgTXAdd   (void      );
     void  EmMiMsgTabClr  (void      );
-    void  EmAppConfig    (void      );
 
   public:
     void  SetTimeZero    (quint64 i_TZ);
@@ -83,6 +84,7 @@ class QVwMain: public QVwDesgn {
   private:
     void  BuildActions   (void);
     void  BuildGrid      (void);
+    void  Connect        (void);
     int   MsgAdd         (quint64 i_TS, Midi *i_tMidi, bool i_val);
     void  setModelData   (int     i_R,  int   i_C, const QVariant &value, int role=Qt::DisplayRole);
 
@@ -105,7 +107,10 @@ class QVwMain: public QVwDesgn {
 
 
     QVwAbout      *theQVwAbout;
+    QVwMsg        *theQVwMsg;
+    QVwConfig     *theQVwConfig;
 
+    DrvIf         *theDrvIf;
 
   char  i_miRaw     [64];
   char  i_miSta     [64];

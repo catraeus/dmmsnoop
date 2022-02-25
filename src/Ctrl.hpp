@@ -40,13 +40,16 @@ public:
   explicit  Ctrl(App *i_theApp, QObject *parent=0);
            ~Ctrl();
 
-  void     SetWinMain(QVwMain *i_theQVwMain) {theQVwMain = i_theQVwMain;};
+  void     SetWinMain   (QVwMain   *i_theQVwMain  );
+  void     SetDrvIf     (DrvIf     *i_theDrvIf    ) {theDrvIf     = i_theDrvIf     ;};
+  void     SetMidi      (Midi      *i_theMidi     ) {theMidi      = i_theMidi      ;};
+  void     SetWinConfig (QVwConfig *i_theQVwConfig) {theQVwConfig = i_theQVwConfig ;};
+  void     SetWinMsg    (QVwMsg    *i_theQVwMsg   ) {theQVwMsg    = i_theQVwMsg    ;};
 
   void     BuildDrvIf      (void);
   void     BuildWinConfig  (void) {theQVwConfig->Setup(); return;};
   void     BuildWinMain    (void);
 
-  void     ConnSigWinMain  (void);
   void     ConnSigWinMsg   (void);
   void     ConnSigDrvIf    (void);
   void     ConnSigApp      (void);

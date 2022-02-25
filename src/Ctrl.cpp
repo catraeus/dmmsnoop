@@ -42,8 +42,6 @@ Ctrl:: Ctrl(App *i_theApp, QObject *i_parent) : QObject(i_parent),  theApp(i_the
   theDrvIf     = new DrvIf();
   theMidi      = new Midi();
 
-  theQVwConfig = new QVwConfig(theDrvIf);
-  theQVwMsg    = new QVwMsg();
   theQVwErr    = new QVwErr();
   theTrMsg     = TrMsg::GetInstance();
 
@@ -79,11 +77,6 @@ void Ctrl::BuildWinMain    (void) {
 
 
 
-void Ctrl::ConnSigWinMain  (void) {
-  connect(theQVwMain, SIGNAL(EmMiMsgTXAdd        (                           )),  theQVwMsg,    SLOT(show()));
-  connect(theQVwMain, SIGNAL(EmAppConfig         (                           )),  theQVwConfig, SLOT(show()));
-  return;
-}
 void Ctrl::ConnSigWinMsg   (void) {
   connect(theQVwMsg, SIGNAL(EmMsgSend            (const QString &            )),  this,          SLOT(OnMiMsgTx(const QString &)));
   return;
@@ -185,7 +178,6 @@ void    Ctrl::OnMiMsgTx        (const QString &i_miMsgStr) {
     miBytes[i] = ((uint)miMsgBytes[i] & 0x000000FFU); // That freq king QByteArray is signed and sign extends on coersion!
   theMidi->Parse(miMsgLen, miBytes);
 
-//    MiMsgParse(miMsgBytes);  // Make sure the bytes represent a valid MIDI i_miMsgStr.
     if(valid)
       TS = theDrvIf->OnMiMsgTx(miMsgBytes);
     else
@@ -201,12 +193,16 @@ void    Ctrl::OnMiMsgRx        (quint64 i_TS, const QByteArray &i_msg) {
   for(uint i=0; i<miMsgLen; i++)
     miBytes[i] = ((uint)i_msg[i] & 0x000000FFU); // That freq king QByteArray is signed and sign extends on coersion!
   theMidi->Parse(miMsgLen, miBytes);
-//    MiMsgParse(i_msg);
-    theQVwMain->OnMiMsgRX(i_TS, theMidi, valid);
+  theQVwMain->OnMiMsgRX(i_TS, theMidi, valid);
 }
 
 bool    Ctrl::OnTestCb(void *i_blob) {
   (void) i_blob;
   fprintf(stdout, "Callback\n"); fflush(stdout);
   return true;
+}
+void     Ctrl::SetWinMain(QVwMain *i_theQVwMain) {
+  theQVwMain   = i_theQVwMain;
+  theQVwConfig = theQVwMain->WinConfigGet();
+  theQVwMsg    = theQVwMain->WinMsgGet();
 }

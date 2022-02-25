@@ -29,13 +29,18 @@
 #include "util/DmmStr.hpp"
 
 QVwMain::QVwMain(QApplication *i_theApp, QObject *i_parent) : QVwDesgn(":/dmmsnoop/QVwMain.ui", i_parent), theApp(i_theApp) {
-  QWd_root    = getRootWidget();
-  theQVwAbout = new QVwAbout();
+  QWd_root      = getRootWidget();
+  theDrvIf      = new DrvIf();
+  theQVwAbout   = new QVwAbout();
+  theQVwConfig  = new QVwConfig(theDrvIf);
+  theQVwMsg     = new QVwMsg();
 
   MSU_WinMain         = NULL;
 
   BuildActions();
   BuildGrid();
+  Connect();
+
 
   TZ = 0;
 }
@@ -46,12 +51,11 @@ QVwMain::~QVwMain() {}
 
 
 void  QVwMain::BuildActions        (void      ) {
-  QAc_AppAbout       = getChild<QAction>(QWd_root, "QAc_AppAbout"       );  connect(QAc_AppAbout,       SIGNAL(triggered   ()), this,   SLOT  (OnAppAbout     ()));
-  QAc_MiMsgOutAdd    = getChild<QAction>(QWd_root, "QAc_MiMsgOutAdd"    );  connect(QAc_MiMsgOutAdd,    SIGNAL(triggered   ()), this,   SIGNAL(EmMiMsgTXAdd   ()));
-  QAc_MiMsgListClear = getChild<QAction>(QWd_root, "QAc_MiMsgListClear" );  connect(QAc_MiMsgListClear, SIGNAL(triggered   ()), this,   SLOT  (OnMiMsgTabClr  ()));
-  QAc_AppConfig      = getChild<QAction>(QWd_root, "QAc_AppConfig"      );  connect(QAc_AppConfig,      SIGNAL(triggered   ()), this,   SIGNAL(EmAppConfig    ()));
-  QAc_AppQuit        = getChild<QAction>(QWd_root, "QAc_AppQuit"        );  connect(QAc_AppQuit,        SIGNAL(triggered   ()), theApp, SLOT  (quit           ()));
-                                                                            connect(this,               SIGNAL(closeRequest()), theApp, SLOT  (quit           ()));
+  QAc_AppAbout       = getChild<QAction>(QWd_root, "QAc_AppAbout"       );
+  QAc_MiMsgOutAdd    = getChild<QAction>(QWd_root, "QAc_MiMsgOutAdd"    );
+  QAc_MiMsgListClear = getChild<QAction>(QWd_root, "QAc_MiMsgListClear" );
+  QAc_AppConfig      = getChild<QAction>(QWd_root, "QAc_AppConfig"      );
+  QAc_AppQuit        = getChild<QAction>(QWd_root, "QAc_AppQuit"        );
   return;
 }
 void  QVwMain::BuildGrid           (void     ) {
@@ -96,7 +100,15 @@ void  QVwMain::BuildGrid           (void     ) {
   QTb_MiMsgGrid->setColumnWidth(MTC_PAD,   64);
   return;
 }
-
+void QVwMain::Connect(void) {
+  connect(QAc_AppAbout,       SIGNAL(triggered   ()), this,         SLOT  (OnAppAbout     ()));
+  connect(QAc_MiMsgOutAdd,    SIGNAL(triggered   ()), theQVwMsg,    SLOT  (show           ()));
+  connect(QAc_MiMsgListClear, SIGNAL(triggered   ()), this,         SLOT  (OnMiMsgTabClr  ()));
+  connect(QAc_AppConfig,      SIGNAL(triggered   ()), theQVwConfig, SLOT  (show           ()));
+  connect(QAc_AppQuit,        SIGNAL(triggered   ()), theApp,       SLOT  (quit           ()));
+  connect(this,               SIGNAL(closeRequest()), theApp,       SLOT  (quit           ()));
+  return;
+}
 
 
 
@@ -165,7 +177,6 @@ void QVwMain::OnMiMsgTX(quint64 i_TS, Midi *i_tMidi, bool valid) {
   index = MsgAdd(i_TS, i_tMidi, valid);
   for(uint i=0; i<MTC_NUM; i++ )
     setModelData(index, i,  brush, Qt::BackgroundRole);
-  //setModelData(index, MTC_TS,    brush, Qt::BackgroundRole);
 }
 void QVwMain::OnMiMsgTabClr() {
   int count = QMd_MiMsgGrid.rowCount();

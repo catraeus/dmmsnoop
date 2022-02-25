@@ -26,10 +26,16 @@
 #include <QtCore/QLibraryInfo>
 #include <QtCore/QLocale>
 #include <QtCore/QTranslator>
+#include "App.hpp"
 
 #include "Ctrl.hpp"
-#include "App.hpp"
+#include "Midi.hpp"
+#include "DrvIf.hpp"
+
 #include "QVwMain.hpp"
+#include "QVwConfig.hpp"
+#include "QVwMsg.hpp"
+
 #include "error.h"
 #include "util/TrMsg.hpp"
 #include "AppVersion.hpp"

@@ -46,6 +46,8 @@ int main(int argc, char **argv) {
   Ctrl         *theCtrl;
   int           result;
 
+  DrvIf        *theDrvIf;
+  Midi         *theMidi;
 
   QVwMain      *theQVwMain;
 
@@ -71,14 +73,18 @@ int main(int argc, char **argv) {
   theApp->installTranslator(theTrApp);
 
   theQVwMain   = new QVwMain(theApp);
+  theMidi      = new Midi();
 
   theCtrl = new Ctrl(theApp); // Has to wait for theApp to be translate-stuffed
   theCtrl->SetWinMain(theQVwMain);
+  theDrvIf     = theQVwMain->DrvIfGet();
+  theCtrl->SetDrvIf(theDrvIf);
+  theCtrl->SetMidi(theMidi);
+
   theCtrl->BuildDrvIf       ();
   theCtrl->BuildWinConfig   ();
 
   theCtrl->BuildWinMain     ();
-  theCtrl->ConnSigWinMain   ();
   theCtrl->ConnSigWinMsg    ();
   theCtrl->ConnSigDrvIf     ();
   theCtrl->ConnSigApp       ();
